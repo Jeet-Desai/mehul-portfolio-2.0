@@ -17,10 +17,13 @@ export default function Depreciation() {
     const C = toNum(cost)
     const S = toNum(salvage)
     const N = Math.max(0, Math.round(toNum(life)))
-    const valid = C > 0 && N > 0 && S >= 0 && S < C
+    const baseValid = C > 0 && N > 0 && S >= 0 && S < C
+    // WDV (reducing balance) cannot drive an asset to nil — it needs a positive salvage value.
+    const wdvNeedsSalvage = method === 'wdv' && baseValid && S <= 0
+    const valid = baseValid && !wdvNeedsSalvage
 
     const slmDep = valid ? (C - S) / N : 0
-    const wdvRate = valid && S > 0 ? (1 - Math.pow(S / C, 1 / N)) * 100 : valid ? 0 : 0
+    const wdvRate = valid && S > 0 ? (1 - Math.pow(S / C, 1 / N)) * 100 : 0
 
     const schedule: { year: number; opening: number; dep: number; closing: number }[] = []
     if (valid) {
@@ -32,7 +35,7 @@ export default function Depreciation() {
         schedule.push({ year: y, opening: round(opening), dep: round(dep), closing: book })
       }
     }
-    return { C, S, N, valid, slmDep: round(slmDep), wdvRate: round(wdvRate), schedule }
+    return { C, S, N, valid, wdvNeedsSalvage, slmDep: round(slmDep), wdvRate: round(wdvRate), schedule }
   }, [cost, salvage, life, method])
 
   const steps: Step[] =
@@ -127,7 +130,9 @@ export default function Depreciation() {
         ) : (
           <ResultPanel>
             <p className="text-sm text-slate-600">
-              Enter a cost greater than the salvage value, and a useful life of at least one year.
+              {m.wdvNeedsSalvage
+                ? 'The written-down value method needs a salvage value greater than zero — under reducing balance an asset can never depreciate fully to nil. Enter a positive salvage value, or switch to the straight-line method.'
+                : 'Enter a cost greater than the salvage value, and a useful life of at least one year.'}
             </p>
           </ResultPanel>
         )}

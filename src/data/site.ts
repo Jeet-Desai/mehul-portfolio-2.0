@@ -68,6 +68,3 @@ export const navLinks: NavLink[] = [
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
 ]
-
-/* The audiences we serve — used on the home page. */
-export const audiences = ['B.Com', 'M.Com', 'BBA', 'BCA', 'CA Foundation', 'CS', 'CMA', 'NET Commerce']

@@ -120,21 +120,21 @@ ActiveLearningLabs). Build order below = quick wins first → flagship simulator
 - Verify each step with `pnpm build` (tsc + vite). House style: every tool shows step-by-step working.
 
 ### Bundle A — Investing & TVM  (Finance / Investing)
-- [ ] SIP / Lumpsum / **Step-up SIP** (growth chart) — *easy, highest demand*
-- [ ] Compound vs Simple interest **visualizer** (widening-gap chart) — *easy*
-- [ ] **TVM playground** — solve for any of PV/FV/PMT/rate/n — *easy*
+- [x] SIP / Lumpsum / **Step-up SIP** (growth chart) — *easy, highest demand* ✅ `Sip.tsx` (`simulateSip` in `lib/finance.ts`)
+- [x] Compound vs Simple interest **visualizer** (widening-gap chart) — *easy* ✅ `CompoundInterest.tsx`
+- [x] **TVM playground** — solve for any of PV/FV/PMT/rate/n — *easy* ✅ `Tvm.tsx` (solvers in `lib/finance.ts`)
 - [ ] CAGR / **XIRR** (Newton-Raphson in `lib/`) — *medium*
 - [ ] PPF / EPF / NPS / FD-RD maturity suite (rates as editable constants) — *easy*
 
 ### Bundle B — Tax pack  (Taxation)
 - [ ] **Capital Gains** LTCG/STCG (FY25-26 rules; bundle CII table in `lib/`) — *medium*
-- [ ] **HRA exemption** (min of 3 rule, step-by-step) — *easy*
+- [x] **HRA exemption** (min of 3 rule, step-by-step) — *easy* ✅ `Hra.tsx`
 - [ ] TDS section-wise (194C/194J/194I/192 … rate+threshold table in `lib/`) — *medium*
 - [ ] GST **ITC set-off simulator** (IGST→CGST→SGST utilization order) — *medium*
 
 ### Bundle C — FM & Ratios  (Financial Management)
 - [ ] **Capital Budgeting** suite: NPV / IRR (iterative) / Payback / PI + **NPV-profile chart** — *medium*
-- [ ] WACC — *easy*
+- [x] WACC — *easy* ✅ `Wacc.tsx`
 - [ ] **Ratio Analysis** — enter P&L + Balance Sheet → liquidity/solvency/profitability/turnover
       ratios **with interpretation text** — *medium*
 - [ ] Bond pricing & **YTM** (+ price-yield curve) — *medium*

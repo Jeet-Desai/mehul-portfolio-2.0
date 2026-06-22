@@ -1,4 +1,15 @@
-import { TrendingUp, Receipt, Landmark, Wallet, Building2 } from 'lucide-react'
+import {
+  TrendingUp,
+  Receipt,
+  Landmark,
+  Wallet,
+  Building2,
+  Home,
+  PiggyBank,
+  LineChart,
+  CalendarClock,
+  Scale,
+} from 'lucide-react'
 import type { Calculator } from './types'
 
 export const calculators: Calculator[] = [
@@ -46,6 +57,51 @@ export const calculators: Calculator[] = [
     icon: Building2,
     load: () => import('./Depreciation'),
     tags: ['slm', 'wdv', 'asset', 'schedule', 'book value'],
+  },
+  {
+    slug: 'sip',
+    title: 'SIP & Lumpsum',
+    category: 'Investing',
+    blurb: 'Project your mutual-fund wealth from a monthly SIP (with annual step-up) or a one-time investment — with a growth chart.',
+    icon: PiggyBank,
+    load: () => import('./Sip'),
+    tags: ['mutual fund', 'step-up', 'lumpsum', 'investment', 'maturity', 'returns', 'compounding'],
+  },
+  {
+    slug: 'compound-interest',
+    title: 'Compound vs Simple Interest',
+    category: 'Investing',
+    blurb: 'See how compounding pulls ahead of simple interest — with a widening-gap chart and full working.',
+    icon: LineChart,
+    load: () => import('./CompoundInterest'),
+    tags: ['ci', 'si', 'interest', 'compounding frequency', 'growth'],
+  },
+  {
+    slug: 'tvm',
+    title: 'Time Value of Money',
+    category: 'Investing',
+    blurb: 'A TVM playground — solve for any of present value, future value, payment, rate or number of periods.',
+    icon: CalendarClock,
+    load: () => import('./Tvm'),
+    tags: ['tvm', 'present value', 'future value', 'annuity', 'pmt', 'discounting'],
+  },
+  {
+    slug: 'hra',
+    title: 'HRA Exemption',
+    category: 'Taxation',
+    blurb: 'House Rent Allowance exemption under Section 10(13A) — the “least of three” rule, worked step by step.',
+    icon: Home,
+    load: () => import('./Hra'),
+    tags: ['house rent allowance', '10(13a)', 'metro', 'rent', 'salary', 'exemption'],
+  },
+  {
+    slug: 'wacc',
+    title: 'WACC',
+    category: 'Financial Management',
+    blurb: 'Weighted average cost of capital across equity, debt and preference — with the debt tax shield applied.',
+    icon: Scale,
+    load: () => import('./Wacc'),
+    tags: ['cost of capital', 'capital structure', 'cost of equity', 'cost of debt', 'tax shield'],
   },
 ]
 

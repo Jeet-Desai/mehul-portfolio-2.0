@@ -9,7 +9,7 @@ import {
   GraduationCap,
   CheckCircle2,
 } from 'lucide-react'
-import { site, professor, stats, audiences } from '../data/site'
+import { site, professor, stats } from '../data/site'
 
 const features = [
   {
@@ -115,25 +115,6 @@ export default function Home() {
               >
                 <Bot className="h-5 w-5 text-brand-600" /> Ask a Doubt
               </Link>
-            </motion.div>
-
-            {/* audience chips */}
-            <motion.div
-              initial="hidden"
-              animate="show"
-              custom={4}
-              variants={fade}
-              className="mt-8 flex flex-wrap items-center gap-2"
-            >
-              <span className="text-sm font-medium text-slate-400">For:</span>
-              {audiences.map((a) => (
-                <span
-                  key={a}
-                  className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600"
-                >
-                  {a}
-                </span>
-              ))}
             </motion.div>
           </div>
 

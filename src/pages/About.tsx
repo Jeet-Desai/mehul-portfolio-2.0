@@ -52,7 +52,7 @@ export default function About() {
             <div className="mt-4 space-y-4 border-l-2 border-brand-100 pl-5">
               {timeline.map((t) => (
                 <div key={t.period} className="relative">
-                  <span className="absolute -left-[27px] top-1 grid h-5 w-5 place-items-center rounded-full bg-brand-600 ring-4 ring-brand-100">
+                  <span className="absolute -left-[31px] top-1 grid h-5 w-5 place-items-center rounded-full bg-brand-600 ring-4 ring-brand-100">
                     <Briefcase className="h-2.5 w-2.5 text-white" />
                   </span>
                   <p className="text-xs font-semibold text-brand-600">{t.period}</p>

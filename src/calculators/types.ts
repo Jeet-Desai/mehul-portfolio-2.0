@@ -17,6 +17,7 @@ export type CalcCategory =
   | 'Taxation'
   | 'Finance'
   | 'Financial Management'
+  | 'Investing'
 
 export type Calculator = {
   slug: string
