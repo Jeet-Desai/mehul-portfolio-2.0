@@ -83,10 +83,12 @@ Contact
 
 ## Phased roadmap (each phase is independently shippable)
 
-- [ ] **Phase 0 — Foundation:** scaffold Vite/React/TS/Tailwind, design system, routing,
-      deploy skeleton to Vercel
-- [ ] **Phase 1 — Redesign + first solvers:** new visual identity, all existing sections
-      rebuilt, fill Research, 4–5 hero calculators (break-even, GST, income tax, EMI, depreciation)
+- [x] **Phase 0 — Foundation:** scaffold Vite/React/TS/Tailwind, design system, routing,
+      deploy skeleton to Vercel ✅
+- [x] **Phase 1 — Redesign + first solvers:** new visual identity, all existing sections
+      rebuilt, 5 hero calculators (break-even +chart, income tax old-vs-new, GST, EMI, depreciation),
+      each with step-by-step working. Research page structured (lazy-loaded calculators). ✅
+      *Pending real data:* publication list + Google Scholar link, book titles (see `src/data/research.ts`).
 - [ ] **Phase 2 — Learn Hub:** full calculator set, formula sheets, resource library
 - [ ] **Phase 3 — Practice & Quizzes:** question bank, exam mode, streaks/leaderboard
 - [ ] **Phase 4 — AI tutor + Doubt Box + Career Guide**
