@@ -90,6 +90,7 @@ Contact
       each with step-by-step working. Research page structured (lazy-loaded calculators). ✅
       *Pending real data:* publication list + Google Scholar link, book titles (see `src/data/research.ts`).
 - [ ] **Phase 2 — Learn Hub:** full calculator set, formula sheets, resource library
+      *(scoped — see "Phase 2 — detailed plan" below)*
 - [ ] **Phase 3 — Practice & Quizzes:** question bank, exam mode, streaks/leaderboard
 - [ ] **Phase 4 — AI tutor + Doubt Box + Career Guide**
 - [ ] **Phase 5 — Polish:** PWA, i18n (EN/HI/GU), dark mode, notice board, WhatsApp sharing
@@ -98,3 +99,59 @@ Contact
 
 - Name: **CommerceLab**; byline **"by Dr. Mehulkumar Desai"** (Ph.D. → "Dr.")
 - Voice: encouraging, practical, exam-aware, India-first
+
+---
+
+## Phase 2 — detailed plan (next session)
+
+Approved: all four tool bundles below + Learn Hub infra. Web research informed the picks
+(Groww/ClearTax calculator indexes, Zerodha Varsity, Investopedia, EconGraphs, ReadyRatios,
+ActiveLearningLabs). Build order below = quick wins first → flagship simulators last.
+
+**Reuse the existing framework — do NOT reinvent:**
+- UI primitives: `src/components/calc/` — `CalcField`, `CalcSteps`, `CalcResult`
+  (`HeroResult` / `ResultRow` / `ResultPanel`), `CalcCard`.
+- Formatting: `src/lib/format.ts` — `formatINR`, `formatNum`, `formatPct`, `toNum`, `round`.
+- Pure calc logic → `src/lib/*.ts` (see `incomeTax.ts` as the pattern) so it's testable.
+- Each calculator = `src/calculators/<Name>.tsx`, registered in
+  `src/calculators/registry.ts` with a **lazy** `load: () => import('./<Name>')`.
+- Charts: recharts (already code-split). Tooltip formatter pattern: `(v) => formatINR(Number(v))`.
+- Add categories to `src/calculators/types.ts` as needed: `Investing`, `Statistics`, `Economics`.
+- Verify each step with `pnpm build` (tsc + vite). House style: every tool shows step-by-step working.
+
+### Bundle A — Investing & TVM  (Finance / Investing)
+- [ ] SIP / Lumpsum / **Step-up SIP** (growth chart) — *easy, highest demand*
+- [ ] Compound vs Simple interest **visualizer** (widening-gap chart) — *easy*
+- [ ] **TVM playground** — solve for any of PV/FV/PMT/rate/n — *easy*
+- [ ] CAGR / **XIRR** (Newton-Raphson in `lib/`) — *medium*
+- [ ] PPF / EPF / NPS / FD-RD maturity suite (rates as editable constants) — *easy*
+
+### Bundle B — Tax pack  (Taxation)
+- [ ] **Capital Gains** LTCG/STCG (FY25-26 rules; bundle CII table in `lib/`) — *medium*
+- [ ] **HRA exemption** (min of 3 rule, step-by-step) — *easy*
+- [ ] TDS section-wise (194C/194J/194I/192 … rate+threshold table in `lib/`) — *medium*
+- [ ] GST **ITC set-off simulator** (IGST→CGST→SGST utilization order) — *medium*
+
+### Bundle C — FM & Ratios  (Financial Management)
+- [ ] **Capital Budgeting** suite: NPV / IRR (iterative) / Payback / PI + **NPV-profile chart** — *medium*
+- [ ] WACC — *easy*
+- [ ] **Ratio Analysis** — enter P&L + Balance Sheet → liquidity/solvency/profitability/turnover
+      ratios **with interpretation text** — *medium*
+- [ ] Bond pricing & **YTM** (+ price-yield curve) — *medium*
+
+### Bundle D — Accounting simulators  (Accounting / Costing)
+- [ ] 🏆 **Journal → Ledger → Trial Balance** simulator — post entries, auto-build T-ledgers +
+      trial balance, flag if it doesn't tally — *hard, flagship, fully client-side*
+- [ ] Financial-statement builder (Schedule-III P&L + Balance Sheet from trial balance) — *hard*
+- [ ] Inventory valuation FIFO / LIFO / Weighted-avg (store ledger card) — *medium*
+- [ ] Marginal vs Absorption costing comparator (reconcile the profit difference) — *medium*
+
+### Learn Hub infra
+- [ ] Add **category filter chips** to `/learn` (currently search-only)
+- [ ] **Formula / cheat sheets** — searchable, per subject, data-driven (`src/data/`), PDF export
+- [ ] **Resource library** — notes/past papers organised by subject & semester (`src/data/`)
+
+*Deferred to a later flagship phase:* virtual NSE stock-trading simulator (needs a market-data
+API + accounts — the only researched idea that isn't client-side).
+
+*Quiz engine + spaced-repetition flashcards live in **Phase 3** (Practice & Quizzes).*
