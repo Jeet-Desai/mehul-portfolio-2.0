@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   Search,
   ChevronDown,
-  Sparkles,
   Send,
   Inbox,
   Trash2,
   Mail,
 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
+import TutorChat from '../components/TutorChat'
 import { faqs, faqCategories } from '../data/faq'
 import { contact } from '../data/site'
 
@@ -70,24 +70,13 @@ export default function Ask() {
       <PageHeader
         eyebrow="Ask CommerceLab"
         title="Your commerce doubt-tutor"
-        subtitle="Browse worked answers to common doubts, or post your own. A 24/7 AI tutor in Dr. Desai’s teaching style is on the way."
+        subtitle="Ask the AI tutor for instant step-by-step help, browse worked answers to common doubts, or post your own."
       />
 
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        {/* AI-coming banner */}
-        <div className="mb-8 flex flex-col gap-3 rounded-3xl bg-gradient-to-br from-brand-500 to-brand-700 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-7">
-          <div className="flex items-start gap-3">
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/20">
-              <Sparkles className="h-6 w-6" />
-            </span>
-            <div>
-              <h2 className="text-lg font-bold">AI doubt-tutor — coming soon</h2>
-              <p className="mt-1 text-sm text-white/85">
-                Soon you’ll get instant, step-by-step answers in English, हिंदी and ગુજરાતી. Until then, the
-                worked FAQs below and the Doubt Box have you covered.
-              </p>
-            </div>
-          </div>
+        {/* AI doubt-tutor */}
+        <div className="mb-12">
+          <TutorChat />
         </div>
 
         {/* FAQ */}

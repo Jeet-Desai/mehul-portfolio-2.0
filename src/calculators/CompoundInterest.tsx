@@ -13,6 +13,7 @@ import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, round, toNum } from '../lib/format'
+import { chartGrid, chartAxis, axisTick, chartLabelFill, tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 type Freq = 1 | 2 | 4 | 12
@@ -142,14 +143,15 @@ export default function CompoundInterest() {
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={m.data} margin={{ top: 8, right: 8, bottom: 4, left: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                     <XAxis
                       dataKey="year"
-                      tick={{ fontSize: 11 }}
-                      label={{ value: 'Year', position: 'insideBottom', offset: -2, fontSize: 11 }}
+                      stroke={chartAxis}
+                      tick={axisTick}
+                      label={{ value: 'Year', position: 'insideBottom', offset: -2, fontSize: 11, fill: chartLabelFill }}
                     />
-                    <YAxis tick={{ fontSize: 11 }} width={48} tickFormatter={compact} />
-                    <Tooltip formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `Year ${l}`} />
+                    <YAxis stroke={chartAxis} tick={axisTick} width={48} tickFormatter={compact} />
+                    <Tooltip {...tooltipProps} formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `Year ${l}`} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                     <Line type="monotone" dataKey="Compound" stroke="#10b981" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Simple" stroke="#6366f1" strokeWidth={2} strokeDasharray="5 4" dot={false} />

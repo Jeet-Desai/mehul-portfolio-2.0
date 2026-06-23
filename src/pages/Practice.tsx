@@ -244,10 +244,10 @@ export default function Practice() {
           {q.options.map((opt, i) => {
             const isCorrect = i === q.correct
             const isPicked = i === picked
-            let cls = 'border-slate-200 bg-white hover:border-brand-300 hover:bg-brand-50/40'
+            let cls = 'border-slate-200 bg-white hover:border-brand-300 hover:bg-brand-50/40 dark:hover:border-brand-500/40 dark:hover:bg-brand-500/10'
             if (answered) {
-              if (isCorrect) cls = 'border-mint-300 bg-mint-50'
-              else if (isPicked) cls = 'border-rose-300 bg-rose-50'
+              if (isCorrect) cls = 'border-mint-300 bg-mint-50 dark:border-mint-500/40 dark:bg-mint-500/15'
+              else if (isPicked) cls = 'border-rose-300 bg-rose-50 dark:border-rose-500/40 dark:bg-rose-500/15'
               else cls = 'border-slate-200 bg-white opacity-60'
             }
             return (

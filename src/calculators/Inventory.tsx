@@ -251,7 +251,7 @@ export default function Inventory() {
               </thead>
               <tbody>
                 {METHODS.map((mm) => (
-                  <tr key={mm.v} className={`border-b border-slate-50 ${method === mm.v ? 'bg-brand-50/50' : ''}`}>
+                  <tr key={mm.v} className={`border-b border-slate-50 ${method === mm.v ? 'bg-brand-50/50 dark:bg-brand-500/10' : ''}`}>
                     <td className="py-2 pr-2 font-semibold text-slate-700">{mm.label}</td>
                     <td className="py-2 px-2 text-right text-slate-700">{formatINR(all[mm.v].closingValue)}</td>
                     <td className="py-2 pl-2 text-right text-slate-700">{formatINR(all[mm.v].cogs)}</td>

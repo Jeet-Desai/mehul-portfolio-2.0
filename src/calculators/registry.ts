@@ -15,6 +15,8 @@ import {
   Gauge,
   Scissors,
   ArrowRightLeft,
+  Banknote,
+  Boxes,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -162,6 +164,24 @@ export const calculators: Calculator[] = [
     icon: ArrowRightLeft,
     load: () => import('./GstItc'),
     tags: ['gst', 'itc', 'input tax credit', 'set off', 'set-off', 'utilisation', 'igst', 'cgst', 'sgst', 'rule 88a', '49a'],
+  },
+  {
+    slug: 'bond-valuation',
+    title: 'Bond Pricing & YTM',
+    category: 'Financial Management',
+    blurb: 'Price a bond from its coupon, market yield and maturity — or solve for the yield to maturity — with a price-yield curve.',
+    icon: Banknote,
+    load: () => import('./Bond'),
+    tags: ['bond', 'ytm', 'yield to maturity', 'coupon', 'face value', 'par', 'premium', 'discount', 'valuation', 'debenture'],
+  },
+  {
+    slug: 'inventory-valuation',
+    title: 'Inventory — FIFO / LIFO / WAvg',
+    category: 'Costing',
+    blurb: 'Value closing stock and the cost of materials issued under FIFO, LIFO or weighted average — with a full store ledger card.',
+    icon: Boxes,
+    load: () => import('./Inventory'),
+    tags: ['inventory', 'stock', 'fifo', 'lifo', 'weighted average', 'wavg', 'store ledger', 'material costing', 'closing stock', 'valuation'],
   },
 ]
 

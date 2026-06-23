@@ -14,6 +14,7 @@ import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
+import { chartGrid, chartAxis, axisTick, chartLabelFill, chartDotStroke, tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 export default function BreakEven() {
@@ -109,24 +110,26 @@ export default function BreakEven() {
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={m.data} margin={{ top: 8, right: 8, bottom: 4, left: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                     <XAxis
                       dataKey="units"
-                      tick={{ fontSize: 11 }}
-                      label={{ value: 'Units', position: 'insideBottom', offset: -2, fontSize: 11 }}
+                      stroke={chartAxis}
+                      tick={axisTick}
+                      label={{ value: 'Units', position: 'insideBottom', offset: -2, fontSize: 11, fill: chartLabelFill }}
                     />
                     <YAxis
-                      tick={{ fontSize: 11 }}
+                      stroke={chartAxis}
+                      tick={axisTick}
                       width={48}
                       tickFormatter={(v: number) => `₹${Intl.NumberFormat('en-IN', { notation: 'compact' }).format(v)}`}
                     />
-                    <Tooltip formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `${formatNum(Number(l))} units`} />
+                    <Tooltip {...tooltipProps} formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `${formatNum(Number(l))} units`} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                     <Line type="monotone" dataKey="Revenue" stroke="#10b981" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Total cost" stroke="#6366f1" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Fixed cost" stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="5 4" dot={false} />
                     {Number.isFinite(m.bepUnits) && (
-                      <ReferenceDot x={round(m.bepUnits, 0)} y={round(m.bepSales, 0)} r={5} fill="#4f46e5" stroke="#fff" strokeWidth={2} />
+                      <ReferenceDot x={round(m.bepUnits, 0)} y={round(m.bepSales, 0)} r={5} fill="#4f46e5" stroke={chartDotStroke} strokeWidth={2} />
                     )}
                   </LineChart>
                 </ResponsiveContainer>

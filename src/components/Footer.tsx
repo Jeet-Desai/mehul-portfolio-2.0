@@ -24,6 +24,11 @@ export default function Footer() {
               </li>
             ))}
             <li>
+              <Link to="/formulas" className="text-slate-600 hover:text-brand-600">
+                Formula Sheets
+              </Link>
+            </li>
+            <li>
               <Link to="/notices" className="text-slate-600 hover:text-brand-600">
                 Notice Board
               </Link>

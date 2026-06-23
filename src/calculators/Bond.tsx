@@ -15,6 +15,7 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
 import { bondPrice, bondYTM } from '../lib/finance'
+import { chartGrid, chartAxis, axisTick, chartLabelFill, chartRef, chartDotStroke, tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 type Mode = 'price' | 'yield'
@@ -232,21 +233,22 @@ export default function Bond() {
               <div className="h-60 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={m.curve} margin={{ top: 8, right: 14, bottom: 4, left: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                     <XAxis
                       dataKey="yield"
                       type="number"
                       domain={[0, round(m.maxY, 0)]}
-                      tick={{ fontSize: 11 }}
+                      stroke={chartAxis}
+                      tick={axisTick}
                       tickFormatter={(v) => `${v}%`}
-                      label={{ value: 'Yield', position: 'insideBottom', offset: -2, fontSize: 11 }}
+                      label={{ value: 'Yield', position: 'insideBottom', offset: -2, fontSize: 11, fill: chartLabelFill }}
                     />
-                    <YAxis tick={{ fontSize: 11 }} width={54} tickFormatter={(v) => `₹${Intl.NumberFormat('en-IN', { notation: 'compact' }).format(v)}`} />
-                    <Tooltip formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `Yield ${formatNum(Number(l), 2)}%`} />
-                    <ReferenceLine y={m.F} stroke="#94a3b8" strokeDasharray="4 4" label={{ value: 'Face', fontSize: 10, fill: '#64748b', position: 'right' }} />
+                    <YAxis stroke={chartAxis} tick={axisTick} width={54} tickFormatter={(v) => `₹${Intl.NumberFormat('en-IN', { notation: 'compact' }).format(v)}`} />
+                    <Tooltip {...tooltipProps} formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `Yield ${formatNum(Number(l), 2)}%`} />
+                    <ReferenceLine y={m.F} stroke={chartRef} strokeDasharray="4 4" label={{ value: 'Face', fontSize: 10, fill: chartLabelFill, position: 'right' }} />
                     <Line type="monotone" dataKey="price" stroke="#6366f1" strokeWidth={2} dot={false} />
                     {Number.isFinite(m.yieldPct) && m.yieldPct >= 0 && m.yieldPct <= m.maxY && (
-                      <ReferenceDot x={round(m.yieldPct, 2)} y={m.price} r={5} fill="#f59e0b" stroke="#fff" strokeWidth={2} />
+                      <ReferenceDot x={round(m.yieldPct, 2)} y={m.price} r={5} fill="#f59e0b" stroke={chartDotStroke} strokeWidth={2} />
                     )}
                   </LineChart>
                 </ResponsiveContainer>

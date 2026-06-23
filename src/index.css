@@ -58,11 +58,46 @@
   --color-slate-800: #e9eef5; /* strong body text */
   --color-slate-900: #f5f8fc; /* headings */
   color-scheme: dark;
+
+  /* chart chrome — dark variants (see the light defaults in @layer base) */
+  --chart-grid: #28344a;
+  --chart-axis: #3b4a63;
+  --chart-axis-text: #8b97a8;
+  --chart-ref: #5b6b85;
+  --chart-dot-stroke: #151c2c; /* = card surface, so the dot halo matches the card */
+  --chart-tooltip-bg: #1e293b;
+  --chart-tooltip-border: #334155;
+  --chart-tooltip-text: #f5f8fc;
 }
+
+/* ----------------------------------------------------------------------------
+   White text sits on COLOURED / gradient surfaces (primary buttons, banners,
+   hero sections, chat bubbles), so it must stay white in dark mode. The neutral-
+   ramp inversion above redefines --color-white for card SURFACES, which would
+   otherwise also flip this text dark. These unlayered rules win over the
+   `text-white` utility without affecting `bg-white` surfaces.
+---------------------------------------------------------------------------- */
+.dark .text-white { color: #fff; }
+.dark .text-white\/90 { color: rgb(255 255 255 / 0.9); }
+.dark .text-white\/85 { color: rgb(255 255 255 / 0.85); }
+.dark .text-white\/80 { color: rgb(255 255 255 / 0.8); }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+
+    /* Chart chrome (gridlines / axes / tooltip / reference lines / dot halos).
+       Light defaults here; flipped under `.dark`. Element-selector specificity
+       (0,0,1) is below `.dark` (0,1,0), so the dark overrides always win.
+       Data-series colours stay brand/mint/sun — they are NOT tokenised here. */
+    --chart-grid: #eef2f7;
+    --chart-axis: #cbd5e1;
+    --chart-axis-text: #64748b;
+    --chart-ref: #94a3b8;
+    --chart-dot-stroke: #ffffff;
+    --chart-tooltip-bg: #ffffff;
+    --chart-tooltip-border: #e2e8f0;
+    --chart-tooltip-text: #0f172a;
   }
   body {
     @apply bg-slate-50 text-slate-800 font-sans antialiased;

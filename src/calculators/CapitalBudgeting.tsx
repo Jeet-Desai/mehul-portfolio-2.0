@@ -14,6 +14,7 @@ import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
+import { chartGrid, chartAxis, axisTick, chartLabelFill, chartRef, tooltipProps } from '../lib/chartTheme'
 import { npv, irr, paybackPeriod } from '../lib/finance'
 import type { Step } from './types'
 
@@ -196,21 +197,23 @@ export default function CapitalBudgeting() {
               <div className="h-60 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={m.profile} margin={{ top: 8, right: 12, bottom: 4, left: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                     <XAxis
                       dataKey="rate"
                       type="number"
                       domain={[0, round(m.maxRatePct, 0)]}
-                      tick={{ fontSize: 11 }}
+                      stroke={chartAxis}
+                      tick={axisTick}
                       tickFormatter={(v) => `${v}%`}
-                      label={{ value: 'Discount rate', position: 'insideBottom', offset: -2, fontSize: 11 }}
+                      label={{ value: 'Discount rate', position: 'insideBottom', offset: -2, fontSize: 11, fill: chartLabelFill }}
                     />
-                    <YAxis tick={{ fontSize: 11 }} width={52} tickFormatter={compact} />
+                    <YAxis stroke={chartAxis} tick={axisTick} width={52} tickFormatter={compact} />
                     <Tooltip
+                      {...tooltipProps}
                       formatter={(v) => formatINR(Number(v))}
                       labelFormatter={(l) => `Rate ${formatNum(Number(l), 2)}%`}
                     />
-                    <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1} />
+                    <ReferenceLine y={0} stroke={chartRef} strokeWidth={1} />
                     {Number.isFinite(m.irrPct) && m.irrPct <= m.maxRatePct && (
                       <ReferenceLine
                         x={round(m.irrPct, 2)}

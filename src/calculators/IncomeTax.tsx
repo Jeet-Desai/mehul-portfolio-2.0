@@ -97,8 +97,8 @@ export default function IncomeTax() {
 
         <div className="mt-4 flex items-start gap-2 rounded-xl bg-sun-50 p-3 text-xs text-sun-600">
           <Info className="mt-0.5 h-4 w-4 shrink-0" />
-          FY 2025-26 (AY 2026-27), individuals below 60. Simplified for learning — verify with the
-          latest Finance Act before filing.
+          FY 2025-26 (AY 2026-27), individuals below 60. Simplified for learning — surcharge on income
+          above ₹50 lakh and marginal relief are not included. Verify with the latest Finance Act before filing.
         </div>
       </div>
 

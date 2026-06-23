@@ -4,6 +4,7 @@ import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, round, toNum } from '../lib/format'
+import { tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 export default function Emi() {
@@ -91,7 +92,7 @@ export default function Emi() {
                       <Cell fill="#6366f1" />
                       <Cell fill="#f59e0b" />
                     </Pie>
-                    <Tooltip formatter={(v) => formatINR(Number(v))} />
+                    <Tooltip {...tooltipProps} formatter={(v) => formatINR(Number(v))} />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
                   </PieChart>
                 </ResponsiveContainer>

@@ -13,6 +13,7 @@ import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatPct, round, toNum } from '../lib/format'
+import { chartGrid, chartAxis, axisTick, chartLabelFill, tooltipProps } from '../lib/chartTheme'
 import { simulateSip } from '../lib/finance'
 import type { Step } from './types'
 
@@ -182,14 +183,15 @@ export default function Sip() {
                         <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                     <XAxis
                       dataKey="year"
-                      tick={{ fontSize: 11 }}
-                      label={{ value: 'Year', position: 'insideBottom', offset: -2, fontSize: 11 }}
+                      stroke={chartAxis}
+                      tick={axisTick}
+                      label={{ value: 'Year', position: 'insideBottom', offset: -2, fontSize: 11, fill: chartLabelFill }}
                     />
-                    <YAxis tick={{ fontSize: 11 }} width={48} tickFormatter={compact} />
-                    <Tooltip formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `Year ${l}`} />
+                    <YAxis stroke={chartAxis} tick={axisTick} width={48} tickFormatter={compact} />
+                    <Tooltip {...tooltipProps} formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `Year ${l}`} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                     <Area type="monotone" dataKey="Value" stroke="#10b981" strokeWidth={2} fill="url(#sipVal)" />
                     <Area type="monotone" dataKey="Invested" stroke="#6366f1" strokeWidth={2} fill="url(#sipInv)" />

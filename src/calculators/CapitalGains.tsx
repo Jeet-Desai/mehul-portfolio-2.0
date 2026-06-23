@@ -220,7 +220,7 @@ export default function CapitalGains() {
                     <div
                       key={i}
                       className={`flex items-center justify-between gap-3 rounded-xl border p-3 ${
-                        mm.chosen ? 'border-mint-300 bg-mint-50' : 'border-slate-200 bg-white'
+                        mm.chosen ? 'border-mint-300 bg-mint-50 dark:border-mint-500/40 dark:bg-mint-500/15' : 'border-slate-200 bg-white'
                       }`}
                     >
                       <div>

@@ -14,34 +14,38 @@ across the site map instead. Keep new features **client-side + data-driven** (ma
 low-friction goal). Favour making every pillar real before deepening any one.
 
 ## Status — what's live now
-- ✅ **16 calculators** (`/learn`): break-even · income-tax · GST · EMI · depreciation · SIP · compound-interest ·
+- ✅ **18 calculators** (`/learn`): break-even · income-tax · GST · EMI · depreciation · SIP · compound-interest ·
   TVM · HRA · WACC · CAGR/XIRR · Capital Budgeting · **Capital Gains** · Ratio Analysis · **TDS section-wise** ·
-  **GST ITC set-off**. (TDS & GST ITC are statutory — rates web-verified Jun 2026; see notes below.)
-- ✅ **Dark mode** — class-based toggle in `Navbar`, no-flash script in `index.html`, persisted to localStorage.
+  **GST ITC set-off** · **Bond pricing & YTM** · **Inventory FIFO/LIFO/WAvg**. (TDS & GST ITC statutory — rates
+  web-verified Jun 2026; see notes below.)
+- ✅ **Formula Sheets** (`/formulas`) — searchable cheat-sheets, ~48 formulas grouped by 6 subjects
+  (`src/data/formulas.ts`), each linked to its calculator. Tax kept *structural* (no slab numbers — they change).
+  Entry points: LearnHub CTA + footer.
+- ✅ **Notice Board** (`/notices`) — data-driven (`src/data/notices.ts`), filter chips, pinned-first sort.
+  Honest content only: real site updates + study tips + exam-info that *links to* official sources (never asserts dates).
+- ✅ **AI doubt-tutor** (`/ask`) — live chat UI, but the backend is **inert until keyed** (see below).
+- ✅ **Dark mode** — class-based toggle; charts now re-theme too via `src/lib/chartTheme.ts` (CSS-var chrome).
 - ✅ **Practice & Quizzes** (`/practice`) — quiz player, 5 topics + mixed, 30 seeded MCQs (`src/data/quizzes.ts`),
   reveal-reasoning, difficulty tags, beat-the-clock timer, score + review.
 - ✅ **Career Guide** (`/career`) — 7 paths (`src/data/careers.ts`), filter chips, expandable roadmaps + official links.
-- ✅ **Ask CommerceLab** (`/ask`) — searchable FAQ accordion (`src/data/faq.ts`) + anonymous Doubt Box
-  (localStorage + mailto) + "AI tutor coming" banner. **No backend.**
 - ✅ Real already: Home, About, Contact (mailto), Research (stats only).
 
-## Built but NOT wired in
-- **Bond pricing & YTM** (`src/calculators/Bond.tsx`, `bondPrice`/`bondYTM` in `lib/finance.ts`) and
-  **Inventory FIFO/LIFO/WAvg** (`src/calculators/Inventory.tsx`, `lib/inventory.ts`) are complete & build-green
-  but **not registered** in `registry.ts`. Flip each on with a one-line entry (slug + lazy `load`) when wanted.
+## AI doubt-tutor — built but DORMANT (wants free, no-card)
+- **NOT Anthropic.** Provider-agnostic OpenAI-compatible proxy, default = **Groq free tier** (open models, no card).
+- `api/tutor.ts` (Vercel **Edge** fn, outside `src` so tsc/vite ignore it), `src/lib/tutor.ts` (client — **mocks in
+  `vite dev`, zero egress**), `src/components/TutorChat.tsx` (chat on `/ask`). Env vars: `LLM_API_KEY` / `LLM_BASE_URL`
+  / `LLM_MODEL`. Returns 503 "not switched on" until a key is set.
+- **To go live:** add a Groq key in Vercel env + redeploy. Full steps in `docs/AI_TUTOR.md`. Key lives ONLY in Vercel.
+- System prompt forbids asserting live tax rates as fact (honesty rule). Rate-limit is per-isolate (note in code).
 
 ## Open / deferred (pick from here)
-- **Live AI tutor** — the only backend piece: Vercel serverless proxy to the Claude API (key server-side,
-  rate-limited) + chat UI on `/ask`. Deferred by the user (cost/deploy friction).
-- **Notice Board** (`/notices`) — still a `ComingSoon` stub; make it data-driven like Career/FAQ.
-- **Dark-mode polish** — recharts use hard-coded hex (light gridlines `#eef2f7`, etc.), so charts don't fully
-  re-theme; the accent `*-50` chips stay light on dark cards (acceptable, but a polish pass could add `dark:` fixes).
-- **More calculators** (deferred per pivot): register Bond/Inventory; then Marginal-vs-Absorption & PPF/EPF/NPS/FD-RD;
+- **More calculators**: Marginal-vs-Absorption costing & PPF/EPF/NPS/FD-RD suite;
   🏆 flagship **Journal→Ledger→Trial Balance** simulator (own focused session).
-- **Learn Hub infra** — category-filter chips, formula/cheat sheets, resource library (all data-driven in `src/data/`).
+- **Learn Hub infra** — category-filter chips on `/learn`; resource library (notes/past papers, data-driven); PDF export.
 - **Research data** — `src/data/research.ts` `books`/`publications` are intentionally `[]`. Fill ONLY when the
   user provides a real list / Scholar link. **Do NOT invent citations.**
-- **Deploy** — Vercel-ready (`vercel.json` SPA rewrites); user connects it for a live URL.
+- **AI tutor next** (optional): streaming replies; durable rate-limit via Vercel KV/Upstash.
+- **Deploy** — Vercel-ready (`vercel.json` SPA rewrites; `/api/*` resolves before the catch-all). User connects it.
 
 ## Conventions (follow exactly)
 - **Calculators**: `src/calculators/<Name>.tsx`, lazy-registered in `registry.ts` (`load: () => import('./<Name>')`);
@@ -53,6 +57,9 @@ low-friction goal). Favour making every pillar real before deepening any one.
 - **Dark mode (Tailwind v4)**: v4 utilities resolve colours via `var(--color-*)`, so dark theme = redefining the
   **neutral ramp (slate + white)** under `.dark` in `index.css` (done). Don't do a `dark:` sweep. Accents
   (brand/mint/sun) are intentionally left intact. `@custom-variant dark` is enabled for targeted `dark:` fixes.
+  **Charts**: neutral chrome (grid / axes / tooltip / reference lines / dot halos) is tokenised in
+  `src/lib/chartTheme.ts` via CSS vars that flip under `.dark`. Reuse those (`chartGrid`, `axisTick`, `tooltipProps`…)
+  in any new chart; keep data-series colours as hard-coded brand/mint/sun accents.
 - **Verify every change with `pnpm build`** (tsc + vite). `pnpm dev` for local (was on :5175 — 5173/4 were taken).
 
 ## Verified statutory facts (re-verify if rules change; sources Jun 2026 — ClearTax/TDSMAN/CBIC)
