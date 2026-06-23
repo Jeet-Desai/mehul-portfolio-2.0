@@ -1,74 +1,78 @@
 # Handoff — CommerceLab (next session)
 
-Pick up the **Phase 2** build. Everything below is current as of the Phase 1 push.
+The product now spans **every pillar as a real, thin slice** (not just calculators). Read `ROADMAP.md`
+for the full vision. Current as of the "full vertical slice" session.
 
 ## What this is
-**CommerceLab — *by Dr. Mehulkumar Desai*** — the 2.0 redesign of a commerce professor's
-portfolio into a free learning hub for all Indian commerce students (B.Com/M.Com/BBA/BCA +
-CA/CS/CMA). Full vision + the detailed Phase 2 task list are in **`ROADMAP.md`** (read it first).
+**CommerceLab — *by Dr. Mehulkumar Desai*** — a free learning hub for all Indian commerce students
+(B.Com/M.Com/BBA/BCA + CA/CS/CMA). Vite + React + TS + **Tailwind v4** + recharts + framer-motion.
+100% client-side (no backend). Repo `Jeet-Desai/mehul-portfolio-2.0` (private), branch `main`.
 
-## Status
-- ✅ **Phase 0** (scaffold) and ✅ **Phase 1** (5 hero calculators + Learn Hub + Research page) — done & pushed.
-- 🟡 **Phase 2 in progress** — the **5 easy-win calculators are done** (see below). Medium calculators,
-  the flagship Journal→Ledger→Trial Balance simulator, and Learn Hub infra remain.
-- Build is green. Repo: `Jeet-Desai/mehul-portfolio-2.0` (private). Branch `main`.
-- Live calculators (10): break-even/CVP, income-tax (old vs new), GST, EMI, depreciation,
-  **SIP & Lumpsum (`sip`), Compound vs Simple interest (`compound-interest`), TVM playground (`tvm`),
-  HRA exemption (`hra`), WACC (`wacc`)**.
+## Direction (IMPORTANT — set by the user this session)
+**Breadth over depth.** We stopped adding more calculators (had 16) and built a *full vertical slice*
+across the site map instead. Keep new features **client-side + data-driven** (matches the public-shippable,
+low-friction goal). Favour making every pillar real before deepening any one.
 
-### Phase 2 progress (this session)
-- Added the **`'Investing'`** category to `src/calculators/types.ts`.
-- New shared lib **`src/lib/finance.ts`** — TVM core (`futureValue`/`presentValue`/`payment`/
-  `solveRate`/`solveN` via bisection) + `simulateSip` (monthly annuity-due with annual step-up).
-- New calculators: `Sip.tsx`, `CompoundInterest.tsx`, `Tvm.tsx`, `Hra.tsx`, `Wacc.tsx` (all registered, lazy-loaded).
-- **Correctness pass over all 10 calculators** (these carry Dr. Desai's name — treat correctness as critical):
-  - Fixed **Depreciation** WDV-with-zero-salvage (was silently showing 0% forever; now explains WDV needs positive salvage).
-  - Fixed **TVM** defaults to be mutually consistent (PV 10k + PMT 5k @ 8% × 10 → FV 94,022) so "Solve for" never shows a confusing negative.
-  - Income-tax simplification (no surcharge >₹50L / marginal relief) is covered by a visible in-tool disclaimer — keep that pattern for any new tax tool.
-- UI fixes: removed the "For: B.Com/M.Com…" audience chips from the Home hero (data + import cleaned up); centered the About-page timeline icons on the line.
+## Status — what's live now
+- ✅ **16 calculators** (`/learn`): break-even · income-tax · GST · EMI · depreciation · SIP · compound-interest ·
+  TVM · HRA · WACC · CAGR/XIRR · Capital Budgeting · **Capital Gains** · Ratio Analysis · **TDS section-wise** ·
+  **GST ITC set-off**. (TDS & GST ITC are statutory — rates web-verified Jun 2026; see notes below.)
+- ✅ **Dark mode** — class-based toggle in `Navbar`, no-flash script in `index.html`, persisted to localStorage.
+- ✅ **Practice & Quizzes** (`/practice`) — quiz player, 5 topics + mixed, 30 seeded MCQs (`src/data/quizzes.ts`),
+  reveal-reasoning, difficulty tags, beat-the-clock timer, score + review.
+- ✅ **Career Guide** (`/career`) — 7 paths (`src/data/careers.ts`), filter chips, expandable roadmaps + official links.
+- ✅ **Ask CommerceLab** (`/ask`) — searchable FAQ accordion (`src/data/faq.ts`) + anonymous Doubt Box
+  (localStorage + mailto) + "AI tutor coming" banner. **No backend.**
+- ✅ Real already: Home, About, Contact (mailto), Research (stats only).
 
-## Critical constraints (don't trip on these)
-- **Git identity is set per-repo to personal**: `Jeet Desai <113788815+Jeet-Desai@users.noreply.github.com>`.
-  Verify with `git config user.email` before committing.
-- **Legacy v1 is untouched** at `Jeet-Desai/Mehul-Portfolio` and local `../Mehul-Portfolio/` — do not modify it.
-- Use **pnpm**. Node 26. GitHub CLI is authed as `Jeet-Desai` (active).
+## Built but NOT wired in
+- **Bond pricing & YTM** (`src/calculators/Bond.tsx`, `bondPrice`/`bondYTM` in `lib/finance.ts`) and
+  **Inventory FIFO/LIFO/WAvg** (`src/calculators/Inventory.tsx`, `lib/inventory.ts`) are complete & build-green
+  but **not registered** in `registry.ts`. Flip each on with a one-line entry (slug + lazy `load`) when wanted.
+
+## Open / deferred (pick from here)
+- **Live AI tutor** — the only backend piece: Vercel serverless proxy to the Claude API (key server-side,
+  rate-limited) + chat UI on `/ask`. Deferred by the user (cost/deploy friction).
+- **Notice Board** (`/notices`) — still a `ComingSoon` stub; make it data-driven like Career/FAQ.
+- **Dark-mode polish** — recharts use hard-coded hex (light gridlines `#eef2f7`, etc.), so charts don't fully
+  re-theme; the accent `*-50` chips stay light on dark cards (acceptable, but a polish pass could add `dark:` fixes).
+- **More calculators** (deferred per pivot): register Bond/Inventory; then Marginal-vs-Absorption & PPF/EPF/NPS/FD-RD;
+  🏆 flagship **Journal→Ledger→Trial Balance** simulator (own focused session).
+- **Learn Hub infra** — category-filter chips, formula/cheat sheets, resource library (all data-driven in `src/data/`).
+- **Research data** — `src/data/research.ts` `books`/`publications` are intentionally `[]`. Fill ONLY when the
+  user provides a real list / Scholar link. **Do NOT invent citations.**
+- **Deploy** — Vercel-ready (`vercel.json` SPA rewrites); user connects it for a live URL.
+
+## Conventions (follow exactly)
+- **Calculators**: `src/calculators/<Name>.tsx`, lazy-registered in `registry.ts` (`load: () => import('./<Name>')`);
+  reuse `src/components/calc/*` (`CalcField`, `CalcSteps`, `HeroResult`/`ResultRow`/`ResultPanel`) and
+  `src/lib/format.ts`; pure math in `src/lib/*.ts` (reuse `finance.ts`). Every tool shows step-by-step working.
+  Layout `grid lg:grid-cols-5` (inputs `lg:col-span-2`, results `lg:col-span-3`). Parse date-only inputs as LOCAL
+  (`parseLocalDate` in `CapitalGains.tsx`). Statutory tools → web-verify rates first + visible in-tool disclaimer.
+- **Pages**: eager-imported in `App.tsx` (only calculators are lazy); use `PageHeader`; content from `src/data/*.ts`.
+- **Dark mode (Tailwind v4)**: v4 utilities resolve colours via `var(--color-*)`, so dark theme = redefining the
+  **neutral ramp (slate + white)** under `.dark` in `index.css` (done). Don't do a `dark:` sweep. Accents
+  (brand/mint/sun) are intentionally left intact. `@custom-variant dark` is enabled for targeted `dark:` fixes.
+- **Verify every change with `pnpm build`** (tsc + vite). `pnpm dev` for local (was on :5175 — 5173/4 were taken).
+
+## Verified statutory facts (re-verify if rules change; sources Jun 2026 — ClearTax/TDSMAN/CBIC)
+- **TDS** FY 2025-26 (`src/lib/tds.ts`): Finance Act 2025 changes baked in — 194A ₹50k/₹1L (senior), 194 dividend ₹10k,
+  194H/194D(non-co) 2% @ ₹20k, 194J ₹50k, 194-I ₹50k/month, 194-IB 2%, §206AA no-PAN = max(rate,20%) (194Q = 5%).
+- **GST ITC** (`src/lib/gstItc.ts`): s.49A + Rule 88A — IGST credit exhausted first (IGST→then CGST/SGST any order),
+  CGST↔SGST never cross-utilise; engine picks the cash-minimising split (verified vs ClearTax worked example).
+- **Capital Gains** (`src/lib/capitalGains.ts`): CII to FY2025-26=376; §112A 12.5%/₹1.25L, §111A 20%, §112 12.5%/20%-indexed option.
+
+## Non-negotiables
+- **Correctness is critical** — everything ships under Dr. Desai's name. Verify formulas/rates; honest working;
+  disclaimers on anything statutory.
+- **Git identity is per-repo personal**: `Jeet Desai <113788815+Jeet-Desai@users.noreply.github.com>` (verified).
+  **Commit only when the user asks; confirm before pushing.**
 - Do not add a `Co-Authored-By` trailer — commits are authored by the repo owner only.
+- Legacy v1 untouched at `Jeet-Desai/Mehul-Portfolio` / local `../Mehul-Portfolio/`. Use **pnpm**.
 
 ## Run / build
 ```bash
-pnpm install        # if needed
-pnpm dev            # http://localhost:5173
-pnpm build          # tsc + vite — run this to verify every change
+pnpm install   # if needed
+pnpm dev       # local
+pnpm build     # tsc + vite — run to verify every change
 ```
-
-## Conventions to follow (Phase 1 established these)
-- New calculator = `src/calculators/<Name>.tsx`; register in `src/calculators/registry.ts`
-  with a **lazy** `load: () => import('./<Name>')` (keeps recharts out of the main bundle).
-- Reuse UI primitives in `src/components/calc/` (`CalcField`, `CalcSteps`, `CalcResult`) and
-  `src/lib/format.ts` (`formatINR`, `formatNum`, `formatPct`, `toNum`, `round`).
-- Put pure calculation logic in `src/lib/*.ts` (pattern: `src/lib/incomeTax.ts`) — easier to verify.
-- **Every tool shows step-by-step working** (the house style). Charts via recharts; Tooltip
-  formatter pattern is `(v) => formatINR(Number(v))`.
-- Design system = "Modern EdTech" (tokens in `src/index.css`: `brand`/`mint`/`sun`, `font-display`).
-
-## Immediate task (continue Phase 2)
-The 5 easy wins are done. Next, in this order (see `ROADMAP.md` → "Phase 2 — detailed plan" for the full checklist):
-1. **Medium calculators** — CAGR/XIRR (Newton-Raphson in `lib/`), Capital Gains LTCG/STCG (CII table in `lib/`),
-   TDS section-wise, GST ITC set-off, Capital Budgeting NPV/IRR/Payback/PI (+NPV-profile chart), Ratio Analysis
-   (with interpretation text), Bond pricing/YTM, Inventory FIFO/LIFO/Weighted-avg, Marginal vs Absorption,
-   PPF/EPF/NPS/FD-RD suite. Reuse `lib/finance.ts` where the math overlaps (NPV/IRR are TVM cousins).
-2. 🏆 **Flagship (hard, do in a fresh session with clean context):** Journal → Ledger → Trial Balance
-   simulator — stateful, post entries, auto-build T-ledgers + trial balance, flag if it doesn't tally.
-   Then the Schedule-III financial-statement builder.
-3. **Learn Hub infra** — category-filter chips on `/learn` (the `'Investing'` category now exists too),
-   formula/cheat sheets (data-driven in `src/data/`), resource library.
-
-**Keep correctness paramount** — every tool ships under Dr. Desai's name. Verify formulas against an
-authoritative source, add a visible in-tool disclaimer for anything statutory (tax/CII rates), and keep
-the step-by-step working honest.
-
-## Open / pending (non-blocking)
-- **Research data**: `src/data/research.ts` has empty `books`/`publications` on purpose — fill once
-  the user provides a Google Scholar/ResearchGate link or the list. Do NOT invent citations.
-- **Deploy**: repo is Vercel-ready (`vercel.json` SPA rewrites). User connects it on Vercel for a live URL.
-- Task tracker (this session) had phase-level tasks #1–#6; #1 & #2 completed.

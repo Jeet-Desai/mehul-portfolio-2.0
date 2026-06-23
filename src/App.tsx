@@ -6,6 +6,7 @@ import About from './pages/About'
 import Research from './pages/Research'
 import LearnHub from './pages/LearnHub'
 import CalculatorPage from './pages/CalculatorPage'
+import Practice from './pages/Practice'
 import Ask from './pages/Ask'
 import CareerGuide from './pages/CareerGuide'
 import NoticeBoard from './pages/NoticeBoard'
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/research" element={<Research />} />
           <Route path="/learn" element={<LearnHub />} />
           <Route path="/learn/c/:slug" element={<CalculatorPage />} />
+          <Route path="/practice" element={<Practice />} />
           <Route path="/ask" element={<Ask />} />
           <Route path="/career" element={<CareerGuide />} />
           <Route path="/notices" element={<NoticeBoard />} />

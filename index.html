@@ -10,6 +10,16 @@
       content="CommerceLab — a free learning hub for every commerce student. Calculators, practice quizzes, formula sheets and an AI doubt-tutor, built by Dr. Mehulkumar Desai, professor of 22 years."
     />
     <meta name="theme-color" content="#4f46e5" />
+    <!-- apply the saved/system theme before paint to avoid a flash of the wrong mode -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme')
+          var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+          if (dark) document.documentElement.classList.add('dark')
+        } catch (e) {}
+      })()
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

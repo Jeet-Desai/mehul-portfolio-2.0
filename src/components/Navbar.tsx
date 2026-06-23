@@ -1,11 +1,29 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, Sparkles } from 'lucide-react'
+import { Menu, X, Sparkles, Sun, Moon } from 'lucide-react'
 import { navLinks } from '../data/site'
 import Logo from './Logo'
 
+function useDarkMode() {
+  const [dark, setDark] = useState(
+    () => typeof document !== 'undefined' && document.documentElement.classList.contains('dark'),
+  )
+  const toggle = () => {
+    const next = !dark
+    setDark(next)
+    document.documentElement.classList.toggle('dark', next)
+    try {
+      localStorage.setItem('theme', next ? 'dark' : 'light')
+    } catch {
+      /* ignore storage failures (private mode) */
+    }
+  }
+  return { dark, toggle }
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const { dark, toggle } = useDarkMode()
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-full px-4 py-2 text-sm font-semibold transition ${
@@ -13,6 +31,16 @@ export default function Navbar() {
         ? 'bg-brand-50 text-brand-700'
         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`
+
+  const ThemeToggle = ({ className = '' }: { className?: string }) => (
+    <button
+      onClick={toggle}
+      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className={`grid h-10 w-10 place-items-center rounded-xl text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 ${className}`}
+    >
+      {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </button>
+  )
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md">
@@ -28,7 +56,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <ThemeToggle />
           <Link
             to="/learn"
             className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-700"
@@ -38,14 +67,17 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* mobile toggle */}
-        <button
-          className="grid h-10 w-10 place-items-center rounded-xl text-slate-700 hover:bg-slate-100 lg:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        {/* mobile controls */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <ThemeToggle />
+          <button
+            className="grid h-10 w-10 place-items-center rounded-xl text-slate-700 hover:bg-slate-100"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </nav>
 
       {/* mobile menu */}

@@ -24,11 +24,6 @@ export default function Footer() {
               </li>
             ))}
             <li>
-              <Link to="/career" className="text-slate-600 hover:text-brand-600">
-                Career Guide
-              </Link>
-            </li>
-            <li>
               <Link to="/notices" className="text-slate-600 hover:text-brand-600">
                 Notice Board
               </Link>

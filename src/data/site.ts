@@ -63,7 +63,9 @@ export type NavLink = { to: string; label: string }
 export const navLinks: NavLink[] = [
   { to: '/', label: 'Home' },
   { to: '/learn', label: 'Learn Hub' },
+  { to: '/practice', label: 'Practice' },
   { to: '/ask', label: 'Ask AI' },
+  { to: '/career', label: 'Career' },
   { to: '/research', label: 'Research' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },

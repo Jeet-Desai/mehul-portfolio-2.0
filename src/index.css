@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* class-based dark mode: `dark:` utilities apply inside a `.dark` ancestor */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ----------------------------------------------------------------------------
    CommerceLab design system — "Modern EdTech"
    vibrant · rounded · card-based. Tokens below generate Tailwind utilities
@@ -36,12 +39,34 @@
   --color-sun-600: #d97706;
 }
 
+/* ----------------------------------------------------------------------------
+   Dark theme — v4 utilities resolve colours via `var(--color-*)`, so redefining
+   the neutral ramp (slate + white) under `.dark` flips the whole UI coherently.
+   Vibrant accents (brand/mint/sun) are left intact — they read well on dark and
+   keep the "Modern EdTech" energy. No 35-file `dark:` sweep needed.
+---------------------------------------------------------------------------- */
+.dark {
+  --color-white: #151c2c; /* card / raised surface */
+  --color-slate-50: #0b1120; /* page background (below the cards) */
+  --color-slate-100: #1e293b; /* hairline borders, subtle fills */
+  --color-slate-200: #334155; /* stronger borders */
+  --color-slate-300: #475569;
+  --color-slate-400: #8b97a8; /* muted text */
+  --color-slate-500: #aab4c4;
+  --color-slate-600: #c5cedb; /* body text */
+  --color-slate-700: #dde3ed;
+  --color-slate-800: #e9eef5; /* strong body text */
+  --color-slate-900: #f5f8fc; /* headings */
+  color-scheme: dark;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   body {
     @apply bg-slate-50 text-slate-800 font-sans antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
   h1,
   h2,
