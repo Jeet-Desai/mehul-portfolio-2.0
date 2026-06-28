@@ -110,7 +110,7 @@ export const careers: CareerPath[] = [
     eligibility: 'B.Com or an equivalent bachelor’s degree.',
     duration: '2 years.',
     stages: [
-      'Complete B.Com',
+      'Complete your bachelor’s degree (B.Com / BBA / BCA or equivalent)',
       'Enrol in M.Com (specialise in accounting / finance)',
       'Qualify UGC-NET / SET for lectureship',
       'Optional: pursue a Ph.D. for a research career',

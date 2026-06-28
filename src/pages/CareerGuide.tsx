@@ -31,8 +31,8 @@ export default function CareerGuide() {
     <>
       <PageHeader
         eyebrow="Career Guide"
-        title="What after B.Com? Map your path."
-        subtitle="The major routes for commerce students — professional courses, postgraduate degrees, global qualifications and government careers — with eligibility, structure and prospects."
+        title="What next? Map your commerce career."
+        subtitle="The major routes open to every commerce student — B.Com, M.Com, BBA, BCA and 12th-commerce — across professional courses, postgraduate degrees, global qualifications and government careers, with eligibility, structure and prospects."
       />
 
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">

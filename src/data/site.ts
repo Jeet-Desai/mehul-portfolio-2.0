@@ -51,8 +51,8 @@ export const contact = {
   address: '214, Ranchhod Nagar, Udhna, Surat, Gujarat 394210',
   hours: '8:00 to 13:00',
   socials: {
-    facebook: 'https://www.facebook.com/mehul.desai.3950',
-    instagram: 'https://www.instagram.com/mehul_p_desai/',
+    facebook: '',
+    instagram: '',
     linkedin: '',
     twitter: '',
   },
