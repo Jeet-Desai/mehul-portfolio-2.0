@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X, Sparkles, Sun, Moon, LogIn, LogOut } from 'lucide-react'
 import { navLinks } from '../data/site'
@@ -30,6 +30,21 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { dark, toggle } = useDarkMode()
   const { enabled, user, signOut } = useAuth()
+
+  // Lock background page scroll while the mobile menu is open. The scroll
+  // container is the <html> element, so lock both it and <body> to be safe.
+  useEffect(() => {
+    if (!open) return
+    const docEl = document.documentElement
+    const prevHtml = docEl.style.overflow
+    const prevBody = document.body.style.overflow
+    docEl.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    return () => {
+      docEl.style.overflow = prevHtml
+      document.body.style.overflow = prevBody
+    }
+  }, [open])
 
   const ThemeToggle = () => (
     <button onClick={toggle} aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'} className={iconBtn}>
@@ -94,9 +109,10 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* slide-down vertical menu — shown below xl (where the links don't fit) */}
+      {/* slide-down vertical menu — shown below xl (where the links don't fit).
+          Scrolls internally if taller than the viewport; background is scroll-locked. */}
       {open && (
-        <div className="border-t border-slate-100 bg-white px-4 py-3 xl:hidden">
+        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-slate-100 bg-white px-4 py-3 xl:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-1">
             {navLinks.map((l) => (
               <NavLink
