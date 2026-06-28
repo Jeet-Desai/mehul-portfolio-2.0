@@ -85,19 +85,6 @@ export default function Login() {
           </div>
         ) : (
           <div className="space-y-4">
-            <button
-              onClick={onGoogle}
-              disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
-            >
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleMark />}
-              Continue with Google
-            </button>
-
-            <div className="flex items-center gap-3 text-xs text-slate-400">
-              <span className="h-px flex-1 bg-slate-200" /> or <span className="h-px flex-1 bg-slate-200" />
-            </div>
-
             <form onSubmit={onSubmit} className="space-y-3">
               <label className="block">
                 <span className="text-sm font-semibold text-slate-700">Email address</span>
@@ -156,6 +143,19 @@ export default function Login() {
                 {mode === 'signup' ? 'Sign in' : 'Create an account'}
               </button>
             </p>
+
+            <div className="flex items-center gap-3 text-xs text-slate-400">
+              <span className="h-px flex-1 bg-slate-200" /> or continue with <span className="h-px flex-1 bg-slate-200" />
+            </div>
+
+            <button
+              onClick={onGoogle}
+              disabled={busy}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
+            >
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleMark />}
+              Continue with Google
+            </button>
           </div>
         )}
       </div>
