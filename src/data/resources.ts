@@ -20,6 +20,9 @@ import {
   Wallet,
   CalendarClock,
   SlidersHorizontal,
+  FileSpreadsheet,
+  PackageSearch,
+  Users,
 } from 'lucide-react'
 
 export type ResourceSubject =
@@ -526,6 +529,285 @@ export const resourceTopics: ResourceTopic[] = [
       },
     ],
     calc: 'flexible-budget',
+  },
+
+  /* ============================================================ Cost Accounting */
+  {
+    id: 'unit-costing',
+    title: 'Cost Sheet (Unit Costing)',
+    subject: 'Cost Accounting',
+    icon: FileSpreadsheet,
+    level: 'B.Com · BBA · CA/CMA Foundation',
+    blurb:
+      'Assemble the total cost of output stage by stage — prime cost, works cost, cost of production and cost of sales — and read off the cost per unit.',
+    readingMinutes: 10,
+    tags: ['cost sheet', 'cost statement', 'prime cost', 'works cost', 'cost of production', 'cost of sales', 'tender', 'output costing'],
+    overview: [
+      'A cost sheet (or cost statement) is a statement prepared periodically that sets out, in a logical sequence, the various elements of cost of a product or service. It does more than show the total cost: it builds the cost up in stages — prime cost, works cost, cost of production and cost of sales — so management can see exactly where money is being spent and control each element.',
+      'The elements of cost are first classified as direct or indirect. Direct material, direct labour and direct expenses can be traced to the product and together form the prime cost. Indirect costs — overheads — are grouped by function into factory, administration, and selling & distribution overheads, and are added in that order.',
+      'The cost sheet is the basis for fixing selling prices and quoting tenders. Because it builds cost in stages, it also lets a firm value closing stocks of raw material, work-in-progress and finished goods consistently, and compare cost per unit period to period.',
+    ],
+    keyTerms: [
+      { term: 'Direct cost', def: 'A cost that can be conveniently identified with a particular product, job or process (direct material, direct wages, direct/chargeable expenses).' },
+      { term: 'Prime cost', def: 'The total of all direct costs = direct material + direct wages + direct expenses.' },
+      { term: 'Overhead', def: 'The total of indirect material, indirect labour and indirect expenses; grouped as factory, office/administration and selling & distribution overheads.' },
+      { term: 'Works (factory) cost', def: 'Prime cost + factory overheads, after adjusting opening and closing work-in-progress.' },
+      { term: 'Cost of production', def: 'Works cost + office & administration overheads.' },
+      { term: 'Cost of sales', def: 'Cost of goods sold + selling & distribution overheads; Sales − Cost of sales = Profit.' },
+    ],
+    formulas: [
+      { name: 'Materials consumed', expr: 'Opening stock + Purchases + Carriage inward − Returns − Closing stock' },
+      { name: 'Prime Cost', expr: 'Direct material + Direct wages + Direct expenses' },
+      { name: 'Works (Factory) Cost', expr: 'Prime cost + Factory overheads + Opening WIP − Closing WIP' },
+      { name: 'Cost of Production', expr: 'Works cost + Office & administration overheads' },
+      { name: 'Cost of Goods Sold', expr: 'Cost of production + Opening finished goods − Closing finished goods' },
+      { name: 'Cost of Sales', expr: 'Cost of goods sold + Selling & distribution overheads' },
+      { name: 'Profit', expr: 'Sales − Cost of sales', note: 'A negative figure is a loss.' },
+    ],
+    procedure: {
+      heading: 'Building the cost sheet',
+      steps: [
+        { title: '1 · Direct material consumed', detail: 'Opening raw material + purchases + carriage inward − purchase returns − closing raw material. Carriage/freight on incoming material is part of material cost.' },
+        { title: '2 · Add direct wages & direct expenses → Prime Cost', detail: 'Direct wages are paid to workers who convert material into product; direct expenses are chargeable expenses such as hire of special plant or royalty on output.' },
+        { title: '3 · Add factory overheads, adjust WIP → Works Cost', detail: 'Indirect factory costs (factory rent, power, depreciation of plant, works manager’s salary). Add opening WIP and subtract closing WIP, both valued at works cost.' },
+        { title: '4 · Add administration overheads → Cost of Production', detail: 'Office salaries, office rent, directors’ remuneration, legal and audit fees.' },
+        { title: '5 · Adjust finished goods, add selling & distribution OH → Cost of Sales', detail: 'Finished-goods stock is valued at cost of production. Then add advertisement, salesmen’s salaries, showroom rent, carriage outward.' },
+        { title: '6 · Compare with sales → Profit', detail: 'Sales − Cost of sales = profit (or loss). Per-unit figures = stage total ÷ units produced.' },
+      ],
+    },
+    examTips: [
+      'Keep purely financial items OUT of the cost sheet: interest, income tax, dividends, donations, profit/loss on sale of assets, and writing-off goodwill or preliminary expenses.',
+      'Adjust each stock at the stage where it is valued — raw material before prime cost, WIP at works cost, finished goods at cost of production. Mixing them up is the classic error.',
+      'Carriage inward is a factory/material cost; carriage outward is a selling & distribution cost — never interchange them.',
+    ],
+    pitfalls: [
+      'Putting office or selling overheads into factory cost (or vice-versa) — it distorts every sub-total below it.',
+      'Forgetting the stock adjustments, or applying a finished-goods adjustment at prime-cost stage.',
+      'Including non-cost financial items, which inflates cost and understates profit.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 2 (Cost Concepts & Cost Sheet)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Cost sheet — format, elements & examples', url: 'https://www.accountingnotes.net/cost-accounting/cost-sheet/cost-sheet-meaning-format-and-examples/16013', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Cost sheet format & components', url: 'https://cleartax.in/s/cost-sheet', kind: 'article', source: 'ClearTax' },
+    ],
+    workedExample: {
+      title: 'Preparing a cost sheet (Arora, Illustration 2.2)',
+      problem:
+        'For the month of January: Direct material ₹57,000; Direct wages ₹28,500; Factory rent & rates ₹2,500; Plant repairs ₹1,000; Plant depreciation ₹1,250; Factory heating & lighting ₹400; Factory manager’s salary ₹2,000; Office salaries ₹1,600; Director’s remuneration ₹1,500; Telephone & postage ₹200; Office rent & rates ₹500; Printing & stationery ₹100; Legal charges ₹150; Advertisement ₹1,500; Salesmen’s salaries ₹2,500; Showroom rent ₹500; Sales ₹1,16,000. Prepare the cost sheet.',
+      steps: [
+        { label: 'Prime Cost = Direct material + Direct wages', formula: '₹57,000 + ₹28,500', result: '₹85,500' },
+        { label: 'Factory overheads', formula: '2,500 + 1,000 + 1,250 + 400 + 2,000', result: '₹7,150' },
+        { label: 'Works Cost = Prime cost + Factory OH', formula: '₹85,500 + ₹7,150', result: '₹92,650' },
+        { label: 'Administration overheads', formula: '1,600 + 1,500 + 200 + 500 + 100 + 150', result: '₹4,050' },
+        { label: 'Cost of Production = Works cost + Admin OH', formula: '₹92,650 + ₹4,050', result: '₹96,700' },
+        { label: 'Selling & distribution overheads', formula: '1,500 + 2,500 + 500', result: '₹4,500' },
+        { label: 'Cost of Sales = Cost of production + S&D OH', formula: '₹96,700 + ₹4,500', result: '₹1,01,200' },
+        { label: 'Profit = Sales − Cost of sales', formula: '₹1,16,000 − ₹1,01,200', result: '₹14,800' },
+      ],
+      answer: 'Prime cost ₹85,500 · Works cost ₹92,650 · Cost of production ₹96,700 · Cost of sales ₹1,01,200 · Profit ₹14,800 (12.76% of sales).',
+      source: 'M.N. Arora, Cost Accounting, Illustration 2.2',
+    },
+    practice: [
+      {
+        q: 'Where is carriage inward shown in a cost sheet, and where is carriage outward?',
+        answer:
+          'Carriage inward is added to the cost of materials purchased (material cost). Carriage outward is a selling & distribution overhead, added after cost of production.',
+      },
+      {
+        q: 'Which of these is NOT included in a cost sheet?',
+        options: ['Factory rent', 'Income tax', 'Direct wages', 'Advertisement'],
+        answer: 'Income tax — it is a financial (appropriation) item, excluded from cost. So are interest, dividends and donations.',
+      },
+      {
+        q: 'Closing stock of finished goods is valued at which figure?',
+        answer:
+          'At cost of production per unit — because that is the cost at which goods are completed and transferred to the finished-goods store.',
+      },
+    ],
+    calc: 'cost-sheet',
+  },
+  {
+    id: 'material-control',
+    title: 'Material Control — EOQ & Stock Levels',
+    subject: 'Cost Accounting',
+    icon: PackageSearch,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Order the most economical quantity and set scientific re-order, minimum, maximum and danger stock levels to avoid both stock-outs and locked-up capital.',
+    readingMinutes: 11,
+    tags: ['eoq', 'economic order quantity', 'reorder level', 'minimum level', 'maximum level', 'danger level', 'stock control', 'inventory'],
+    overview: [
+      'Material is often the largest element of cost, so controlling it is central to cost control. Two opposing dangers must be balanced: over-stocking locks up capital and risks obsolescence, while under-stocking risks stoppage of production. Scientific stock control sets quantity levels for each item so it is automatically held within sensible limits.',
+      'The Economic Order Quantity (EOQ) answers “how much to order at a time”. Ordering many small lots raises ordering cost but cuts carrying cost; ordering a few large lots does the reverse. The EOQ is the order size at which the total of ordering and carrying cost is the lowest — and at that point the two costs are equal.',
+      'Stock levels answer “when to order” and “between what limits to hold”. The re-order level triggers a fresh purchase; the minimum level is a safety floor; the maximum level is a ceiling that prevents over-investment; the danger level signals that only urgent issues should be made.',
+    ],
+    keyTerms: [
+      { term: 'Ordering cost', def: 'Cost of placing and processing an order — stationery, receiving, inspection, salaries of the buying staff.' },
+      { term: 'Carrying (holding) cost', def: 'Cost of holding stock — storage, insurance, interest on capital locked up, deterioration and obsolescence.' },
+      { term: 'Economic Order Quantity', def: 'The order size that minimises the total of ordering and carrying cost.' },
+      { term: 'Lead time', def: 'The time between raising an order and receiving the material.' },
+      { term: 'Re-order level', def: 'The stock level at which a fresh purchase requisition is raised.' },
+      { term: 'Danger level', def: 'A level below the minimum at which normal issues stop and material is issued only for urgent jobs.' },
+    ],
+    formulas: [
+      { name: 'Economic Order Quantity', expr: 'EOQ = √(2 × A × O ÷ Cₕ)', note: 'A = annual consumption, O = ordering cost per order, Cₕ = carrying cost per unit per annum.' },
+      { name: 'Carrying cost per unit', expr: 'Cₕ = Cost per unit × Carrying % (when given as a % of value)' },
+      { name: 'Re-order level', expr: 'Maximum usage × Maximum lead time' },
+      { name: 'Minimum level', expr: 'Re-order level − (Normal usage × Average lead time)' },
+      { name: 'Maximum level', expr: 'Re-order level + Re-order quantity − (Minimum usage × Minimum lead time)' },
+      { name: 'Average stock level', expr: '½ (Minimum level + Maximum level)  —  or  Minimum level + ½ Re-order quantity' },
+      { name: 'Danger level', expr: 'Normal usage × Emergency lead time' },
+    ],
+    procedure: {
+      heading: 'Setting EOQ and stock levels',
+      steps: [
+        { title: '1 · Gather the data', detail: 'Annual consumption, ordering cost per order and carrying cost (per unit, or as a % of unit value). For levels: minimum/normal/maximum usage and lead time, and the re-order (EOQ) quantity.' },
+        { title: '2 · Compute EOQ', detail: 'Apply EOQ = √(2AO ÷ Cₕ). Verify by checking that at the EOQ, total ordering cost ≈ total carrying cost.' },
+        { title: '3 · Re-order level', detail: 'Maximum usage × maximum lead time — the worst-case demand over the longest delay, so stock never runs out before fresh supply arrives.' },
+        { title: '4 · Minimum & maximum levels', detail: 'Minimum = ROL − (normal usage × average lead time). Maximum = ROL + ROQ − (minimum usage × minimum lead time).' },
+        { title: '5 · Average & danger levels', detail: 'Average = ½(min + max). Danger = normal usage × emergency (top-priority) lead time.' },
+      ],
+    },
+    examTips: [
+      'Keep usage and lead time in the SAME period units (both per week, or both per month) before multiplying.',
+      'At the EOQ, ordering cost equals carrying cost — a quick way to self-check your answer.',
+      'For maximum level use minimum usage × minimum lead time (the best case leaves the most stock); for re-order level use maximum usage × maximum lead time (the worst case).',
+    ],
+    pitfalls: [
+      'Mixing the carrying cost as a percentage with the carrying cost per unit — convert to ₹ per unit first (unit cost × %).',
+      'Using average rather than maximum figures for the re-order level (or vice-versa for the maximum level).',
+      'Forgetting that EOQ assumes constant demand, price and ordering cost — quantity discounts can shift the economic size.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 3 (Material Cost Control)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Economic order quantity (EOQ) — formula & meaning', url: 'https://corporatefinanceinstitute.com/resources/accounting/economic-order-quantity-eoq/', kind: 'article', source: 'CFI' },
+      { label: 'Stock levels — re-order, minimum, maximum, danger', url: 'https://www.accountingnotes.net/cost-accounting/material-control/levels-of-stock/16125', kind: 'article', source: 'Accounting Notes' },
+    ],
+    workedExample: {
+      title: 'EOQ and stock levels (Arora, Illustrations 3.1 & 3.2)',
+      problem:
+        'EOQ: annual requirement 600 units, cost per unit ₹20, ordering cost ₹12 per order, carrying cost 20% of average inventory. Stock levels for material A: minimum usage 50, normal usage 100, maximum usage 150 units per week; re-order quantity 600 units; delivery (lead) time 4 to 6 weeks. Find the EOQ and the stock levels.',
+      steps: [
+        { label: 'Carrying cost per unit = 20% × ₹20', result: '₹4 per unit p.a.' },
+        { label: 'EOQ = √(2 × A × O ÷ Cₕ)', formula: '√(2 × 600 × 12 ÷ 4) = √3,600', result: '60 units' },
+        { label: 'Re-order level = Max usage × Max lead time', formula: '150 × 6', result: '900 units' },
+        { label: 'Minimum level = ROL − (Normal usage × Avg lead time)', formula: '900 − (100 × 5)', result: '400 units' },
+        { label: 'Maximum level = ROL + ROQ − (Min usage × Min lead time)', formula: '900 + 600 − (50 × 4)', result: '1,300 units' },
+        { label: 'Average stock level = ½ (Min + Max)', formula: '½ (400 + 1,300)', result: '850 units' },
+      ],
+      answer: 'EOQ 60 units. Material A: re-order level 900, minimum 400, maximum 1,300, average 850 units.',
+      source: 'M.N. Arora, Cost Accounting, Illustrations 3.1 & 3.2',
+    },
+    practice: [
+      {
+        q: 'At the economic order quantity, what is the relationship between ordering cost and carrying cost?',
+        answer: 'They are equal. The EOQ is the point at which their total is minimised, and the two cost curves cross.',
+      },
+      {
+        q: 'If annual demand quadruples (×4), what happens to the EOQ?',
+        answer:
+          'EOQ rises with the square root of demand, so it doubles (√4 = 2), not quadruples. The same logic applies to ordering cost.',
+      },
+      {
+        q: 'Why is the maximum level computed using minimum usage and minimum lead time?',
+        answer:
+          'Because the highest stock occurs in the best case — slowest consumption during the shortest delay — when fresh supply arrives with the most old stock still on hand.',
+      },
+    ],
+    calc: 'eoq-stock-levels',
+  },
+  {
+    id: 'labour-costing',
+    title: 'Labour Cost — Wage Systems & Turnover',
+    subject: 'Cost Accounting',
+    icon: Users,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Compute earnings under time, piece and the Halsey & Rowan premium-bonus plans, and measure labour turnover by the separation, replacement and flux methods.',
+    readingMinutes: 11,
+    tags: ['labour cost', 'halsey', 'rowan', 'incentive', 'premium bonus', 'time rate', 'piece rate', 'labour turnover', 'separation', 'flux'],
+    overview: [
+      'Labour is the second major element of cost. Its control has two sides: paying workers in a way that rewards efficiency (the method of remuneration), and keeping the workforce stable (controlling labour turnover).',
+      'The two basic methods are time rate (pay for hours worked — secure but no incentive to be quick) and piece rate (pay per unit produced — strong incentive but no security and a risk to quality). Premium-bonus plans blend the two: they guarantee time wages and add a bonus for time saved, sharing the gain between worker and employer. The best-known are the Halsey plan (bonus = 50% of time saved) and the Rowan plan (bonus proportionate to the time saved).',
+      'Labour turnover is the rate at which workers leave and are replaced. Some turnover is normal, but a high rate is costly — recruitment, training, lower productivity of new hires and spoilage. It is measured by the separation, replacement or flux method, and one method should be used consistently for comparison.',
+    ],
+    keyTerms: [
+      { term: 'Time rate system', def: 'Wages = hours worked × rate per hour. Guarantees pay but gives no direct incentive to produce more.' },
+      { term: 'Piece rate system', def: 'Wages = units produced × rate per unit. Rewards output but offers no security and may hurt quality.' },
+      { term: 'Time saved', def: 'Standard (allowed) time − actual time taken. Premium-bonus plans pay a bonus only when time is saved.' },
+      { term: 'Halsey plan', def: 'Guaranteed time wages + 50% of (time saved × rate). The other 50% of the saving stays with the employer.' },
+      { term: 'Rowan plan', def: 'Guaranteed time wages + (time saved ÷ standard time) × time wages. The bonus can never exceed the time wages.' },
+      { term: 'Labour turnover', def: 'The rate of change in the composition of the workforce over a period, expressed as a percentage.' },
+    ],
+    formulas: [
+      { name: 'Time wages', expr: 'Actual time × Rate per hour' },
+      { name: 'Halsey bonus', expr: '50% × (Time saved × Rate)', note: 'Halsey–Weir uses 30% instead of 50%.' },
+      { name: 'Halsey earnings', expr: 'Time wages + Halsey bonus' },
+      { name: 'Rowan bonus', expr: '(Time saved ÷ Standard time) × Time wages' },
+      { name: 'Rowan earnings', expr: 'Time wages + Rowan bonus' },
+      { name: 'Separation rate', expr: 'Separations ÷ Average workers × 100' },
+      { name: 'Replacement rate', expr: 'Replacements ÷ Average workers × 100' },
+      { name: 'Flux rate', expr: '(Separations + Replacements) ÷ Average workers × 100' },
+    ],
+    procedure: {
+      heading: 'Incentive earnings & turnover',
+      steps: [
+        { title: '1 · Find the time saved', detail: 'Time saved = standard (allowed) time − actual time. If none is saved, only the guaranteed time wages are paid.' },
+        { title: '2 · Time wages', detail: 'Actual time × rate per hour — the guaranteed floor under both Halsey and Rowan.' },
+        { title: '3 · Halsey bonus & earnings', detail: 'Bonus = 50% of (time saved × rate). Earnings = time wages + bonus.' },
+        { title: '4 · Rowan bonus & earnings', detail: 'Bonus = (time saved ÷ standard time) × time wages. Earnings = time wages + bonus.' },
+        { title: '5 · Labour turnover', detail: 'Average workers = (opening + closing) ÷ 2. Then apply the separation, replacement and flux formulas. Exclude expansion hires from these rates.' },
+      ],
+    },
+    examTips: [
+      'Bonus accrues only on time SAVED. If the worker takes the standard time or longer, both plans simply pay the guaranteed time wages.',
+      'Halsey gives the bigger bonus when more than half the time is saved; Rowan gives the bigger bonus when less than half is saved (and caps the bonus at 100% of time wages).',
+      'In turnover, workers hired for an expansion programme are NOT replacements — exclude them from the separation, replacement and flux rates; count them only in accessions.',
+    ],
+    pitfalls: [
+      'Calculating bonus on actual time or on standard time instead of on time saved.',
+      'Using the wrong base for the Rowan bonus — it is a proportion of the time wages (actual time × rate), not of the standard wages.',
+      'Including expansion recruitment in the replacement or flux rate, which overstates turnover.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 5 (Labour Cost Control)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Halsey & Rowan premium bonus plans (illustrated)', url: 'https://www.accountingnotes.net/cost-accounting/labour-cost/incentive-plans/incentive-plans-of-wage-payment/16290', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Labour turnover — meaning, methods & cost', url: 'https://www.yourarticlelibrary.com/cost-accounting/labour-turnover/labour-turnover-meaning-causes-and-effects/53129', kind: 'article', source: 'Article Library' },
+    ],
+    workedExample: {
+      title: 'Halsey & Rowan earnings; labour turnover (Arora, Unit 5)',
+      problem:
+        'Wages: standard time 50 hours, actual time taken 42 hours, rate ₹3 per hour. Compute earnings under the Halsey and Rowan plans. Turnover: workers at the beginning 900, at the end 1,100; during the month 50 workers left and 150 were recruited, of whom 25 filled vacancies and 125 were for expansion. Compute the separation, replacement and flux rates.',
+      steps: [
+        { label: 'Time saved = 50 − 42', result: '8 hours' },
+        { label: 'Time wages = 42 × ₹3', result: '₹126' },
+        { label: 'Halsey: bonus = 50% × (8 × ₹3)', formula: '₹126 + ₹12', result: '₹138' },
+        { label: 'Rowan: bonus = (8 ÷ 50) × ₹126', formula: '₹126 + ₹20.16', result: '₹146.16' },
+        { label: 'Average workers = (900 + 1,100) ÷ 2', result: '1,000' },
+        { label: 'Separation rate = 50 ÷ 1,000 × 100', result: '5%' },
+        { label: 'Replacement rate = 25 ÷ 1,000 × 100', result: '2.5%' },
+        { label: 'Flux rate = (50 + 25) ÷ 1,000 × 100', result: '7.5%' },
+      ],
+      answer: 'Halsey earnings ₹138, Rowan earnings ₹146.16. Turnover — separation 5%, replacement 2.5%, flux 7.5%.',
+      source: 'M.N. Arora, Cost Accounting, Unit 5 (Illustration 5.1 & wage examples)',
+    },
+    practice: [
+      {
+        q: 'A worker saves 60% of the standard time. Will Halsey or Rowan give the higher bonus?',
+        answer:
+          'Halsey. When more than 50% of the time is saved, the Halsey 50%-of-saving bonus exceeds the Rowan proportionate bonus. Below 50% saved, Rowan pays more.',
+      },
+      {
+        q: 'Standard time 10 h, actual 8 h, rate ₹5. Find the Rowan bonus.',
+        answer: 'Time saved 2 h; time wages = 8 × 5 = ₹40; bonus = (2 ÷ 10) × 40 = ₹8. Earnings ₹48.',
+      },
+      {
+        q: 'Why are workers recruited for an expansion programme excluded from the labour-turnover rate?',
+        answer:
+          'They do not replace anyone who left — they are additions to the workforce, not a change in its composition due to separation. They appear only in the accession figures.',
+      },
+    ],
+    calc: 'wage-systems',
   },
 ]
 

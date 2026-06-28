@@ -67,15 +67,27 @@ Done so far on the build:
   figure + presets). Embedded full-width under BOTH Cash Flow and Fund Flow for deriving adjustment figures
   (tax paid, assets bought/sold). Verified (derives tax paid ₹15,000).
 - Resource topics for fund-flow & cash-flow already existed and now auto-light their "Try the calculator" CTA.
+- ✅ **Batch 3 (unit · material · labour)** — DONE & browser-verified (light/dark), all figures tie to Arora:
+  - **Cost Sheet** — `lib/costSheet.ts` + `CostSheet.tsx` (slug `cost-sheet`). Full ladder: RM consumed → prime →
+    works (±WIP) → cost of production (±FG) → cost of sales → profit, with optional per-unit column. Seeded with
+    Arora Ill 2.2 → profit ₹14,800 on sales ₹1,16,000. Topic `unit-costing`.
+  - **EOQ & Stock Levels** — `lib/materialControl.ts` + `MaterialControl.tsx` (slug `eoq-stock-levels`; **tabbed**:
+    EOQ + ordering/carrying cost · ROL/min/max/avg/danger). Seeded Arora Ill 3.1/3.2 → EOQ 60; A: ROL 900, min 400,
+    max 1,300, avg 850. Topic `material-control`.
+  - **Wage Systems & Labour Turnover** — `lib/wages.ts` + `Wages.tsx` (slug `wage-systems`; **tabbed**: incentive
+    earnings table [time/piece/Halsey/Halsey-Weir/Rowan] · labour turnover sep/repl/flux). Seeded → Halsey ₹138,
+    Rowan ₹146.16; turnover sep 5% / repl 2.5% / flux 7.5%. Topic `labour-costing`.
+  - All three slot into the cost block at the TOP (cost-sheet → eoq → wage-systems → fund-flow → cash-flow → break-even).
+  - **Tab pattern** for multi-tool calcs: inline segmented control (`inline-flex rounded-xl … p-1`, active = `bg-brand-600
+    text-white`, container `dark:bg-white`). Reuse for future multi-mode calcs.
 
 Remaining, in order (paired topic+calc batches, full exam-grade — user-confirmed):
-1. **9 Cost Accounting resource topics** from Arora (same format as the 5 done): unit · material · labour · overhead ·
+1. **6 Cost Accounting resource topics** left from Arora (same format; 3 of 9 done — unit/material/labour): overhead ·
    job&batch · contract · process · operating · standard costing. Worked examples + a few practice Qs.
-2. **~11 calculators** for them + **cash-budget** & **flexible-budget** (topics already exist): cost sheet · EOQ &
-   stock levels · wage systems (Halsey/Rowan) + labour turnover · overhead absorption · job/batch (EBQ) · contract a/c ·
-   process costing (normal/abnormal loss, equivalent units) · operating/service costing · standard costing variances ·
-   cash budget · flexible budget. Same pattern (lib + `calc/*` primitives + step-by-step working + light/dark verify).
-   Suggested batches: (3) unit·material·labour → (4) overhead·job-batch·contract → (5) process·operating·standard →
+2. **~8 calculators** left + **cash-budget** & **flexible-budget** (topics already exist): overhead absorption ·
+   job/batch (EBQ) · contract a/c · process costing (normal/abnormal loss, equivalent units) · operating/service costing ·
+   standard costing variances · cash budget · flexible budget. Same pattern (lib + `calc/*` primitives + step-by-step
+   working + light/dark verify). Next batches: (4) overhead·job-batch·contract → (5) process·operating·standard →
    (6) cash-budget·flexible-budget.
 3. Update `ROADMAP.md` checkboxes + this file when done.
 

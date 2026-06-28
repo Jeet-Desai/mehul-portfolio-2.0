@@ -19,6 +19,9 @@ import {
   Repeat,
   Banknote,
   Boxes,
+  FileSpreadsheet,
+  PackageSearch,
+  Users,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -38,6 +41,33 @@ export const calculators: Calculator[] = [
   },
 
   /* ---- Cost & Management Accounting block ---- */
+  {
+    slug: 'cost-sheet',
+    title: 'Cost Sheet',
+    category: 'Costing',
+    blurb: 'Build the full cost sheet — raw material consumed, prime cost, works cost, cost of production and cost of sales — with stock adjustments and per-unit cost.',
+    icon: FileSpreadsheet,
+    load: () => import('./CostSheet'),
+    tags: ['cost sheet', 'cost statement', 'unit costing', 'output costing', 'prime cost', 'works cost', 'factory cost', 'cost of production', 'cost of sales', 'tender'],
+  },
+  {
+    slug: 'eoq-stock-levels',
+    title: 'EOQ & Stock Levels',
+    category: 'Costing',
+    blurb: 'Find the economic order quantity and the re-order, minimum, maximum, average and danger stock levels — the core of material cost control.',
+    icon: PackageSearch,
+    load: () => import('./MaterialControl'),
+    tags: ['eoq', 'economic order quantity', 'reorder level', 'reorder quantity', 'minimum level', 'maximum level', 'danger level', 'stock levels', 'material control', 'ordering cost', 'carrying cost'],
+  },
+  {
+    slug: 'wage-systems',
+    title: 'Wage Systems & Labour Turnover',
+    category: 'Costing',
+    blurb: 'Compare earnings under time, piece, Halsey and Rowan incentive plans, and compute labour turnover by the separation, replacement and flux methods.',
+    icon: Users,
+    load: () => import('./Wages'),
+    tags: ['wages', 'halsey', 'rowan', 'halsey weir', 'incentive', 'premium bonus', 'time rate', 'piece rate', 'labour turnover', 'separation rate', 'replacement rate', 'flux rate', 'labour cost'],
+  },
   {
     slug: 'fund-flow',
     title: 'Fund Flow Statement',
