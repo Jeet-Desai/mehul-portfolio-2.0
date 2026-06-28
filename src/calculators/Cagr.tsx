@@ -157,7 +157,7 @@ export default function Cagr() {
               </>
             ) : (
               <div className="space-y-3">
-                <div className="flex items-start gap-2 rounded-xl bg-brand-50 p-3 text-xs text-brand-700">
+                <div className="flex items-start gap-2 rounded-xl bg-brand-50 p-3 text-xs text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
                   <Info className="mt-0.5 h-4 w-4 shrink-0" />
                   <span>
                     Enter each cash flow with its date. <b>Negative</b> = money you put in (purchase),{' '}

@@ -124,3 +124,33 @@
     @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold;
   }
 }
+
+/* ----------------------------------------------------------------------------
+   Print / "Download PDF" — the Resource Library topic pages render to a clean,
+   readable PDF via the browser's print-to-PDF. The page chrome (navbar, footer,
+   buttons, interactive CTAs) is hidden via `print:hidden`; here we tidy the rest:
+   white page, no card shadows/hover-lift, and no awkward breaks inside a block.
+   (Dark mode is removed in JS before printing — see downloadAsPdf in ResourceTopic.)
+---------------------------------------------------------------------------- */
+@media print {
+  @page {
+    margin: 16mm;
+  }
+  header,
+  footer {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  .cl-card {
+    box-shadow: none !important;
+    transform: none !important;
+    break-inside: avoid;
+  }
+  section,
+  li,
+  ol {
+    break-inside: avoid;
+  }
+}

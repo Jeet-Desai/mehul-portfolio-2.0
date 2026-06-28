@@ -120,7 +120,7 @@ export default function Practice() {
                   className="cl-card flex h-full flex-col p-6 text-left disabled:opacity-50"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600">
+                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
                       <t.icon className="h-6 w-6" />
                     </span>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">{count} Qs</span>
@@ -167,7 +167,7 @@ export default function Practice() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
         <div className="cl-card p-8 text-center hover:translate-y-0">
-          <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-brand-50 text-brand-600">
+          <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
             <Trophy className="h-8 w-8" />
           </span>
           <h2 className="mt-4 text-2xl font-extrabold">{score} / {total} correct</h2>

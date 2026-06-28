@@ -119,7 +119,7 @@ export default function RatioAnalysis() {
           </ResultPanel>
         ))}
 
-        <div className="rounded-xl bg-brand-50 p-3 text-xs text-brand-700">
+        <div className="rounded-xl bg-brand-50 p-3 text-xs text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
           Interpretations use common rule-of-thumb benchmarks. A ratio is only meaningful against the firm’s own
           trend over years and against its industry peers — read them together, not in isolation.
         </div>

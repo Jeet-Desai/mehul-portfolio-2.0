@@ -1,8 +1,8 @@
 /* Single source of truth for site content — easy to extend without touching UI. */
 
 export const site = {
-  brand: 'CommerceLab',
-  byline: 'by Dr. Mehulkumar Desai',
+  brand: 'AccrualSense',
+  byline: 'by Mehul Desai',
   tagline: 'Built by a professor of 22 years — for every commerce student.',
   description:
     'A free learning hub for every commerce student — calculators that show their working, practice quizzes, formula sheets and a 24/7 AI doubt-tutor.',
@@ -63,6 +63,7 @@ export type NavLink = { to: string; label: string }
 export const navLinks: NavLink[] = [
   { to: '/', label: 'Home' },
   { to: '/learn', label: 'Learn Hub' },
+  { to: '/resources', label: 'Library' },
   { to: '/practice', label: 'Practice' },
   { to: '/ask', label: 'Ask AI' },
   { to: '/career', label: 'Career' },

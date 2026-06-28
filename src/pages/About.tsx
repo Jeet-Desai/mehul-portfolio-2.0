@@ -32,7 +32,7 @@ export default function About() {
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {infoItems.map((it) => (
                 <div key={it.label} className="cl-card flex items-start gap-3 p-4 hover:translate-y-0">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
                     <it.icon className="h-5 w-5" />
                   </span>
                   <div>

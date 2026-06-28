@@ -15,12 +15,48 @@ import {
   Gauge,
   Scissors,
   ArrowRightLeft,
+  ArrowDownUp,
+  Repeat,
   Banknote,
   Boxes,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
+/* Order: Ratio Analysis first, then the Cost & Management Accounting block (in
+   teaching order), then Break-even, then the existing finance / tax / investing
+   calculators. New cost/management calculators are slotted into the block as they
+   are built. */
 export const calculators: Calculator[] = [
+  {
+    slug: 'ratio-analysis',
+    title: 'Ratio Analysis',
+    category: 'Financial Management',
+    blurb: 'Turn a P&L and balance sheet into liquidity, solvency, profitability and turnover ratios — each with a plain-English interpretation.',
+    icon: Gauge,
+    load: () => import('./RatioAnalysis'),
+    tags: ['ratios', 'current ratio', 'quick ratio', 'debt equity', 'roce', 'roe', 'gross margin', 'turnover', 'interpretation'],
+  },
+
+  /* ---- Cost & Management Accounting block ---- */
+  {
+    slug: 'fund-flow',
+    title: 'Fund Flow Statement',
+    category: 'Management Accounting',
+    blurb: 'Prepare the schedule of changes in working capital, funds from operations and the fund flow statement — with the sources-vs-applications cross-check.',
+    icon: Repeat,
+    load: () => import('./FundFlow'),
+    tags: ['fund flow', 'funds flow', 'working capital', 'sources and applications', 'funds from operations', 'schedule of changes', 'where got where gone'],
+  },
+  {
+    slug: 'cash-flow',
+    title: 'Cash Flow Statement (AS 3)',
+    category: 'Management Accounting',
+    blurb: 'Build a cash flow statement by the indirect method — operating, investing and financing activities — with a full reconciliation to closing cash.',
+    icon: ArrowDownUp,
+    load: () => import('./CashFlow'),
+    tags: ['cash flow', 'as 3', 'ind as 7', 'indirect method', 'operating investing financing', 'funds from operations', 'cash from operations'],
+  },
+
   {
     slug: 'break-even',
     title: 'Break-even / CVP',
@@ -137,15 +173,6 @@ export const calculators: Calculator[] = [
     icon: Coins,
     load: () => import('./CapitalGains'),
     tags: ['ltcg', 'stcg', '112a', '111a', 'indexation', 'cii', 'shares', 'property', 'mutual fund'],
-  },
-  {
-    slug: 'ratio-analysis',
-    title: 'Ratio Analysis',
-    category: 'Financial Management',
-    blurb: 'Turn a P&L and balance sheet into liquidity, solvency, profitability and turnover ratios — each with a plain-English interpretation.',
-    icon: Gauge,
-    load: () => import('./RatioAnalysis'),
-    tags: ['ratios', 'current ratio', 'quick ratio', 'debt equity', 'roce', 'roe', 'gross margin', 'turnover', 'interpretation'],
   },
   {
     slug: 'tds',

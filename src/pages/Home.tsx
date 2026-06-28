@@ -28,7 +28,7 @@ const features = [
   },
   {
     icon: Bot,
-    title: 'Ask CommerceLab',
+    title: 'Ask AccrualSense',
     desc: 'Worked answers to common doubts plus a Doubt Box — and a 24/7 AI tutor in Dr. Desai’s style, on the way.',
     to: '/ask',
     tone: 'from-sun-500 to-sun-600',

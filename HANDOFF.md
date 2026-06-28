@@ -21,6 +21,13 @@ low-friction goal). Favour making every pillar real before deepening any one.
 - ✅ **Formula Sheets** (`/formulas`) — searchable cheat-sheets, ~48 formulas grouped by 6 subjects
   (`src/data/formulas.ts`), each linked to its calculator. Tax kept *structural* (no slab numbers — they change).
   Entry points: LearnHub CTA + footer.
+- ✅ **Resource Library** (`/resources`, `/resources/:id`) — data-driven study notes (`src/data/resources.ts`),
+  `ResourceLibrary.tsx` (index: search + subject chips) + `ResourceTopic.tsx` (detail). **5 topics live & enriched**:
+  ratio-analysis, fund-flow, cash-flow (AS 3), cash-budget, flexible-budget. Each = overview / key terms / formulas /
+  step-by-step method / **worked example** / exam tips + pitfalls / **practice (reveal-answer + warning)** / references.
+  **Download-PDF** per topic (`window.print()` → light-forced; print CSS in `index.css`). Detail page shows the
+  "Try the calculator" CTA only if that calc exists in the registry (auto-lights-up as calculators are built).
+  Entry points: "Library" nav link + LearnHub. Sourced from the user's material + M.N. Arora; web-checked (ACCA/ICAI/etc).
 - ✅ **Notice Board** (`/notices`) — data-driven (`src/data/notices.ts`), filter chips, pinned-first sort.
   Honest content only: real site updates + study tips + exam-info that *links to* official sources (never asserts dates).
 - ✅ **AI doubt-tutor** (`/ask`) — live chat UI, but the backend is **inert until keyed** (see below).
@@ -38,10 +45,57 @@ low-friction goal). Favour making every pillar real before deepening any one.
 - **To go live:** add a Groq key in Vercel env + redeploy. Full steps in `docs/AI_TUTOR.md`. Key lives ONLY in Vercel.
 - System prompt forbids asserting live tax rates as fact (honesty rule). Rate-limit is per-isolate (note in code).
 
+## 🔨 ACTIVE BUILD — Cost & Management Accounting expansion (in progress)
+Big multi-session build started Jun 2026. Source material: **`D:\commercelab\material`** (user's own college
+question banks + theory/solutions; read via stdlib Python — Office files aren't directly readable; see below) and
+**M.N. Arora, *Cost Accounting*** (`cost_accounting_textbook.pdf`, maps unit-for-unit onto the costing calculators).
+**Correctness is the #1 rule — everything ships under Dr. Desai's name; never invent.**
+
+**Rebrand (done):** product is now **"AccrualSense — by Mehul Desai"** (logo `public/images/accrualsense-mark.png`
++ `public/favicon.png`; brand in `src/data/site.ts`). Dark-mode `brand-50` white-tint fixed (page-header gradients +
+icon tiles → `dark:from-brand-500/10` / `dark:bg-brand-500/10`). Docs (this file / CLAUDE.md / ROADMAP.md) still say
+"CommerceLab" in prose — cosmetic, update when convenient.
+
+Done so far on the build:
+- ✅ **Batch 0 infra** — `Management Accounting` category added to `types.ts`; `registry.ts` reordered (Ratio Analysis
+  first → cost/management block → break-even → existing finance/tax). New cost calcs slot into the block as built.
+- ✅ **Cash Flow Statement (AS 3)** calc — `lib/cashFlow.ts` + `CashFlow.tsx` (indirect method, full statement +
+  reconciliation). Verified vs the topic worked example (operating ₹95,000 / closing ₹1,55,000).
+- ✅ **Fund Flow Statement** calc — `lib/fundFlow.ts` + `FundFlow.tsx` (schedule of WC changes, FFO, fund flow
+  statement, sources-vs-applications cross-check). Verified (+₹10,000 ties).
+- ✅ **Ledger T-account utility** — `src/components/calc/LedgerWorkings.tsx` (reusable; Dr/Cr entries → auto balancing
+  figure + presets). Embedded full-width under BOTH Cash Flow and Fund Flow for deriving adjustment figures
+  (tax paid, assets bought/sold). Verified (derives tax paid ₹15,000).
+- Resource topics for fund-flow & cash-flow already existed and now auto-light their "Try the calculator" CTA.
+
+Remaining, in order (paired topic+calc batches, full exam-grade — user-confirmed):
+1. **9 Cost Accounting resource topics** from Arora (same format as the 5 done): unit · material · labour · overhead ·
+   job&batch · contract · process · operating · standard costing. Worked examples + a few practice Qs.
+2. **~11 calculators** for them + **cash-budget** & **flexible-budget** (topics already exist): cost sheet · EOQ &
+   stock levels · wage systems (Halsey/Rowan) + labour turnover · overhead absorption · job/batch (EBQ) · contract a/c ·
+   process costing (normal/abnormal loss, equivalent units) · operating/service costing · standard costing variances ·
+   cash budget · flexible budget. Same pattern (lib + `calc/*` primitives + step-by-step working + light/dark verify).
+   Suggested batches: (3) unit·material·labour → (4) overhead·job-batch·contract → (5) process·operating·standard →
+   (6) cash-budget·flexible-budget.
+3. Update `ROADMAP.md` checkboxes + this file when done.
+
+**Dev-server note:** Tailwind v4 + Vite dev does NOT pick up newly-added utility classes after the server started —
+they render as missing in the browser though `pnpm build`'s `dist` CSS has them. **Restart `pnpm dev` after adding
+classes** (or verify via `pnpm preview`), and beware zombie vite processes holding the port (kill via PowerShell
+`Get-NetTCPConnection -LocalPort 5173`). Calculator row layouts use **flexbox, not arbitrary `grid-cols-[…]`** (v4
+collapsed multi-track arbitrary grids to one column).
+
+**Reading the material (Office files):** the Read tool can't open `.docx`/`.pptx`/`.doc`. Use stdlib Python — a
+`zipfile`+`xml.etree` extractor for docx/pptx (render tables pipe-delimited), printable-`strings` for old binary `.doc`,
+and `pdftotext` for PDFs. (An extractor lived in the session scratchpad; re-create if cleared.)
+**Build env:** Vite 8 needs Node ≥20.19 — user is on Node 24. Run `pnpm install` once under it (fetches rolldown's
+native binding) then `pnpm build`/`pnpm dev` work.
+
 ## Open / deferred (pick from here)
 - **More calculators**: Marginal-vs-Absorption costing & PPF/EPF/NPS/FD-RD suite;
   🏆 flagship **Journal→Ledger→Trial Balance** simulator (own focused session).
-- **Learn Hub infra** — category-filter chips on `/learn`; resource library (notes/past papers, data-driven); PDF export.
+- **Learn Hub infra** — category-filter chips on `/learn`; resource library ✅ done (extend with the 9 cost topics);
+  per-topic PDF ✅ done (could add formula-sheet / result-card PDF export too).
 - **Research data** — `src/data/research.ts` `books`/`publications` are intentionally `[]`. Fill ONLY when the
   user provides a real list / Scholar link. **Do NOT invent citations.**
 - **AI tutor next** (optional): streaming replies; durable rate-limit via Vercel KV/Upstash.

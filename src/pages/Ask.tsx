@@ -63,12 +63,12 @@ export default function Ask() {
   const remove = (id: number) => save(doubts.filter((d) => d.id !== id))
 
   const mailtoFor = (d: Doubt) =>
-    `mailto:${contact.email}?subject=${encodeURIComponent('Doubt from a CommerceLab student')}&body=${encodeURIComponent(`${d.text}\n\n— ${d.name}`)}`
+    `mailto:${contact.email}?subject=${encodeURIComponent('Doubt from an AccrualSense student')}&body=${encodeURIComponent(`${d.text}\n\n— ${d.name}`)}`
 
   return (
     <>
       <PageHeader
-        eyebrow="Ask CommerceLab"
+        eyebrow="Ask AccrualSense"
         title="Your commerce doubt-tutor"
         subtitle="Ask the AI tutor for instant step-by-step help, browse worked answers to common doubts, or post your own."
       />

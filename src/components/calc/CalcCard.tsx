@@ -6,7 +6,7 @@ export default function CalcCard({ calc }: { calc: Calculator }) {
   return (
     <Link to={`/learn/c/${calc.slug}`} className="cl-card flex h-full flex-col p-6">
       <div className="flex items-center justify-between">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600">
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
           <calc.icon className="h-6 w-6" />
         </span>
         <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">

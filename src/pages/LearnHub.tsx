@@ -1,13 +1,27 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, PencilLine, FileText, Library, ArrowRight } from 'lucide-react'
+import { Search, BookOpen, FileText, Library, ArrowRight } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import CalcCard from '../components/calc/CalcCard'
 import { calculators } from '../calculators/registry'
 
 const upcoming = [
-  { icon: PencilLine, title: 'Resource Library', desc: 'Notes and past papers, organised subject- and semester-wise.', phase: 'Phase 5' },
   { icon: Library, title: 'PDF export', desc: 'Download any formula sheet or result card for offline revision.', phase: 'Phase 5' },
+]
+
+const entryPoints = [
+  {
+    to: '/resources',
+    icon: BookOpen,
+    title: 'Resource Library',
+    desc: 'Topic-by-topic study notes — concept, method, exam tips and references.',
+  },
+  {
+    to: '/formulas',
+    icon: FileText,
+    title: 'Formula Sheets',
+    desc: 'Searchable cheat-sheets across every subject — revise before an exam.',
+  },
 ]
 
 export default function LearnHub() {
@@ -41,22 +55,25 @@ export default function LearnHub() {
           />
         </div>
 
-        {/* formula sheets entry point */}
-        <Link
-          to="/formulas"
-          className="mb-8 flex items-center gap-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-4 transition hover:border-brand-200 hover:bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/20 sm:p-5"
-        >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-brand-600 shadow-sm">
-            <FileText className="h-6 w-6" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-bold text-slate-900">Formula Sheets</h3>
-            <p className="text-sm text-slate-600">
-              Searchable cheat-sheets across every subject — revise the key formulas before an exam.
-            </p>
-          </div>
-          <ArrowRight className="h-5 w-5 shrink-0 text-brand-600" />
-        </Link>
+        {/* study-resource entry points */}
+        <div className="mb-8 grid gap-4 sm:grid-cols-2">
+          {entryPoints.map((e) => (
+            <Link
+              key={e.to}
+              to={e.to}
+              className="flex items-center gap-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-4 transition hover:border-brand-200 hover:bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 dark:hover:border-brand-500/30 dark:hover:bg-brand-500/20 sm:p-5"
+            >
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white text-brand-600 shadow-sm">
+                <e.icon className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-slate-900">{e.title}</h3>
+                <p className="text-sm text-slate-600">{e.desc}</p>
+              </div>
+              <ArrowRight className="h-5 w-5 shrink-0 text-brand-600" />
+            </Link>
+          ))}
+        </div>
 
         <h2 className="text-xl font-bold">
           Calculators <span className="text-sm font-medium text-slate-400">({filtered.length})</span>

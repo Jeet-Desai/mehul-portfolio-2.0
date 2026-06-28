@@ -12,7 +12,7 @@ export default function PageHeader({
   children?: ReactNode
 }) {
   return (
-    <section className="border-b border-slate-100 bg-gradient-to-b from-brand-50/60 to-transparent">
+    <section className="border-b border-slate-100 bg-gradient-to-b from-brand-50/60 to-transparent dark:from-brand-500/10">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
         {eyebrow && (
           <span className="cl-pill bg-brand-100 text-brand-700">{eyebrow}</span>

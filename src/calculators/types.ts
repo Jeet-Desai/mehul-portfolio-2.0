@@ -13,6 +13,7 @@ export type Step = {
 
 export type CalcCategory =
   | 'Costing'
+  | 'Management Accounting'
   | 'Accounting'
   | 'Taxation'
   | 'Finance'

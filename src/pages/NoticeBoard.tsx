@@ -88,7 +88,7 @@ export default function NoticeBoard() {
       <PageHeader
         eyebrow="Notice Board"
         title="Announcements & updates"
-        subtitle="What's new on CommerceLab, study pointers, and where to confirm official exam schedules — so you never miss a thing."
+        subtitle="What's new on AccrualSense, study pointers, and where to confirm official exam schedules — so you never miss a thing."
       />
 
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
@@ -120,7 +120,7 @@ export default function NoticeBoard() {
         <div className="mt-8 flex items-start gap-2 rounded-xl bg-slate-50 p-4 text-xs text-slate-500">
           <Info className="mt-0.5 h-4 w-4 shrink-0" />
           <span>
-            This board carries CommerceLab updates and general study guidance. It never lists official exam
+            This board carries AccrualSense updates and general study guidance. It never lists official exam
             dates — exam schedules and syllabus schemes change every session, so always confirm them on your
             university or institute's official website.
           </span>

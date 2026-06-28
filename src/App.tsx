@@ -6,6 +6,8 @@ import About from './pages/About'
 import Research from './pages/Research'
 import LearnHub from './pages/LearnHub'
 import Formulas from './pages/Formulas'
+import ResourceLibrary from './pages/ResourceLibrary'
+import ResourceTopic from './pages/ResourceTopic'
 import CalculatorPage from './pages/CalculatorPage'
 import Practice from './pages/Practice'
 import Ask from './pages/Ask'
@@ -25,6 +27,8 @@ export default function App() {
           <Route path="/research" element={<Research />} />
           <Route path="/learn" element={<LearnHub />} />
           <Route path="/formulas" element={<Formulas />} />
+          <Route path="/resources" element={<ResourceLibrary />} />
+          <Route path="/resources/:id" element={<ResourceTopic />} />
           <Route path="/learn/c/:slug" element={<CalculatorPage />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/ask" element={<Ask />} />

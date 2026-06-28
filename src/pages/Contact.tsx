@@ -19,7 +19,7 @@ export default function Contact() {
     e.preventDefault()
     const body = `From: ${form.name} (${form.email})%0D%0A%0D%0A${encodeURIComponent(form.message)}`
     window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(
-      form.subject || 'Message from CommerceLab',
+      form.subject || 'Message from AccrualSense',
     )}&body=${body}`
   }
 
@@ -35,7 +35,7 @@ export default function Contact() {
           <div className="space-y-4">
             {items.map((it) => (
               <div key={it.label} className="cl-card flex items-start gap-4 p-5 hover:translate-y-0">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
                   <it.icon className="h-5 w-5" />
                 </span>
                 <div>

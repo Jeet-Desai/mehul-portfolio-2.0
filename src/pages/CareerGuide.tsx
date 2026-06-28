@@ -60,7 +60,7 @@ export default function CareerGuide() {
                   onClick={() => setOpen(isOpen ? null : c.id)}
                   className="flex w-full items-center gap-4 p-5 text-left sm:p-6"
                 >
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-50 font-display text-sm font-extrabold text-brand-600">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-50 font-display text-sm font-extrabold text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
                     {c.name}
                   </span>
                   <div className="min-w-0 flex-1">
