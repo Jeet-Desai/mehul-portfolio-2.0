@@ -62,7 +62,7 @@ export default function Login() {
             {mode === 'signup' ? 'Create your account' : 'Sign in to AccrualSense'}
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Free for every commerce student. Log in to use the calculators, quizzes and AI tutor.
+            Free for everyone. Log in to use the calculators, quizzes and AI tutor.
           </p>
         </div>
 
