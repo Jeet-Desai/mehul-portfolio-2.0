@@ -25,6 +25,9 @@ import {
   Layers,
   ClipboardList,
   HardHat,
+  GitBranch,
+  Bus,
+  SlidersHorizontal,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -97,6 +100,33 @@ export const calculators: Calculator[] = [
     icon: HardHat,
     load: () => import('./Contract'),
     tags: ['contract costing', 'notional profit', 'work certified', 'work uncertified', 'retention money', 'cash ratio', 'incomplete contract', 'escalation', 'work in progress'],
+  },
+  {
+    slug: 'process-costing',
+    title: 'Process Costing',
+    category: 'Costing',
+    blurb: 'Cost a process with normal loss, abnormal loss or abnormal gain — cost per unit, the process account and the abnormal-loss/gain treatment.',
+    icon: GitBranch,
+    load: () => import('./Process'),
+    tags: ['process costing', 'normal loss', 'abnormal loss', 'abnormal gain', 'process account', 'scrap value', 'cost per unit', 'equivalent units'],
+  },
+  {
+    slug: 'operating-costing',
+    title: 'Operating / Service Costing',
+    category: 'Costing',
+    blurb: 'Cost a transport service — total operating cost, cost per km and the composite cost per tonne-km or passenger-km, with the rate to charge.',
+    icon: Bus,
+    load: () => import('./Operating'),
+    tags: ['operating costing', 'service costing', 'transport costing', 'cost per km', 'tonne-km', 'passenger-km', 'standing charges', 'running charges', 'composite unit'],
+  },
+  {
+    slug: 'standard-costing-variances',
+    title: 'Standard Costing Variances',
+    category: 'Costing',
+    blurb: 'Compute material and labour cost variances — split into price/rate and usage/efficiency — with the favourable/adverse reconciliation.',
+    icon: SlidersHorizontal,
+    load: () => import('./Variance'),
+    tags: ['standard costing', 'variance analysis', 'material cost variance', 'price variance', 'usage variance', 'labour rate variance', 'efficiency variance', 'favourable', 'adverse'],
   },
   {
     slug: 'fund-flow',

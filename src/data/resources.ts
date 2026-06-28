@@ -26,6 +26,8 @@ import {
   Layers,
   ClipboardList,
   HardHat,
+  GitBranch,
+  Bus,
 } from 'lucide-react'
 
 export type ResourceSubject =
@@ -1064,6 +1066,258 @@ export const resourceTopics: ResourceTopic[] = [
       },
     ],
     calc: 'contract-costing',
+  },
+  {
+    id: 'process-costing',
+    title: 'Process Costing',
+    subject: 'Cost Accounting',
+    icon: GitBranch,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Cost continuous production process by process — normal loss, abnormal loss and abnormal gain, and the cost per unit that good output carries.',
+    readingMinutes: 11,
+    tags: ['process costing', 'normal loss', 'abnormal loss', 'abnormal gain', 'process account', 'equivalent units', 'scrap'],
+    overview: [
+      'Process costing is used where production is continuous and the output is uniform — chemicals, sugar, paper, paint, oil refining. The material passes through a series of processes, and the output of one process becomes the input of the next. Because the units are identical, cost is averaged: cost per unit = total process cost ÷ units produced.',
+      'A defining feature is loss in process. Normal loss is the unavoidable loss expected under efficient conditions (evaporation, shrinkage); its cost is borne by the good output, and only its scrap value is credited to the process. Abnormal loss is the excess over normal — due to carelessness, breakdown, defective material — and is NOT charged to good output; it goes to the costing P&L so the cost of good production stays stable.',
+      'Sometimes the actual loss is less than expected, so output exceeds the normal output — an abnormal gain. It is valued at the same cost per unit, debited to the process account and credited to an Abnormal Gain account. Where there is opening/closing work-in-progress, the equivalent-units method converts part-finished units into equivalent whole units before averaging cost.',
+    ],
+    keyTerms: [
+      { term: 'Normal loss', def: 'Unavoidable loss expected under efficient working; its cost is absorbed by good output. Scrap value is credited to the process.' },
+      { term: 'Abnormal loss', def: 'Loss in excess of normal, valued at the normal cost per unit and transferred to the costing P&L.' },
+      { term: 'Abnormal gain', def: 'When actual output exceeds expected (normal) output; valued at cost per unit, debited to the process, credited to Abnormal Gain A/c.' },
+      { term: 'Cost per unit', def: '(Total process cost − scrap value of normal loss) ÷ (input units − normal loss units).' },
+      { term: 'Equivalent units', def: 'Part-finished units expressed as an equivalent number of complete units, used when there is work-in-progress.' },
+    ],
+    formulas: [
+      { name: 'Normal loss units', expr: 'Input units × Normal loss %' },
+      { name: 'Cost per unit', expr: '(Total cost − Scrap value of normal loss) ÷ (Input − Normal loss units)' },
+      { name: 'Abnormal loss/gain (units)', expr: 'Expected output − Actual output', note: 'Positive = abnormal loss; negative = abnormal gain.' },
+      { name: 'Value of abnormal loss/gain', expr: 'Cost per unit × Abnormal units' },
+      { name: 'Cost of good output', expr: 'Cost per unit × Actual good output' },
+    ],
+    procedure: {
+      heading: 'Costing a process with loss',
+      steps: [
+        { title: '1 · Total the process cost', detail: 'Add cost of units introduced + materials + labour + overheads charged to the process.' },
+        { title: '2 · Allow for normal loss', detail: 'Normal loss units = input × normal-loss %. Credit the process with its scrap value only.' },
+        { title: '3 · Cost per unit', detail: '(Total cost − scrap value) ÷ (input − normal loss). This is the rate every good unit carries.' },
+        { title: '4 · Abnormal loss or gain', detail: 'Compare actual output with expected output. Value the difference at the cost per unit; take it to the costing P&L (abnormal loss credited out of, abnormal gain debited into, the process).' },
+        { title: '5 · Equivalent units (if WIP)', detail: 'Where work-in-progress exists, convert it to equivalent complete units (separately for material, labour, overheads) before computing cost per equivalent unit.' },
+      ],
+    },
+    examTips: [
+      'Normal loss carries NO cost (only scrap value) — its cost is automatically absorbed by good units through the cost-per-unit formula.',
+      'Always compute cost per unit on (input − normal loss) units, never on full input — that is how the normal-loss cost transfers to good output.',
+      'Abnormal gain is debited to the process account (it looks odd, but it restores the good-output cost to normal).',
+    ],
+    pitfalls: [
+      'Dividing total cost by full input units (forgetting to remove normal loss) — understates cost per unit.',
+      'Charging abnormal loss to good output — it must go to the costing P&L.',
+      'Forgetting to deduct the scrap value of normal loss before computing the cost per unit.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 9 (Process Costing)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Process costing — normal & abnormal loss', url: 'https://www.accountingnotes.net/cost-accounting/process-costing/process-costing/16236', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Process costing technical article', url: 'https://www.accaglobal.com/gb/en/student/exam-support-resources/fundamentals-exams-study-resources/f2/technical-articles/process-costing.html', kind: 'official', source: 'ACCA' },
+    ],
+    workedExample: {
+      title: 'Normal & abnormal loss (Arora, Unit 9 — Process A)',
+      problem:
+        '10,000 units are introduced into Process A at ₹1 each (₹10,000). Added: materials ₹1,000, labour ₹5,000, expenses ₹1,050. Normal loss is 3% of input with a scrap value of ₹0.25 per unit. Actual output is 9,500 units. Find the cost per unit and the abnormal loss.',
+      steps: [
+        { label: 'Total process cost', formula: '10,000 + 1,000 + 5,000 + 1,050', result: '₹17,050' },
+        { label: 'Normal loss = 3% × 10,000', formula: '300 units; scrap 300 × ₹0.25', result: '300 units · scrap ₹75' },
+        { label: 'Cost per unit = (17,050 − 75) ÷ (10,000 − 300)', formula: '16,975 ÷ 9,700', result: '₹1.75 per unit' },
+        { label: 'Abnormal loss = expected − actual', formula: '(10,000 − 300) − 9,500 = 200 units × ₹1.75', result: '₹350' },
+        { label: 'Cost of good output', formula: '9,500 × ₹1.75', result: '₹16,625' },
+      ],
+      answer: 'Cost per unit ₹1.75; abnormal loss 200 units = ₹350; good output transferred ₹16,625.',
+      source: 'M.N. Arora, Cost Accounting, Unit 9 (Process A)',
+    },
+    practice: [
+      {
+        q: 'Why is the cost of normal loss not separately charged anywhere?',
+        answer: 'Because it is absorbed by good output: dividing cost by (input − normal loss) raises the cost per unit so the good units automatically bear the normal-loss cost.',
+      },
+      {
+        q: 'Actual output exceeds the expected (normal) output. What is this, and how is it treated?',
+        answer: 'An abnormal gain — valued at the normal cost per unit, debited to the process account and credited to the Abnormal Gain account (→ costing P&L).',
+      },
+      {
+        q: 'Input 1,000 units, cost ₹9,500; normal loss 5% with no scrap value. Find the cost per unit.',
+        answer: 'Cost per unit = 9,500 ÷ (1,000 − 50) = 9,500 ÷ 950 = ₹10.',
+      },
+    ],
+    calc: 'process-costing',
+  },
+  {
+    id: 'operating-costing',
+    title: 'Operating / Service Costing',
+    subject: 'Cost Accounting',
+    icon: Bus,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Cost services rather than products — the cost per km and the composite tonne-km / passenger-km used by transport and other service undertakings.',
+    readingMinutes: 9,
+    tags: ['operating costing', 'service costing', 'transport costing', 'cost per km', 'tonne-km', 'passenger-km', 'composite unit'],
+    overview: [
+      'Operating (or service) costing is used by undertakings that provide a service rather than make a product — transport, hospitals, hotels, canteens, power houses, cinemas. The aim is the cost per unit of service, which is then used to fix fares, charges or hire rates.',
+      'Choosing the cost unit is the crux. A simple unit (per km, per 1,000 litres, per meal) suits some services; but transport usually needs a composite unit that rolls two factors into one — a tonne-km (1 tonne carried 1 km) for goods, or a passenger-km for passengers. This reflects that both the load and the distance drive cost.',
+      'Costs are grouped as standing (fixed) charges — insurance, tax, garage, salaries — which do not vary with distance; running (variable) charges — fuel, oil, tyres — which vary with km run; and maintenance, which is semi-variable. Dividing total cost by the number of service units gives the cost per unit.',
+    ],
+    keyTerms: [
+      { term: 'Operating costing', def: 'Costing method for undertakings rendering services, to find the cost per unit of service.' },
+      { term: 'Simple cost unit', def: 'A single-factor unit — per km, per 1,000 litres, per bed-day.' },
+      { term: 'Composite cost unit', def: 'A two-factor unit — tonne-km (goods) or passenger-km (passengers).' },
+      { term: 'Standing charges', def: 'Fixed costs incurred regardless of distance run (tax, insurance, garage, salaries).' },
+      { term: 'Running charges', def: 'Variable costs that change with distance (fuel, oil, tyres).' },
+    ],
+    formulas: [
+      { name: 'Total operating cost', expr: 'Standing charges + Running charges + Maintenance' },
+      { name: 'Cost per km', expr: 'Total operating cost ÷ Distance run (km)' },
+      { name: 'Composite units', expr: 'Distance (km) × Average load (tonnes or passengers)' },
+      { name: 'Cost per tonne-km / passenger-km', expr: 'Total operating cost ÷ Composite units' },
+      { name: 'Rate to charge', expr: 'Cost per unit × (1 + Profit %)' },
+    ],
+    procedure: {
+      heading: 'Building the operating cost sheet',
+      steps: [
+        { title: '1 · Classify the costs', detail: 'Group into standing (fixed), running (variable) and maintenance (semi-variable) charges.' },
+        { title: '2 · Total the cost', detail: 'Add all three groups for the period’s total operating cost.' },
+        { title: '3 · Count service units', detail: 'Cost per km uses distance; the composite unit uses distance × average load (tonne-km or passenger-km).' },
+        { title: '4 · Cost per unit & rate', detail: 'Divide total cost by service units; add the profit margin to fix the fare or freight rate.' },
+      ],
+    },
+    examTips: [
+      'For a composite unit, multiply distance by the average load — a tonne-km is 1 tonne moved 1 km.',
+      'Absolute tonne-km totals each leg separately (distance × load on that leg); commercial tonne-km uses total distance × average load.',
+      'Keep standing and running charges separate — it is the basis for comparing own-vehicle vs hired-transport cost.',
+    ],
+    pitfalls: [
+      'Dividing by distance alone when the question asks for cost per tonne-km (you must include the load).',
+      'Treating fuel as a standing charge or insurance as a running charge.',
+      'Ignoring return-trip empty running when computing average load.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 11 (Operating Costing)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Operating costing — transport (illustrated)', url: 'https://www.accountingnotes.net/cost-accounting/operating-costing/operating-costing/16320', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Service costing technical article', url: 'https://www.accaglobal.com/gb/en/student/exam-support-resources/fundamentals-exams-study-resources/f2.html', kind: 'official', source: 'ACCA' },
+    ],
+    workedExample: {
+      title: 'Cost per tonne-km',
+      problem:
+        'A truck’s monthly costs are: standing charges ₹9,000, running charges ₹8,000, maintenance ₹3,000. It runs 10,000 km in the month carrying an average load of 5 tonnes. Find the total operating cost, the cost per km, and the cost per tonne-km.',
+      steps: [
+        { label: 'Total operating cost', formula: '₹9,000 + ₹8,000 + ₹3,000', result: '₹20,000' },
+        { label: 'Cost per km', formula: '₹20,000 ÷ 10,000 km', result: '₹2.00 per km' },
+        { label: 'Tonne-km = distance × average load', formula: '10,000 × 5', result: '50,000 tonne-km' },
+        { label: 'Cost per tonne-km', formula: '₹20,000 ÷ 50,000', result: '₹0.40 per tonne-km' },
+      ],
+      answer: 'Total operating cost ₹20,000; cost ₹2.00 per km and ₹0.40 per tonne-km.',
+    },
+    practice: [
+      {
+        q: 'Why does a goods-transport business use tonne-km rather than km as its cost unit?',
+        answer: 'Because cost depends on both the load carried and the distance. A tonne-km (1 tonne × 1 km) captures both, so cost comparison and pricing are fairer.',
+      },
+      {
+        q: 'A bus runs 4,000 km carrying on average 40 passengers. What are the passenger-kms?',
+        answer: '4,000 × 40 = 1,60,000 passenger-km.',
+      },
+      {
+        q: 'Are tyres a standing charge or a running charge?',
+        answer: 'A running (variable) charge — tyre wear depends on distance run.',
+      },
+    ],
+    calc: 'operating-costing',
+  },
+  {
+    id: 'standard-costing',
+    title: 'Standard Costing & Variances',
+    subject: 'Cost Accounting',
+    icon: SlidersHorizontal,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Set standard costs, then explain the gap to actuals — material and labour variances split into price/rate and usage/efficiency.',
+    readingMinutes: 11,
+    tags: ['standard costing', 'variance analysis', 'material variance', 'labour variance', 'price variance', 'efficiency variance', 'favourable adverse'],
+    overview: [
+      'Standard costing sets a predetermined cost for each unit — the standard cost — built from standard quantities and standard prices. Actual results are then compared with these standards, and the differences (variances) are analysed by cause. It is a tool of control: it pinpoints where, and by how much, performance departed from plan.',
+      'A variance is favourable (F) when it saves cost — actual is less than standard — and adverse (A) when it costs more. The total cost variance for an element is split into a price/rate variance (the effect of paying a different price) and a usage/efficiency variance (the effect of using a different quantity or time). The two sub-variances always reconcile to the total.',
+      'The same logic applies to material and labour. For material: price variance isolates the price paid, usage variance the quantity used. For labour: rate variance isolates the wage rate, efficiency variance the hours worked. Responsibility usually differs — purchasing owns price; production owns usage and efficiency.',
+    ],
+    keyTerms: [
+      { term: 'Standard cost', def: 'A predetermined cost = standard quantity × standard price (per unit of output).' },
+      { term: 'Variance', def: 'Difference between standard cost (of actual output) and actual cost. F = favourable, A = adverse.' },
+      { term: 'Material price variance', def: '(SP − AP) × AQ — the effect of paying a different price.' },
+      { term: 'Material usage variance', def: '(SQ − AQ) × SP — the effect of using a different quantity.' },
+      { term: 'Labour rate variance', def: '(SR − AR) × AH — the effect of a different wage rate.' },
+      { term: 'Labour efficiency variance', def: '(SH − AH) × SR — the effect of taking different hours.' },
+    ],
+    formulas: [
+      { name: 'Material cost variance', expr: '(SQ × SP) − (AQ × AP)' },
+      { name: 'Material price variance', expr: '(SP − AP) × AQ' },
+      { name: 'Material usage variance', expr: '(SQ − AQ) × SP', note: 'Price + Usage = Cost variance.' },
+      { name: 'Labour cost variance', expr: '(SH × SR) − (AH × AR)' },
+      { name: 'Labour rate variance', expr: '(SR − AR) × AH' },
+      { name: 'Labour efficiency variance', expr: '(SH − AH) × SR', note: 'Rate + Efficiency = Cost variance.' },
+    ],
+    procedure: {
+      heading: 'Computing a variance',
+      steps: [
+        { title: '1 · Fix the standard for actual output', detail: 'Standard quantity/hours are those allowed for the output actually achieved, at standard price/rate.' },
+        { title: '2 · Total cost variance', detail: 'Standard cost − actual cost. Favourable if positive (cost saved).' },
+        { title: '3 · Price / rate variance', detail: 'Hold quantity at actual, vary the price: (SP − AP) × AQ for material; (SR − AR) × AH for labour.' },
+        { title: '4 · Usage / efficiency variance', detail: 'Hold price at standard, vary the quantity: (SQ − AQ) × SP for material; (SH − AH) × SR for labour.' },
+        { title: '5 · Reconcile', detail: 'Price/rate + usage/efficiency must equal the total cost variance — a built-in check.' },
+      ],
+    },
+    examTips: [
+      'Label every variance F or A — marks are lost for an unlabelled number, even if the arithmetic is right.',
+      'Use AQ for the price variance and SP for the usage variance (and AH/SR for labour) — swapping the multiplier is the commonest mistake.',
+      'Standard quantity/hours must be for the ACTUAL output achieved, not the budgeted output.',
+    ],
+    pitfalls: [
+      'Computing the usage variance at actual price instead of standard price.',
+      'Forgetting that price + usage must reconcile to the cost variance — if they don’t, a sign is wrong.',
+      'Confusing favourable with a positive number blindly — always check the direction (lower actual cost = favourable).',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 13 (Standard Costing)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Variance analysis — material & labour', url: 'https://www.accaglobal.com/gb/en/student/exam-support-resources/fundamentals-exams-study-resources/f2/technical-articles/variance-analysis.html', kind: 'official', source: 'ACCA' },
+      { label: 'Standard costing & variances', url: 'https://www.accountingnotes.net/cost-accounting/standard-costing/standard-costing/16480', kind: 'article', source: 'Accounting Notes' },
+    ],
+    workedExample: {
+      title: 'Material & labour variances (Arora, Unit 13)',
+      problem:
+        'Material: standard quantity for actual output 4,000 kg @ ₹5; actual 4,300 kg @ ₹4.80. Labour: standard 2,000 hrs @ ₹10; actual 2,100 hrs @ ₹9.50. Compute the cost, price/rate and usage/efficiency variances.',
+      steps: [
+        { label: 'Material price variance = (SP − AP) × AQ', formula: '(5 − 4.80) × 4,300', result: '₹860 (F)' },
+        { label: 'Material usage variance = (SQ − AQ) × SP', formula: '(4,000 − 4,300) × 5', result: '₹1,500 (A)' },
+        { label: 'Material cost variance = price + usage', formula: '+860 − 1,500', result: '₹640 (A)' },
+        { label: 'Labour rate variance = (SR − AR) × AH', formula: '(10 − 9.50) × 2,100', result: '₹1,050 (F)' },
+        { label: 'Labour efficiency variance = (SH − AH) × SR', formula: '(2,000 − 2,100) × 10', result: '₹1,000 (A)' },
+        { label: 'Labour cost variance = rate + efficiency', formula: '+1,050 − 1,000', result: '₹50 (F)' },
+      ],
+      answer: 'Material: price ₹860 (F), usage ₹1,500 (A), cost ₹640 (A). Labour: rate ₹1,050 (F), efficiency ₹1,000 (A), cost ₹50 (F).',
+      source: 'M.N. Arora, Cost Accounting, Unit 13',
+    },
+    practice: [
+      {
+        q: 'A material usage variance is adverse. Who is usually responsible?',
+        answer: 'The production department — adverse usage means more material was consumed than the standard allowed (waste, defective material, poor workmanship). Price is the buyer’s responsibility.',
+      },
+      {
+        q: 'SP ₹8, AP ₹8.50, AQ 1,000 kg. Find the material price variance and its nature.',
+        answer: '(8 − 8.50) × 1,000 = −₹500 → ₹500 (A), adverse — more was paid than standard.',
+      },
+      {
+        q: 'Why must the price and usage variances add up to the cost variance?',
+        answer: 'Because together they decompose the same total difference: one isolates the price effect, the other the quantity effect — their sum is the whole cost variance.',
+      },
+    ],
+    calc: 'standard-costing-variances',
   },
 ]
 
