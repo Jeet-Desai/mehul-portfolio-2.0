@@ -53,30 +53,13 @@ export default function Home() {
         <div className="pointer-events-none absolute -right-16 top-32 h-72 w-72 rounded-full bg-sun-200/40 blur-3xl" />
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
-          <div>
-            <motion.div
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+            <motion.h1
               initial="hidden"
               animate="show"
               custom={0}
               variants={fade}
-              className="flex items-center gap-3"
-            >
-              <span className="relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-[#0a0a0b] shadow-lg ring-1 ring-white/10">
-                <img src="/images/accrualsense-mark.png" alt={site.brand} className="h-full w-full object-cover" />
-                <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/20 via-white/5 to-transparent to-60%" />
-              </span>
-              <span className="leading-tight">
-                <span className="block font-display text-2xl font-extrabold text-slate-900">{site.brand}</span>
-                <span className="block text-sm font-medium text-slate-500">{site.byline}</span>
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial="hidden"
-              animate="show"
-              custom={1}
-              variants={fade}
-              className="mt-5 text-4xl font-extrabold leading-[1.1] sm:text-5xl lg:text-6xl"
+              className="text-4xl font-extrabold leading-[1.1] sm:text-5xl lg:text-6xl"
             >
               Master Commerce.
               <span className="block bg-gradient-to-r from-brand-600 to-brand-400 bg-clip-text text-transparent">
@@ -99,7 +82,7 @@ export default function Home() {
               animate="show"
               custom={3}
               variants={fade}
-              className="mt-8 flex flex-wrap gap-3"
+              className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start"
             >
               <Link
                 to="/learn"
