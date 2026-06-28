@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, Sparkles, Sun, Moon } from 'lucide-react'
+import { Menu, X, Sparkles, Sun, Moon, LogIn, LogOut } from 'lucide-react'
 import { navLinks } from '../data/site'
+import { useAuth } from '../lib/auth'
 import Logo from './Logo'
 
 function useDarkMode() {
@@ -24,6 +25,31 @@ function useDarkMode() {
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { dark, toggle } = useDarkMode()
+  const { enabled, user, signOut } = useAuth()
+
+  /** Login / logout control — only rendered once the auth feature is switched on. */
+  const AuthControl = ({ mobile = false }: { mobile?: boolean }) => {
+    if (!enabled) return null
+    if (user)
+      return (
+        <button
+          onClick={() => signOut()}
+          className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 ${mobile ? 'w-full justify-center' : ''}`}
+          title={user.email ?? 'Sign out'}
+        >
+          <LogOut className="h-4 w-4" /> Sign out
+        </button>
+      )
+    return (
+      <Link
+        to="/login"
+        onClick={() => mobile && setOpen(false)}
+        className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 ${mobile ? 'w-full justify-center' : ''}`}
+      >
+        <LogIn className="h-4 w-4" /> Log in
+      </Link>
+    )
+  }
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-full px-4 py-2 text-sm font-semibold transition ${
@@ -58,6 +84,7 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle />
+          <AuthControl />
           <Link
             to="/learn"
             className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-700"
@@ -107,6 +134,7 @@ export default function Navbar() {
               <Sparkles className="h-4 w-4" />
               Start Learning
             </Link>
+            <AuthControl mobile />
           </div>
         </div>
       )}

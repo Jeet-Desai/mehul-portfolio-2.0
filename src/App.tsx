@@ -14,7 +14,9 @@ import Ask from './pages/Ask'
 import CareerGuide from './pages/CareerGuide'
 import NoticeBoard from './pages/NoticeBoard'
 import Contact from './pages/Contact'
+import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import RequireAuth from './components/RequireAuth'
 
 export default function App() {
   return (
@@ -29,12 +31,14 @@ export default function App() {
           <Route path="/formulas" element={<Formulas />} />
           <Route path="/resources" element={<ResourceLibrary />} />
           <Route path="/resources/:id" element={<ResourceTopic />} />
-          <Route path="/learn/c/:slug" element={<CalculatorPage />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/ask" element={<Ask />} />
+          {/* Interactive tools require login (when auth is enabled); browse pages stay public for SEO. */}
+          <Route path="/learn/c/:slug" element={<RequireAuth><CalculatorPage /></RequireAuth>} />
+          <Route path="/practice" element={<RequireAuth><Practice /></RequireAuth>} />
+          <Route path="/ask" element={<RequireAuth><Ask /></RequireAuth>} />
           <Route path="/career" element={<CareerGuide />} />
           <Route path="/notices" element={<NoticeBoard />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
