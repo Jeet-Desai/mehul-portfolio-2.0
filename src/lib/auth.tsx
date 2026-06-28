@@ -52,7 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!supabase) return { error: 'Login is not enabled yet.' }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: redirectTo() },
+      options: {
+        redirectTo: redirectTo(),
+        // Always show Google's account chooser (instead of silently reusing the
+        // one already signed in to the browser).
+        queryParams: { prompt: 'select_account' },
+      },
     })
     return { error: error?.message ?? null }
   }
