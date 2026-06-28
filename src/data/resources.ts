@@ -23,6 +23,9 @@ import {
   FileSpreadsheet,
   PackageSearch,
   Users,
+  Layers,
+  ClipboardList,
+  HardHat,
 } from 'lucide-react'
 
 export type ResourceSubject =
@@ -808,6 +811,259 @@ export const resourceTopics: ResourceTopic[] = [
       },
     ],
     calc: 'wage-systems',
+  },
+  {
+    id: 'overhead-costing',
+    title: 'Overhead Absorption',
+    subject: 'Cost Accounting',
+    icon: Layers,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Spread indirect costs onto products — allocation, apportionment, the six absorption methods (incl. machine-hour rate), and under-/over-absorption.',
+    readingMinutes: 11,
+    tags: ['overhead', 'absorption', 'machine hour rate', 'apportionment', 'under absorption', 'over absorption', 'recovery rate'],
+    overview: [
+      'Overheads are the indirect costs — indirect material, indirect labour and indirect expenses — that cannot be traced to a single product. Because they are shared, they must be spread fairly across cost units in three steps: allocation, apportionment, and absorption.',
+      'Allocation charges a whole cost item to one department (e.g. a department’s own supervisor’s salary). Apportionment splits a shared cost across departments on an equitable basis (rent on floor area, power on machine kW-hours). Service-department costs are then re-apportioned to production departments (secondary distribution).',
+      'Finally, each production department’s overhead is absorbed into the cost units passing through it using a predetermined rate. Six rates are common; the machine-hour rate suits machine-intensive work, the labour-hour rate suits labour-intensive work. Because the rate is set in advance, the amount absorbed rarely equals the actual overhead — the gap is under- or over-absorption.',
+    ],
+    keyTerms: [
+      { term: 'Allocation', def: 'Charging an entire item of overhead to a single cost centre that wholly incurred it.' },
+      { term: 'Apportionment', def: 'Splitting a shared overhead across cost centres on an equitable basis (area, value, headcount).' },
+      { term: 'Absorption', def: 'Charging a department’s overhead to the cost units passing through it via a predetermined rate.' },
+      { term: 'Machine-hour rate', def: 'Overhead ÷ machine hours; used where work is machine-paced.' },
+      { term: 'Under-absorption', def: 'Actual overhead exceeds the amount absorbed — costs under-recovered.' },
+      { term: 'Over-absorption', def: 'Absorbed overhead exceeds the actual — costs over-recovered.' },
+    ],
+    formulas: [
+      { name: '% of direct material', expr: 'Overheads ÷ Direct material cost × 100' },
+      { name: '% of direct labour', expr: 'Overheads ÷ Direct labour cost × 100' },
+      { name: '% of prime cost', expr: 'Overheads ÷ Prime cost × 100' },
+      { name: 'Labour-hour rate', expr: 'Overheads ÷ Direct labour hours' },
+      { name: 'Machine-hour rate', expr: 'Overheads ÷ Machine hours' },
+      { name: 'Rate per unit', expr: 'Overheads ÷ Units produced' },
+      { name: 'Under-/over-absorption', expr: 'Actual overhead − Absorbed overhead', note: 'Absorbed = predetermined rate × actual base. Positive = under-absorbed.' },
+    ],
+    procedure: {
+      heading: 'Overhead distribution & absorption',
+      steps: [
+        { title: '1 · Primary distribution', detail: 'Allocate and apportion all overheads to production and service departments on equitable bases.' },
+        { title: '2 · Secondary distribution', detail: 'Re-apportion service-department costs to production departments (step-ladder or, for mutual services, simultaneous-equation/repeated-distribution).' },
+        { title: '3 · Compute the absorption rate', detail: 'For each production department, rate = department overhead ÷ chosen base (machine hours, labour hours, etc.). Pick the base that drives the overhead.' },
+        { title: '4 · Absorb into cost units', detail: 'Overhead absorbed = rate × actual units of the base in the job/unit.' },
+        { title: '5 · Under-/over-absorption', detail: 'Compare actual overhead with absorbed. Clear the difference to the costing P&L, or use a supplementary rate if large and due to normal causes.' },
+      ],
+    },
+    examTips: [
+      'Use a predetermined (budgeted ÷ budgeted) rate — that is exactly why under-/over-absorption arises.',
+      'Match the base to the cost driver: a machine shop → machine-hour rate; an assembly line → labour-hour rate. The % methods ignore time and can mislead.',
+      'Under-absorption due to abnormal idle capacity is written off to P&L; if due to normal fluctuations, a supplementary rate may be used to adjust cost.',
+    ],
+    pitfalls: [
+      'Confusing allocation (whole item, one department) with apportionment (split on a basis).',
+      'Forgetting to re-apportion service-department costs before striking the absorption rate.',
+      'Treating over-absorption as profit — it is merely a recovery of cost that must be adjusted.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 6 (Overhead Cost Control)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Overhead absorption rate — methods', url: 'https://www.accountingnotes.net/cost-accounting/overheads/absorption-of-overheads/16413', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Absorption costing & overheads', url: 'https://www.accaglobal.com/gb/en/student/exam-support-resources/fundamentals-exams-study-resources/f2/technical-articles/absorption-costing.html', kind: 'official', source: 'ACCA' },
+    ],
+    workedExample: {
+      title: 'Absorption rates & under-absorption (Arora §6.4 / §6.6)',
+      problem:
+        'Budgeted production overheads ₹40,000; direct material ₹2,00,000; direct labour ₹1,00,000 (prime cost ₹3,00,000); direct labour hours 2,500; machine hours 2,000; units 1,000. Actual overhead incurred ₹42,000 against 2,000 actual machine hours. Find the absorption rates and the under-/over-absorption on a machine-hour basis.',
+      steps: [
+        { label: '% of direct material', formula: '₹40,000 ÷ ₹2,00,000 × 100', result: '20%' },
+        { label: '% of direct labour', formula: '₹40,000 ÷ ₹1,00,000 × 100', result: '40%' },
+        { label: 'Machine-hour rate', formula: '₹40,000 ÷ 2,000', result: '₹20 per hour' },
+        { label: 'Overhead absorbed', formula: '₹20 × 2,000 actual hours', result: '₹40,000' },
+        { label: 'Under-absorption', formula: '₹42,000 actual − ₹40,000 absorbed', result: '₹2,000 under-absorbed' },
+      ],
+      answer: 'Rates: 20% of material, 40% of labour, ₹20 machine-hour. Absorbed ₹40,000 vs actual ₹42,000 → ₹2,000 under-absorbed, charged to the costing P&L.',
+      source: 'M.N. Arora, Cost Accounting, Unit 6 (§6.4 & §6.6)',
+    },
+    practice: [
+      {
+        q: 'Why does under-/over-absorption arise at all?',
+        answer: 'Because overheads are absorbed on a predetermined rate (budgeted ÷ budgeted). Actual overhead and actual activity differ from budget, so the absorbed amount rarely equals the actual.',
+      },
+      {
+        q: 'A machine shop with little direct labour should use which absorption base?',
+        options: ['% of direct labour', 'Machine-hour rate', '% of direct material', 'Rate per unit'],
+        answer: 'Machine-hour rate — overhead is driven by machine running time, not labour.',
+      },
+      {
+        q: 'Absorbed overhead ₹50,000; actual ₹46,000. Under- or over-absorbed, and by how much?',
+        answer: 'Over-absorbed by ₹4,000 (absorbed exceeds actual) — the excess is credited back / adjusted.',
+      },
+    ],
+    calc: 'overhead-absorption',
+  },
+  {
+    id: 'job-batch-costing',
+    title: 'Job & Batch Costing',
+    subject: 'Cost Accounting',
+    icon: ClipboardList,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Cost a one-off job on a job cost card and quote a cost-plus price; for repeated lots, find the Economic Batch Quantity.',
+    readingMinutes: 9,
+    tags: ['job costing', 'batch costing', 'ebq', 'economic batch quantity', 'job cost sheet', 'quotation', 'specific order costing'],
+    overview: [
+      'Job costing and batch costing are forms of specific-order costing, used where production is to customer order rather than continuous. Each cost object is identifiable and its costs are accumulated separately — unlike process costing, where identical units flow continuously.',
+      'In job costing, every job (a printing order, a repair, a custom machine) gets its own job cost card: direct material, direct wages and direct expenses are charged directly; overheads are absorbed using a predetermined rate; and a profit mark-up gives the quotation price.',
+      'Batch costing treats a batch of identical units as one job, then divides by the number of units for a cost per unit. The key question is the optimum batch size: large batches cut set-up cost per unit but raise carrying cost. The Economic Batch Quantity (EBQ) — the batch twin of EOQ — balances the two.',
+    ],
+    keyTerms: [
+      { term: 'Job cost card', def: 'The document that accumulates all costs of a specific job — the unique record of job costing.' },
+      { term: 'Cost-plus pricing', def: 'Selling price = total cost + an agreed profit mark-up on cost.' },
+      { term: 'Batch', def: 'A group of identical units produced together and costed as a single job.' },
+      { term: 'Set-up cost', def: 'The fixed cost of preparing machines/tools for a production run; fixed per batch, so falls per unit as batch size rises.' },
+      { term: 'Economic Batch Quantity', def: 'The batch size that minimises total set-up plus carrying cost.' },
+    ],
+    formulas: [
+      { name: 'Prime cost', expr: 'Direct material + Direct wages + Direct expenses' },
+      { name: 'Works cost', expr: 'Prime cost + Factory overhead absorbed' },
+      { name: 'Total cost', expr: 'Works cost + Administration overhead' },
+      { name: 'Quotation price', expr: 'Total cost + Profit mark-up' },
+      { name: 'Economic Batch Quantity', expr: 'EBQ = √(2 × U × S ÷ C)', note: 'U = annual units, S = set-up cost per batch, C = carrying cost per unit p.a.' },
+      { name: 'Production runs per year', expr: 'Annual units ÷ EBQ' },
+    ],
+    procedure: {
+      heading: 'Job card & batch size',
+      steps: [
+        { title: '1 · Charge direct costs', detail: 'Post direct material, direct wages and direct expenses straight to the job/batch.' },
+        { title: '2 · Absorb overheads', detail: 'Apply factory overhead (often a % of wages or a labour/machine-hour rate) and administration overhead (often a % of works cost).' },
+        { title: '3 · Add profit → price', detail: 'For a quotation, add the profit mark-up on total cost (cost-plus).' },
+        { title: '4 · Batch size', detail: 'For repeated production, compute EBQ = √(2US/C); the number of runs = annual units ÷ EBQ.' },
+      ],
+    },
+    examTips: [
+      'EBQ uses the same logic as EOQ — set-up cost replaces ordering cost, carrying cost stays the same.',
+      'Be clear whether profit is a % of cost (mark-up) or a % of selling price (margin) — they give different prices.',
+      'For batch costing, always state cost per unit = total batch cost ÷ units in the batch.',
+    ],
+    pitfalls: [
+      'Mixing up profit on cost vs profit on sales when quoting.',
+      'Forgetting that set-up cost is per batch (fixed), so cost per unit falls as the batch grows.',
+      'Applying the wrong overhead base in the job card (using % of material where a labour-hour rate is intended).',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Units 8 & 12 (Job & Batch Costing)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Job costing — meaning & procedure', url: 'https://www.accountingnotes.net/cost-accounting/job-costing/job-costing/16210', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Economic batch quantity', url: 'https://www.accaglobal.com/gb/en/student/exam-support-resources/fundamentals-exams-study-resources/f2.html', kind: 'official', source: 'ACCA' },
+    ],
+    workedExample: {
+      title: 'Economic Batch Quantity (Arora §12.2.1)',
+      problem:
+        'Annual production 12,000 units; set-up cost ₹150 per batch; carrying cost ₹0.20 per unit per annum. Find the economic batch quantity and the number of production runs per year.',
+      steps: [
+        { label: 'EBQ = √(2 × U × S ÷ C)', formula: '√(2 × 12,000 × 150 ÷ 0.20) = √1,80,00,000', result: '≈ 4,243 units' },
+        { label: 'Production runs per year', formula: '12,000 ÷ 4,243', result: '≈ 2.83 runs' },
+      ],
+      answer: 'Economic batch quantity ≈ 4,243 units, giving about 2.8 production runs a year.',
+      source: 'M.N. Arora, Cost Accounting, §12.2.1 (Economic Batch Quantity)',
+    },
+    practice: [
+      {
+        q: 'How does EBQ differ from EOQ?',
+        answer: 'They share the same √(2 × demand × cost-per-event ÷ carrying-cost) formula. EOQ uses ordering cost for purchased material; EBQ uses set-up cost for produced batches.',
+      },
+      {
+        q: 'A job has prime cost ₹4,500, factory overhead ₹1,500, admin overhead ₹600. Profit is 25% on cost. Find the price.',
+        answer: 'Total cost = 4,500 + 1,500 + 600 = ₹6,600; profit = 25% × 6,600 = ₹1,650; price = ₹8,250.',
+      },
+      {
+        q: 'Why does cost per unit fall as batch size increases?',
+        answer: 'Set-up cost is fixed per batch, so spreading it over more units lowers set-up cost per unit (until rising carrying cost offsets it — hence EBQ).',
+      },
+    ],
+    calc: 'job-batch-costing',
+  },
+  {
+    id: 'contract-costing',
+    title: 'Contract Costing',
+    subject: 'Cost Accounting',
+    icon: HardHat,
+    level: 'B.Com · BBA · CA/CMA Inter',
+    blurb:
+      'Cost long-duration contracts — the contract account, work certified/uncertified, notional profit, and the prudence rules for profit on incomplete contracts.',
+    readingMinutes: 11,
+    tags: ['contract costing', 'notional profit', 'work certified', 'retention money', 'cash ratio', 'incomplete contract'],
+    overview: [
+      'Contract costing applies to large, long-duration jobs carried out at a site — construction, civil engineering, shipbuilding. Each contract is a cost unit with its own contract account, to which all direct costs (materials, labour, plant, direct expenses) are charged. Because most costs are direct, it is essentially job costing on a big scale.',
+      'When a contract spans more than one year, the problem is how much profit to recognise on the unfinished work. Taking all the profit only on completion would distort year-to-year results; taking too much on incomplete work breaches prudence. So a notional profit is struck each year and only a conservative portion is credited to the P&L.',
+      'Two valuations matter at the year-end: work certified (approved by the contractee’s architect, valued at contract price, so it includes profit) and work uncertified (not yet approved, valued at cost only). The contractee usually pays a cash ratio of the work certified and holds back the rest as retention money.',
+    ],
+    keyTerms: [
+      { term: 'Work certified', def: 'Work-in-progress approved by the architect, valued at contract price (includes profit).' },
+      { term: 'Work uncertified', def: 'Completed work not yet approved, valued at cost only (no profit).' },
+      { term: 'Retention money', def: 'The part of work certified withheld by the contractee as security; cash ratio is the part paid.' },
+      { term: 'Notional profit', def: 'The contract account’s balancing figure = value of work certified + cost of uncertified − cost to date.' },
+      { term: 'Estimated profit', def: 'Contract price − estimated total cost; used when a contract is near completion.' },
+    ],
+    formulas: [
+      { name: 'Notional profit', expr: '(Work certified + Work uncertified) − Cost of work to date' },
+      { name: 'Stage of completion', expr: 'Work certified ÷ Contract price' },
+      { name: 'Cash ratio', expr: 'Cash received ÷ Work certified' },
+      { name: 'Profit (¼ ≤ stage < ½)', expr: '⅓ × Notional profit × Cash ratio' },
+      { name: 'Profit (½ ≤ stage < 9⁄10)', expr: '⅔ × Notional profit × Cash ratio' },
+    ],
+    procedure: {
+      heading: 'Profit on an incomplete contract',
+      steps: [
+        { title: '1 · Prepare the contract account', detail: 'Debit all costs (materials, labour, plant, expenses, overheads). Credit closing materials/plant at site, work uncertified, and work certified.' },
+        { title: '2 · Find notional profit', detail: 'It is the balancing figure of the account. If costs exceed the credits, it is a notional loss.' },
+        { title: '3 · Judge the stage', detail: 'Stage = work certified ÷ contract price. Below ¼ → take no profit.' },
+        { title: '4 · Apply the prudence rule', detail: '¼–½ → ⅓ × notional profit × cash ratio; ½–9⁄10 → ⅔ × notional profit × cash ratio; near completion → use estimated profit.' },
+        { title: '5 · Carry the reserve', detail: 'The portion not taken to P&L is held back as a reserve against future contingencies; a notional loss goes to P&L in full.' },
+      ],
+    },
+    examTips: [
+      'Work certified carries profit (valued at contract price); work uncertified is at cost. Never value uncertified work at selling price.',
+      'Multiply by the cash ratio (cash received ÷ work certified) — the “more common practice” — to be doubly prudent.',
+      'A notional loss is transferred to P&L in full, regardless of the stage of completion.',
+    ],
+    pitfalls: [
+      'Entering cash received in the contract account — it goes to the contractee’s personal account, not the contract account.',
+      'Forgetting to credit closing plant/material at site, which understates notional profit.',
+      'Taking the whole notional profit to P&L while the contract is incomplete.',
+    ],
+    references: [
+      { label: 'M.N. Arora, Cost Accounting — Unit 10 (Contract Costing)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
+      { label: 'Contract costing — profit on incomplete contracts', url: 'https://www.accountingnotes.net/cost-accounting/contract-costing/contract-costing/16260', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Profit on incomplete contracts', url: 'https://www.yourarticlelibrary.com/cost-accounting/contract-costing/profit-on-incomplete-contracts/55617', kind: 'article', source: 'Article Library' },
+    ],
+    workedExample: {
+      title: 'Notional profit & profit transfer (Arora, Illustration 10.1)',
+      problem:
+        'Contract price ₹10,00,000. To date: materials ₹50,000, labour ₹3,00,000, plant ₹20,000. Materials costing ₹5,000 were damaged. Plant depreciated 25% → ₹15,000 at site. Cash received ₹3,60,000 = 90% of work certified; work uncertified at cost ₹10,000. Find the notional profit and the profit to credit to P&L.',
+      steps: [
+        { label: 'Work certified = cash ÷ cash ratio', formula: '₹3,60,000 ÷ 90%', result: '₹4,00,000' },
+        { label: 'Debits (cost) = materials + labour + plant', formula: '50,000 + 3,00,000 + 20,000', result: '₹3,70,000' },
+        { label: 'Credits = damaged + plant at site + certified + uncertified', formula: '5,000 + 15,000 + 4,00,000 + 10,000', result: '₹4,30,000' },
+        { label: 'Notional profit = credits − debits', formula: '₹4,30,000 − ₹3,70,000', result: '₹60,000' },
+        { label: 'Stage = 4,00,000 ÷ 10,00,000 = 40% → ⅓ rule', formula: '⅓ × ₹60,000 × 90% cash ratio', result: '₹18,000' },
+      ],
+      answer: 'Notional profit ₹60,000; stage 40% (¼–½ band) → ⅓ × 60,000 × 90% = ₹18,000 credited to P&L, ₹42,000 carried as reserve.',
+      source: 'M.N. Arora, Cost Accounting, Illustration 10.1',
+    },
+    practice: [
+      {
+        q: 'Why is only part of the notional profit taken to P&L on an incomplete contract?',
+        answer: 'Prudence — the contract is unfinished and future losses/contingencies may arise, so a reserve is held back. The further along and the more cash collected, the larger the share recognised.',
+      },
+      {
+        q: 'At what stage is no profit transferred?',
+        answer: 'When work certified is less than ¼ of the contract price — the contract has not advanced far enough to recognise profit reliably.',
+      },
+      {
+        q: 'How is a notional loss treated?',
+        answer: 'Transferred to the P&L account in full, regardless of the stage of completion.',
+      },
+    ],
+    calc: 'contract-costing',
   },
 ]
 

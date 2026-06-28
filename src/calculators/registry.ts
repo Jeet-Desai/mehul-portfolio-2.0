@@ -22,6 +22,9 @@ import {
   FileSpreadsheet,
   PackageSearch,
   Users,
+  Layers,
+  ClipboardList,
+  HardHat,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -67,6 +70,33 @@ export const calculators: Calculator[] = [
     icon: Users,
     load: () => import('./Wages'),
     tags: ['wages', 'halsey', 'rowan', 'halsey weir', 'incentive', 'premium bonus', 'time rate', 'piece rate', 'labour turnover', 'separation rate', 'replacement rate', 'flux rate', 'labour cost'],
+  },
+  {
+    slug: 'overhead-absorption',
+    title: 'Overhead Absorption',
+    category: 'Costing',
+    blurb: 'Compute the overhead absorption rate by all six methods (% of material/labour/prime cost, labour-hour, machine-hour, per unit) and find under- or over-absorption.',
+    icon: Layers,
+    load: () => import('./Overhead'),
+    tags: ['overhead', 'absorption', 'recovery rate', 'machine hour rate', 'labour hour rate', 'under absorption', 'over absorption', 'apportionment', 'on cost'],
+  },
+  {
+    slug: 'job-batch-costing',
+    title: 'Job & Batch Costing',
+    category: 'Costing',
+    blurb: 'Build a job cost card up to a cost-plus quotation, and find the Economic Batch Quantity that minimises set-up plus carrying cost.',
+    icon: ClipboardList,
+    load: () => import('./JobBatch'),
+    tags: ['job costing', 'batch costing', 'ebq', 'economic batch quantity', 'job cost sheet', 'quotation', 'cost plus', 'setup cost', 'production run'],
+  },
+  {
+    slug: 'contract-costing',
+    title: 'Contract Account',
+    category: 'Costing',
+    blurb: 'Prepare the contract account, find notional profit as the balancing figure, and apply the prudence rules for profit on incomplete contracts.',
+    icon: HardHat,
+    load: () => import('./Contract'),
+    tags: ['contract costing', 'notional profit', 'work certified', 'work uncertified', 'retention money', 'cash ratio', 'incomplete contract', 'escalation', 'work in progress'],
   },
   {
     slug: 'fund-flow',
