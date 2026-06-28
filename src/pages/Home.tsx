@@ -1,14 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import {
-  Calculator,
-  PencilLine,
-  Bot,
-  Compass,
-  ArrowRight,
-  GraduationCap,
-  CheckCircle2,
-} from 'lucide-react'
+import { Calculator, PencilLine, Bot, Compass, ArrowRight } from 'lucide-react'
 import { site, professor, stats } from '../data/site'
 
 const features = [
@@ -56,22 +48,28 @@ export default function Home() {
     <>
       {/* ---------- Hero ---------- */}
       <section className="relative overflow-hidden">
-        {/* decorative blobs */}
-        <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand-200/50 blur-3xl" />
+        {/* a single warm decorative blob behind the photo (the top-left one was a
+            distracting white glow in dark mode, so it was removed) */}
         <div className="pointer-events-none absolute -right-16 top-32 h-72 w-72 rounded-full bg-sun-200/40 blur-3xl" />
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
           <div>
-            <motion.span
+            <motion.div
               initial="hidden"
               animate="show"
               custom={0}
               variants={fade}
-              className="cl-pill bg-white text-brand-700 shadow-sm ring-1 ring-brand-100"
+              className="flex items-center gap-3"
             >
-              <GraduationCap className="h-4 w-4" />
-              {site.byline}
-            </motion.span>
+              <span className="relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-[#0a0a0b] shadow-lg ring-1 ring-white/10">
+                <img src="/images/accrualsense-mark.png" alt={site.brand} className="h-full w-full object-cover" />
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/20 via-white/5 to-transparent to-60%" />
+              </span>
+              <span className="leading-tight">
+                <span className="block font-display text-2xl font-extrabold text-slate-900">{site.brand}</span>
+                <span className="block text-sm font-medium text-slate-500">{site.byline}</span>
+              </span>
+            </motion.div>
 
             <motion.h1
               initial="hidden"
@@ -118,35 +116,26 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* professor card */}
+          {/* professor card — smaller, badges removed (stats live on /about) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="relative mx-auto w-full max-w-sm"
+            className="mx-auto w-full max-w-[280px]"
           >
+            <p className="mb-3 text-center text-xs font-bold uppercase tracking-[0.25em] text-brand-600 dark:text-brand-300">
+              An initiative by
+            </p>
             <div className="cl-card overflow-hidden p-0 hover:translate-y-0">
               <img
                 src={professor.photo}
                 alt={professor.name}
                 className="aspect-[4/5] w-full object-cover"
               />
-              <div className="p-5">
-                <p className="font-display text-lg font-bold text-slate-900">{professor.name}</p>
+              <div className="p-4 text-center">
+                <p className="font-display text-base font-bold text-slate-900">{professor.name}</p>
                 <p className="text-sm text-slate-500">{professor.role}</p>
               </div>
-            </div>
-
-            {/* floating badges */}
-            <div className="absolute -left-4 top-6 hidden rounded-2xl bg-white p-3 shadow-xl ring-1 ring-slate-100 sm:block">
-              <p className="text-2xl font-extrabold text-brand-600">22+</p>
-              <p className="text-xs text-slate-500">years teaching</p>
-            </div>
-            <div className="absolute -right-4 bottom-24 hidden rounded-2xl bg-white p-3 shadow-xl ring-1 ring-slate-100 sm:block">
-              <p className="flex items-center gap-1 text-sm font-bold text-mint-600">
-                <CheckCircle2 className="h-4 w-4" /> 36 papers
-              </p>
-              <p className="text-xs text-slate-500">published research</p>
             </div>
           </motion.div>
         </div>
