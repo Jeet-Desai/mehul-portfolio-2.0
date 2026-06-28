@@ -67,6 +67,23 @@ Done so far on the build:
   figure + presets). Embedded full-width under BOTH Cash Flow and Fund Flow for deriving adjustment figures
   (tax paid, assets bought/sold). Verified (derives tax paid ₹15,000).
 - Resource topics for fund-flow & cash-flow already existed and now auto-light their "Try the calculator" CTA.
+- ✅ **Cost & Management Accounting build COMPLETE** — Batches 3–6, all 11 calculators shipped & browser-verified
+  (light/dark), every seeded figure tied to M.N. Arora. Commits `33fada2` (B3), `fcffb27` (B4), `7fbef87` (B5),
+  `c625e53` (B6). Calculators: cost-sheet · eoq-stock-levels · wage-systems · overhead-absorption · job-batch-costing ·
+  contract-costing · process-costing · operating-costing · standard-costing-variances · cash-budget · flexible-budget.
+  9 new resource topics + cash/flexible budget topics now light their "Try the calculator" CTA. Reusable **tabbed
+  segmented-control** pattern (EOQ, wages, job/batch, variances) and **T-account / two-column table** patterns
+  (contract, process) established.
+- ✅ **Login / Auth (Supabase) — built, DORMANT until keyed** (commit `0bfc9e5`). Mirrors the AI-tutor pattern:
+  enabled only when `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` are set; until then the whole site is open and
+  `/login` says "not switched on". When enabled, **only the interactive tools** require login — calculators
+  (`/learn/c/:slug`), `/practice`, `/ask`; everything else (Home, About, Contact, Resources, Formulas, Notices,
+  Career, Research, `/learn` index) stays public for SEO. Google OAuth + passwordless email magic link.
+  Files: `lib/supabaseClient.ts`, `lib/auth.tsx` (AuthProvider/useAuth), `components/RequireAuth.tsx`,
+  `pages/Login.tsx`; wired in `App.tsx`/`main.tsx`; Navbar shows Log in/Sign out only when enabled.
+  **To switch on:** `docs/AUTH.md` (create Supabase project → add 2 keys in Vercel → enable Google+email → redeploy).
+  Dep added: `@supabase/supabase-js`.
+
 - ✅ **Batch 3 (unit · material · labour)** — DONE & browser-verified (light/dark), all figures tie to Arora:
   - **Cost Sheet** — `lib/costSheet.ts` + `CostSheet.tsx` (slug `cost-sheet`). Full ladder: RM consumed → prime →
     works (±WIP) → cost of production (±FG) → cost of sales → profit, with optional per-unit column. Seeded with
