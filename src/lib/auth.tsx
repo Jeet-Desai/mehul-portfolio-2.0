@@ -13,7 +13,12 @@ type AuthContextValue = {
   /** whether the auth feature is switched on (keys present) */
   enabled: boolean
   signInWithGoogle: () => Promise<{ error: string | null }>
-  signInWithEmail: (email: string) => Promise<{ error: string | null }>
+  signInWithPassword: (email: string, password: string) => Promise<{ error: string | null }>
+  /** returns needsConfirmation = true when email confirmation is on (no session yet) */
+  signUpWithPassword: (
+    email: string,
+    password: string,
+  ) => Promise<{ error: string | null; needsConfirmation: boolean }>
   signOut: () => Promise<void>
 }
 
@@ -52,13 +57,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null }
   }
 
-  const signInWithEmail = async (email: string) => {
+  const signInWithPassword = async (email: string, password: string) => {
     if (!supabase) return { error: 'Login is not enabled yet.' }
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    return { error: error?.message ?? null }
+  }
+
+  const signUpWithPassword = async (email: string, password: string) => {
+    if (!supabase) return { error: 'Login is not enabled yet.', needsConfirmation: false }
+    const { data, error } = await supabase.auth.signUp({
       email,
+      password,
       options: { emailRedirectTo: redirectTo() },
     })
-    return { error: error?.message ?? null }
+    // When "Confirm email" is OFF a session is returned (auto signed-in). When it
+    // is ON, a user exists but no session — the email must be confirmed first.
+    const needsConfirmation = !error && !data.session && !!data.user
+    return { error: error?.message ?? null, needsConfirmation }
   }
 
   const signOut = async () => {
@@ -73,7 +88,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         enabled: authEnabled,
         signInWithGoogle,
-        signInWithEmail,
+        signInWithPassword,
+        signUpWithPassword,
         signOut,
       }}
     >

@@ -1,20 +1,23 @@
 import { useState } from 'react'
 import { useLocation, useNavigate, Navigate } from 'react-router-dom'
-import { LogIn, Mail, CheckCircle2, Info, Loader2 } from 'lucide-react'
+import { LogIn, Mail, Lock, CheckCircle2, Info, Loader2 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import Logo from '../components/Logo'
 
 type LocState = { from?: string }
+type Mode = 'signin' | 'signup'
 
 export default function Login() {
-  const { enabled, user, signInWithGoogle, signInWithEmail } = useAuth()
+  const { enabled, user, signInWithGoogle, signInWithPassword, signUpWithPassword } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const from = (location.state as LocState | null)?.from ?? '/learn'
 
+  const [mode, setMode] = useState<Mode>('signin')
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
-  const [sent, setSent] = useState(false)
+  const [confirm, setConfirm] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // Already signed in → bounce to where they were headed.
@@ -31,15 +34,23 @@ export default function Login() {
     // On success the browser redirects to Google, so no further handling here.
   }
 
-  const onEmail = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!email || !password) return
     setBusy(true)
     setError(null)
-    const { error } = await signInWithEmail(email.trim())
-    setBusy(false)
-    if (error) setError(error)
-    else setSent(true)
+    if (mode === 'signup') {
+      const { error, needsConfirmation } = await signUpWithPassword(email.trim(), password)
+      setBusy(false)
+      if (error) setError(error)
+      else if (needsConfirmation) setConfirm(true)
+      else navigate(from, { replace: true }) // confirmation off → signed in
+    } else {
+      const { error } = await signInWithPassword(email.trim(), password)
+      setBusy(false)
+      if (error) setError(error)
+      else navigate(from, { replace: true })
+    }
   }
 
   return (
@@ -47,7 +58,9 @@ export default function Login() {
       <div className="cl-card p-8 hover:translate-y-0">
         <div className="mb-6 flex flex-col items-center text-center">
           <Logo />
-          <h1 className="mt-5 font-display text-2xl font-extrabold">Sign in to AccrualSense</h1>
+          <h1 className="mt-5 font-display text-2xl font-extrabold">
+            {mode === 'signup' ? 'Create your account' : 'Sign in to AccrualSense'}
+          </h1>
           <p className="mt-1 text-sm text-slate-500">
             Free for every commerce student. Log in to use the calculators, quizzes and AI tutor.
           </p>
@@ -62,12 +75,12 @@ export default function Login() {
               <button onClick={() => navigate('/learn')} className="font-semibold underline">Learn Hub</button>.
             </span>
           </div>
-        ) : sent ? (
+        ) : confirm ? (
           <div className="flex items-start gap-2 rounded-xl bg-mint-50 p-4 text-sm text-mint-700 dark:bg-mint-500/10 dark:text-mint-300">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              Check your inbox — we’ve emailed a magic sign-in link to <strong>{email}</strong>. Click it to finish
-              logging in.
+              Almost there — we’ve emailed a confirmation link to <strong>{email}</strong>. Click it to verify your
+              account, then come back and sign in.
             </span>
           </div>
         ) : (
@@ -85,7 +98,7 @@ export default function Login() {
               <span className="h-px flex-1 bg-slate-200" /> or <span className="h-px flex-1 bg-slate-200" />
             </div>
 
-            <form onSubmit={onEmail} className="space-y-3">
+            <form onSubmit={onSubmit} className="space-y-3">
               <label className="block">
                 <span className="text-sm font-semibold text-slate-700">Email address</span>
                 <div className="mt-1.5 flex items-stretch overflow-hidden rounded-xl border border-slate-200 bg-white focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100">
@@ -93,6 +106,7 @@ export default function Login() {
                   <input
                     type="email"
                     required
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
@@ -100,20 +114,47 @@ export default function Login() {
                   />
                 </div>
               </label>
+
+              <label className="block">
+                <span className="text-sm font-semibold text-slate-700">Password</span>
+                <div className="mt-1.5 flex items-stretch overflow-hidden rounded-xl border border-slate-200 bg-white focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100">
+                  <span className="grid place-items-center bg-slate-50 px-3 text-slate-400"><Lock className="h-4 w-4" /></span>
+                  <input
+                    type="password"
+                    required
+                    minLength={6}
+                    autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={mode === 'signup' ? 'At least 6 characters' : 'Your password'}
+                    className="w-full bg-transparent px-3 py-2.5 text-sm outline-none"
+                  />
+                </div>
+              </label>
+
               <button
                 type="submit"
                 disabled={busy}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-700 disabled:opacity-60"
               >
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
-                Email me a magic link
+                {mode === 'signup' ? 'Create account' : 'Sign in'}
               </button>
             </form>
 
             {error && <p className="text-sm text-rose-500">{error}</p>}
 
-            <p className="text-center text-xs text-slate-400">
-              No password needed — we email you a one-time sign-in link.
+            <p className="text-center text-xs text-slate-500">
+              {mode === 'signup' ? 'Already have an account?' : 'New here?'}{' '}
+              <button
+                onClick={() => {
+                  setMode(mode === 'signup' ? 'signin' : 'signup')
+                  setError(null)
+                }}
+                className="font-semibold text-brand-600 hover:underline"
+              >
+                {mode === 'signup' ? 'Sign in' : 'Create an account'}
+              </button>
             </p>
           </div>
         )}
