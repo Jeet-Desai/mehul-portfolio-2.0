@@ -28,6 +28,7 @@ import {
   GitBranch,
   Bus,
   SlidersHorizontal,
+  CalendarRange,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -127,6 +128,24 @@ export const calculators: Calculator[] = [
     icon: SlidersHorizontal,
     load: () => import('./Variance'),
     tags: ['standard costing', 'variance analysis', 'material cost variance', 'price variance', 'usage variance', 'labour rate variance', 'efficiency variance', 'favourable', 'adverse'],
+  },
+  {
+    slug: 'cash-budget',
+    title: 'Cash Budget',
+    category: 'Management Accounting',
+    blurb: 'Build a month-by-month cash budget — receipts, payments and a running closing balance that flags exactly when an overdraft is needed.',
+    icon: CalendarRange,
+    load: () => import('./CashBudget'),
+    tags: ['cash budget', 'receipts and payments', 'closing balance', 'overdraft', 'budgetary control', 'cash forecast', 'liquidity'],
+  },
+  {
+    slug: 'flexible-budget',
+    title: 'Flexible Budget',
+    category: 'Management Accounting',
+    blurb: 'Split a semi-variable cost into fixed and variable by the high-low method, then restate the budget at any level of activity.',
+    icon: SlidersHorizontal,
+    load: () => import('./FlexibleBudget'),
+    tags: ['flexible budget', 'high-low method', 'cost behaviour', 'fixed variable', 'semi-variable', 'capacity', 'budgetary control'],
   },
   {
     slug: 'fund-flow',
