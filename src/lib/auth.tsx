@@ -40,6 +40,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!active) return
       setSession(data.session)
       setLoading(false)
+      // Belt-and-suspenders: once the session is established, make sure no auth
+      // artefact (PKCE ?code, or a stray implicit #access_token) is left in the
+      // address bar. The SDK normally strips it; this guarantees a clean URL.
+      if (typeof window !== 'undefined') {
+        const { pathname, hash, search } = window.location
+        if (hash.includes('access_token') || hash.includes('error') || /[?&]code=/.test(search)) {
+          window.history.replaceState({}, document.title, pathname)
+        }
+      }
     })
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s))
     return () => {
@@ -64,7 +73,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithPassword = async (email: string, password: string) => {
     if (!supabase) return { error: 'Login is not enabled yet.' }
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    // Update the context immediately so a redirect right after sign-in doesn't
+    // race the async onAuthStateChange (which would bounce the user back to /login).
+    if (data?.session) setSession(data.session)
     return { error: error?.message ?? null }
   }
 
@@ -75,8 +87,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: { emailRedirectTo: redirectTo() },
     })
-    // When "Confirm email" is OFF a session is returned (auto signed-in). When it
-    // is ON, a user exists but no session — the email must be confirmed first.
+    // When "Confirm email" is OFF a session is returned (auto signed-in). Set it
+    // immediately so the user is logged straight in — no second login prompt.
+    // When confirmation is ON, a user exists but no session — email must be confirmed.
+    if (data?.session) setSession(data.session)
     const needsConfirmation = !error && !data.session && !!data.user
     return { error: error?.message ?? null, needsConfirmation }
   }

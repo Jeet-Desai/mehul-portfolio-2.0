@@ -15,6 +15,8 @@ import CareerGuide from './pages/CareerGuide'
 import NoticeBoard from './pages/NoticeBoard'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 import NotFound from './pages/NotFound'
 import RequireAuth from './components/RequireAuth'
 
@@ -39,6 +41,8 @@ export default function App() {
           <Route path="/notices" element={<NoticeBoard />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

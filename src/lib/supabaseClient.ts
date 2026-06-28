@@ -22,6 +22,10 @@ export const supabase: SupabaseClient | null = authEnabled
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        // PKCE flow: the redirect returns a short-lived, single-use `?code=…`
+        // (not a full access token in the URL hash). The SDK exchanges it for a
+        // session and strips it from the address bar — no token left in the URL.
+        flowType: 'pkce',
       },
     })
   : null

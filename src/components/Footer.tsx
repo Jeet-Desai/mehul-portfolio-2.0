@@ -69,8 +69,11 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-slate-100 py-5 text-center text-xs text-slate-400">
-        © {new Date().getFullYear()} {site.brand} · {site.byline}
+      <div className="flex flex-col items-center justify-center gap-2 border-t border-slate-100 py-5 text-center text-xs text-slate-400 sm:flex-row sm:gap-4">
+        <span>© {new Date().getFullYear()} {site.brand} · {site.byline}</span>
+        <span className="hidden sm:inline">·</span>
+        <Link to="/privacy" className="hover:text-brand-600">Privacy Policy</Link>
+        <Link to="/terms" className="hover:text-brand-600">Terms of Service</Link>
       </div>
     </footer>
   )
