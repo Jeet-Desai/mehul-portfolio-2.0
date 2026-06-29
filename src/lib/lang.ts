@@ -77,6 +77,13 @@ export const UI_STRINGS: Record<Lang, Record<string, string>> = {
     search: 'Search topics — ratio analysis, EOQ, variances…',
     allSubjects: 'All',
     study: 'Study',
+    heroTitle: 'Study notes that actually teach the method',
+    heroSubtitle:
+      'Topic-by-topic guides for commerce students — the concept, the formulas, the step-by-step method, exam tips and common mistakes, each grounded in standard texts and linked to a calculator that shows the working.',
+    disclaimer:
+      'These notes are a study aid grounded in standard B.Com / CA-CS-CMA texts and cross-checked against authoritative sources (each topic lists its references). For statutory rates and the latest exam scheme, always confirm with the official source.',
+    topicDisclaimer:
+      'A study aid grounded in standard B.Com / CA-CS-CMA texts and Dr. Desai’s class material. Always confirm statutory rates and the current exam scheme with the official source before relying on them.',
   },
   gu: {
     library: 'સંદર્ભ ગ્રંથાલય',
@@ -109,7 +116,33 @@ export const UI_STRINGS: Record<Lang, Record<string, string>> = {
     search: 'વિષય શોધો — ગુણોત્તર, EOQ, વિચરણ…',
     allSubjects: 'બધા',
     study: 'અભ્યાસ',
+    heroTitle: 'અભ્યાસ-નોંધો જે ખરેખર પદ્ધતિ શીખવે',
+    heroSubtitle:
+      'વાણિજ્ય વિદ્યાર્થીઓ માટે વિષય-વાર માર્ગદર્શિકાઓ — ખ્યાલ, સૂત્રો, પગલાં-દર-પગલાં પદ્ધતિ, પરીક્ષાની ટિપ્સ અને સામાન્ય ભૂલો; દરેક પ્રમાણભૂત પાઠ્યપુસ્તકો પર આધારિત અને ઉકેલ બતાવતા કૅલ્ક્યુલેટર સાથે જોડાયેલ.',
+    disclaimer:
+      'આ નોંધો પ્રમાણભૂત B.Com / CA-CS-CMA પાઠ્યપુસ્તકો પર આધારિત અને અધિકૃત સ્રોતો સામે ચકાસેલ અભ્યાસ-સહાય છે (દરેક વિષય તેના સંદર્ભો દર્શાવે છે). કાયદાકીય દરો અને નવીનતમ પરીક્ષા-યોજના માટે હંમેશાં અધિકૃત સ્રોત સાથે ખાતરી કરો.',
+    topicDisclaimer:
+      'પ્રમાણભૂત B.Com / CA-CS-CMA પાઠ્યપુસ્તકો અને ડૉ. દેસાઈની વર્ગ-સામગ્રી પર આધારિત અભ્યાસ-સહાય. આધાર રાખતા પહેલાં કાયદાકીય દરો અને વર્તમાન પરીક્ષા-યોજના હંમેશાં અધિકૃત સ્રોત સાથે ખાતરી કરો.',
   },
 }
 
 export const useUI = (lang: Lang) => UI_STRINGS[lang]
+
+/** Gujarati labels for the three ResourceSubject groups (chips + section headings).
+    Keyed by the English subject string; falls back to that string if unmapped. */
+const SUBJECT_LABELS: Record<Lang, Record<string, string>> = {
+  en: {
+    'Financial Statement Analysis': 'Financial Statement Analysis',
+    'Budgetary Control': 'Budgetary Control',
+    'Cost Accounting': 'Cost Accounting',
+  },
+  gu: {
+    'Financial Statement Analysis': 'નાણાકીય પત્રકોનું વિશ્લેષણ',
+    'Budgetary Control': 'અંદાજપત્રીય નિયમન',
+    'Cost Accounting': 'પડતર હિસાબ',
+  },
+}
+
+export function subjectLabel(lang: Lang, subject: string): string {
+  return SUBJECT_LABELS[lang][subject] ?? subject
+}

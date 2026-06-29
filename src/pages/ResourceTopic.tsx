@@ -27,7 +27,7 @@ import {
 } from 'lucide-react'
 import { getResourceTopic, type RefKind, type PracticeQuestion } from '../data/resources'
 import { getCalculator } from '../calculators/registry'
-import { useLang, useUI, type Lang } from '../lib/lang'
+import { useLang, useUI, subjectLabel, type Lang } from '../lib/lang'
 import NotFound from './NotFound'
 
 /** Print the current topic as a clean PDF (browser "Save as PDF").
@@ -169,7 +169,7 @@ export default function ResourceTopic() {
         </span>
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="cl-pill bg-brand-100 text-brand-700 !px-2.5 !py-0.5 !text-xs">{topic.subject}</span>
+            <span className="cl-pill bg-brand-100 text-brand-700 !px-2.5 !py-0.5 !text-xs">{subjectLabel(lang, topic.subject)}</span>
             <span className="inline-flex items-center gap-1 text-xs text-slate-400">
               <Clock className="h-3.5 w-3.5" /> {topic.readingMinutes} {ui.minRead}
             </span>
@@ -427,10 +427,7 @@ export default function ResourceTopic() {
             )
           })}
         </div>
-        <p className="mt-4 text-xs leading-relaxed text-slate-400">
-          A study aid grounded in standard B.Com / CA-CS-CMA texts and Dr. Desai’s class material. Always
-          confirm statutory rates and the current exam scheme with the official source before relying on them.
-        </p>
+        <p className="mt-4 text-xs leading-relaxed text-slate-400">{ui.topicDisclaimer}</p>
       </section>
     </div>
   )

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, ArrowRight, Clock, Info } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import { resourceTopics, resourceSubjects, type ResourceSubject } from '../data/resources'
-import { useLang, useUI, type Lang } from '../lib/lang'
+import { useLang, useUI, subjectLabel, type Lang } from '../lib/lang'
 
 const subjectTone: Record<ResourceSubject, string> = {
   'Financial Statement Analysis': 'bg-brand-100 text-brand-700',
@@ -40,11 +40,7 @@ export default function ResourceLibrary() {
 
   return (
     <>
-      <PageHeader
-        eyebrow="Resource Library"
-        title="Study notes that actually teach the method"
-        subtitle="Topic-by-topic guides for commerce students — the concept, the formulas, the step-by-step method, exam tips and common mistakes, each grounded in standard texts and linked to a calculator that shows the working."
-      />
+      <PageHeader eyebrow={ui.library} title={ui.heroTitle} subtitle={ui.heroSubtitle} />
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         {/* search + language toggle */}
@@ -83,7 +79,7 @@ export default function ResourceLibrary() {
                 subject === s ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              {s}
+              {s === 'All' ? ui.allSubjects : subjectLabel(lang, s)}
             </button>
           ))}
         </div>
@@ -91,7 +87,7 @@ export default function ResourceLibrary() {
         {groups.map((g) => (
           <section key={g.subject} className="mb-10">
             <div className="mb-4 flex items-center gap-3">
-              <h2 className="text-xl font-bold">{g.subject}</h2>
+              <h2 className="text-xl font-bold">{subjectLabel(lang, g.subject)}</h2>
               <span className={`cl-pill ${subjectTone[g.subject]} !px-2.5 !py-0.5 !text-xs`}>
                 {g.items.length}
               </span>
@@ -138,11 +134,7 @@ export default function ResourceLibrary() {
 
         <div className="mt-4 flex items-start gap-2 rounded-xl bg-slate-50 p-4 text-xs text-slate-500">
           <Info className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>
-            These notes are a study aid grounded in standard B.Com / CA-CS-CMA texts and cross-checked against
-            authoritative sources (each topic lists its references). For statutory rates and the latest exam
-            scheme, always confirm with the official source.
-          </span>
+          <span>{ui.disclaimer}</span>
         </div>
       </div>
     </>
