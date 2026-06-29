@@ -179,3 +179,84 @@ export function computeStockLevels(inp: StockInputs): StockResult {
 
   return { reorderLevel, minimumLevel, maximumLevel, averageLevel, dangerLevel, avgLeadTime, steps }
 }
+
+/* --------------------------------------------------- Inventory turnover ---- */
+/* Inventory / Stock Turnover Ratio — how many times the average stock is
+   consumed (or sold) in a period, plus the inventory holding period.
+   Cost-accounting convention (M.N. Arora, Material Cost Control): use the
+   COST flow (materials consumed or COGS), never sales, over AVERAGE stock.
+   Cross-checked: Finance Strategists, CFI, NetSuite, Wikipedia. */
+
+export type TurnoverInputs = {
+  /** 'material' = raw-material turnover (consumed ÷ avg RM stock);
+      'cogs' = finished-goods / trading inventory turnover (COGS ÷ avg stock) */
+  basis: 'material' | 'cogs'
+  /** how the cost flow is supplied */
+  flowMode: 'direct' | 'purchases'
+  /** opening stock */
+  opening: number
+  /** closing stock */
+  closing: number
+  /** materials consumed / COGS, when flowMode = 'direct' */
+  flowDirect: number
+  /** purchases, when flowMode = 'purchases' → flow = opening + purchases − closing */
+  purchases: number
+  /** days in the period (365 default) */
+  periodDays: number
+}
+
+export type TurnoverResult = {
+  /** the cost flow used (materials consumed or COGS) */
+  flow: number
+  averageStock: number
+  /** turnover ratio, in 'times' */
+  turnover: number
+  /** inventory holding period in days */
+  holdingDays: number
+  steps: Step[]
+}
+
+export function computeTurnover(inp: TurnoverInputs): TurnoverResult {
+  const flowLabel = inp.basis === 'material' ? 'materials consumed' : 'cost of goods sold'
+  const stockLabel = inp.basis === 'material' ? 'average raw-material stock' : 'average inventory'
+
+  const flow =
+    inp.flowMode === 'direct' ? inp.flowDirect : inp.opening + inp.purchases - inp.closing
+  const averageStock = (inp.opening + inp.closing) / 2
+  const turnover = averageStock > 0 ? flow / averageStock : 0
+  const holdingDays = turnover > 0 ? inp.periodDays / turnover : 0
+
+  const steps: Step[] = []
+
+  if (inp.flowMode === 'purchases') {
+    steps.push({
+      label: `Cost of ${flowLabel} = Opening stock + Purchases − Closing stock`,
+      formula: `${formatINR(inp.opening)} + ${formatINR(inp.purchases)} − ${formatINR(inp.closing)}`,
+      result: formatINR(flow),
+    })
+  }
+
+  steps.push(
+    {
+      label: `${cap(stockLabel)} = (Opening + Closing) ÷ 2`,
+      formula: `(${formatINR(inp.opening)} + ${formatINR(inp.closing)}) ÷ 2`,
+      result: formatINR(averageStock),
+    },
+    {
+      label: `Turnover ratio = Cost of ${flowLabel} ÷ ${stockLabel}`,
+      formula: `${formatINR(flow)} ÷ ${formatINR(averageStock)}`,
+      result: `${formatNum(turnover)} times`,
+      note: 'Use the cost flow (not sales) so numerator and denominator are on the same basis.',
+    },
+    {
+      label: `Inventory holding period = ${formatNum(inp.periodDays)} ÷ turnover ratio`,
+      formula: `${formatNum(inp.periodDays)} ÷ ${formatNum(turnover)}`,
+      result: `${formatNum(holdingDays)} days`,
+      note: 'How long, on average, an item stays in stock before it is consumed or sold.',
+    },
+  )
+
+  return { flow, averageStock, turnover, holdingDays, steps }
+}
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)

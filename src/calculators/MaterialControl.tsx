@@ -7,21 +7,24 @@ import { formatINR, formatNum, toNum } from '../lib/format'
 import {
   computeEoq,
   computeStockLevels,
+  computeTurnover,
   type EoqInputs,
   type StockInputs,
+  type TurnoverInputs,
 } from '../lib/materialControl'
 
-type Tab = 'eoq' | 'levels'
+type Tab = 'eoq' | 'levels' | 'turnover'
 
 export default function MaterialControl() {
   const [tab, setTab] = useState<Tab>('eoq')
 
   return (
     <div className="space-y-6">
-      <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 dark:bg-white">
+      <div className="inline-flex flex-wrap rounded-xl border border-slate-200 bg-slate-50 p-1 dark:bg-white">
         {([
           ['eoq', 'Economic Order Quantity'],
           ['levels', 'Stock levels'],
+          ['turnover', 'Inventory turnover'],
         ] as [Tab, string][]).map(([v, label]) => (
           <button
             key={v}
@@ -36,7 +39,7 @@ export default function MaterialControl() {
         ))}
       </div>
 
-      {tab === 'eoq' ? <Eoq /> : <Levels />}
+      {tab === 'eoq' ? <Eoq /> : tab === 'levels' ? <Levels /> : <Turnover />}
     </div>
   )
 }
@@ -199,6 +202,117 @@ function Levels() {
           <span>
             Lead time and usage must be in the <strong>same period units</strong> (e.g. weeks). “Maximum” uses fastest
             consumption × longest delay; “minimum” keeps a buffer for normal consumption over the average delay.
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ----------------------------------------------------- Inventory turnover -- */
+
+const TURNOVER_SEED = {
+  basis: 'material' as 'material' | 'cogs',
+  flowMode: 'direct' as 'direct' | 'purchases',
+  opening: '80000',
+  closing: '120000',
+  flowDirect: '1200000',
+  purchases: '1240000',
+  periodDays: '365',
+}
+
+function Turnover() {
+  const [f, setF] = useState(TURNOVER_SEED)
+  const set = (k: keyof typeof TURNOVER_SEED, v: string) => setF((s) => ({ ...s, [k]: v }))
+
+  const res = useMemo(() => {
+    const inp: TurnoverInputs = {
+      basis: f.basis,
+      flowMode: f.flowMode,
+      opening: toNum(f.opening),
+      closing: toNum(f.closing),
+      flowDirect: toNum(f.flowDirect),
+      purchases: toNum(f.purchases),
+      periodDays: toNum(f.periodDays),
+    }
+    return computeTurnover(inp)
+  }, [f])
+
+  const flowLabel = f.basis === 'material' ? 'Cost of materials consumed' : 'Cost of goods sold'
+  const ratioLabel = f.basis === 'material' ? 'Raw-material turnover ratio' : 'Inventory turnover ratio'
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-5">
+      <div className="space-y-4 lg:col-span-2">
+        <ResultPanel title="Stock & cost flow">
+          <div className="space-y-3">
+            <div>
+              <span className="text-sm font-semibold text-slate-700">What is being turned over?</span>
+              <div className="mt-1.5 inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1 dark:bg-white">
+                {([
+                  ['material', 'Raw material'],
+                  ['cogs', 'Finished goods'],
+                ] as ['material' | 'cogs', string][]).map(([v, label]) => (
+                  <button key={v} type="button" onClick={() => set('basis', v)} className={`rounded-md px-3 py-1.5 text-xs font-semibold transition ${f.basis === v ? 'bg-brand-600 text-white' : 'text-slate-500'}`}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <CalcField label="Opening stock" prefix="₹" value={f.opening} onChange={(v) => set('opening', v)} />
+            <CalcField label="Closing stock" prefix="₹" value={f.closing} onChange={(v) => set('closing', v)} hint={`Average stock = ${formatINR(res.averageStock)}`} />
+
+            <div>
+              <span className="text-sm font-semibold text-slate-700">{flowLabel} is…</span>
+              <div className="mt-1.5 inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1 dark:bg-white">
+                {([
+                  ['direct', 'Given directly'],
+                  ['purchases', 'From purchases'],
+                ] as ['direct' | 'purchases', string][]).map(([v, label]) => (
+                  <button key={v} type="button" onClick={() => set('flowMode', v)} className={`rounded-md px-3 py-1.5 text-xs font-semibold transition ${f.flowMode === v ? 'bg-brand-600 text-white' : 'text-slate-500'}`}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {f.flowMode === 'direct' ? (
+              <CalcField label={flowLabel} prefix="₹" value={f.flowDirect} onChange={(v) => set('flowDirect', v)} />
+            ) : (
+              <CalcField label="Purchases during the period" prefix="₹" value={f.purchases} onChange={(v) => set('purchases', v)} hint={`Consumed = opening + purchases − closing = ${formatINR(res.flow)}`} />
+            )}
+
+            <CalcField label="Days in the period" value={f.periodDays} onChange={(v) => set('periodDays', v)} hint="365 for a year (use 12 for months, 52 for weeks)" />
+          </div>
+        </ResultPanel>
+      </div>
+
+      <div className="space-y-4 lg:col-span-3">
+        <HeroResult
+          label={ratioLabel}
+          value={`${formatNum(res.turnover)} times`}
+          sub={`Average stock is consumed about ${formatNum(res.turnover)} times — held ~${formatNum(res.holdingDays)} days on average`}
+          tone="brand"
+        />
+        <ResultPanel title="Turnover & holding period">
+          <div className="divide-y divide-slate-100">
+            <ResultRow label={flowLabel} value={formatINR(res.flow)} />
+            <ResultRow label="Average stock" value={formatINR(res.averageStock)} />
+            <ResultRow label={ratioLabel} value={`${formatNum(res.turnover)} times`} strong />
+            <ResultRow label="Inventory holding period" value={`${formatNum(res.holdingDays)} days`} />
+          </div>
+          <p className="mt-3 text-xs text-slate-400">
+            A higher ratio = faster-moving stock and less capital locked up; a low ratio flags slow-moving, dormant or
+            obsolete stock. Read it against the firm’s trend and the industry — a very high ratio can mean stock-out risk.
+          </p>
+        </ResultPanel>
+        <CalcSteps steps={res.steps} />
+        <div className="flex items-start gap-2 rounded-xl bg-brand-50 p-3 text-xs text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>
+            Always use a <strong>cost</strong> flow (materials consumed or cost of goods sold), never sales — mixing a
+            selling-price numerator with a cost denominator overstates the ratio.
           </span>
         </div>
       </div>
