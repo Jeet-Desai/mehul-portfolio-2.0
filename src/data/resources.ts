@@ -87,6 +87,12 @@ export type ResourceTopic = {
   procedure?: { heading?: string; steps: ProcedureStep[] }
   examTips?: string[]
   pitfalls?: string[]
+  /** where this topic is used in industry / the real world */
+  applications?: string[]
+  /** merits / advantages / benefits of the technique */
+  advantages?: string[]
+  /** limitations / drawbacks to be aware of */
+  limitations?: string[]
   /** a fully-worked numerical example, where one helps */
   workedExample?: WorkedExample
   /** a few self-test questions with reveal-on-click answers */
@@ -96,6 +102,31 @@ export type ResourceTopic = {
   calc?: string
   /** extra search keywords */
   tags?: string[]
+  /** Gujarati (ગુજરાતી) translation — any field present overrides the English one
+      when the language toggle is set to 'gu'; missing fields fall back to English.
+      References, the calculator and numbers/₹/formula expressions stay as-is. */
+  gu?: TopicTranslation
+}
+
+/** A topic's Gujarati translation. Mirror only the translatable text fields;
+    anything omitted falls back to the English version. Follow the register in
+    docs/i18n-gujarati-glossary.md (native coinages for પડતર/ગુણોત્તર/વિચરણ; keep
+    EOQ/FIFO and ₹ figures as-is). */
+export type TopicTranslation = {
+  title?: string
+  blurb?: string
+  level?: string
+  overview?: string[]
+  keyTerms?: KeyTerm[]
+  formulas?: TopicFormula[]
+  procedure?: { heading?: string; steps: ProcedureStep[] }
+  examTips?: string[]
+  pitfalls?: string[]
+  applications?: string[]
+  advantages?: string[]
+  limitations?: string[]
+  workedExample?: WorkedExample
+  practice?: PracticeQuestion[]
 }
 
 /** Only subjects that currently have topics are listed (drives the filter chips). */
@@ -194,7 +225,120 @@ export const resourceTopics: ResourceTopic[] = [
           'It can signal idle cash, excessive or slow-moving inventory, or poor working-capital management — not necessarily financial strength.',
       },
     ],
+    applications: [
+      'Banks and lenders screen loan applications using liquidity and gearing ratios before sanctioning credit.',
+      'Investors and analysts compare profitability and return ratios (ROCE, ROE, margins) across companies to pick stocks.',
+      'Management uses turnover and efficiency ratios for internal control and to set targets and benchmarks.',
+      'Credit-rating agencies and suppliers assess a firm’s solvency before extending terms.',
+    ],
+    advantages: [
+      'Condenses bulky financial statements into a few decision-ready indicators.',
+      'Enables meaningful comparison — across years (trend), against budgets, and between firms or industries.',
+      'Pinpoints strengths and weaknesses in liquidity, solvency, profitability and efficiency for corrective action.',
+      'Useful to a wide audience — owners, lenders, investors, employees and regulators.',
+    ],
+    limitations: [
+      'Only as reliable as the financial statements behind them — window-dressing or differing accounting policies distort comparison.',
+      'Ignores price-level (inflation) changes and qualitative factors such as management quality or brand.',
+      'A single ratio in isolation can mislead; ratios reveal symptoms, not their causes.',
+      'Historical in nature — they look backward and may not predict the future.',
+    ],
     calc: 'ratio-analysis',
+    gu: {
+      title: 'ગુણોત્તર વિશ્લેષણ',
+      blurb:
+        'નફા-નુકસાન ખાતા અને સરવૈયાને પ્રવાહિતા, શોધનક્ષમતા, નફાકારકતા અને ઉથલા(turnover)ના ગુણોત્તરોમાં ફેરવો — અને તે શું દર્શાવે છે તે વાંચતાં શીખો.',
+      overview: [
+        'ગુણોત્તર વિશ્લેષણ એ નાણાકીય પત્રકોના વિશ્લેષણનું સૌથી વ્યાપક રીતે વપરાતું સાધન છે. ગુણોત્તર એટલે નાણાકીય પત્રકોમાંથી લીધેલા બે આંકડા વચ્ચેનો સંબંધ — દા.ત. ચાલુ મિલકતો સામે ચાલુ દેવાં — જેથી કેવળ સંપૂર્ણ આંકડાઓ કરતાં કામગીરીનું મૂલ્યાંકન વધુ અર્થપૂર્ણ રીતે થઈ શકે.',
+        'ગુણોત્તરોને તેઓ જે પ્રશ્નનો જવાબ આપે છે તે મુજબ વર્ગીકૃત કરવામાં આવે છે: પ્રવાહિતા ગુણોત્તરો ટૂંકા ગાળાની શોધનક્ષમતા ચકાસે છે, શોધનક્ષમતા/ગિયરિંગ ગુણોત્તરો લાંબા ગાળાનું નાણાકીય માળખું ચકાસે છે, નફાકારકતા ગુણોત્તરો કમાણીશક્તિ ચકાસે છે, અને પ્રવૃત્તિ (ઉથલા) ગુણોત્તરો મિલકતો કેટલી કાર્યક્ષમતાથી વપરાય છે તે ચકાસે છે. એકલો એક ગુણોત્તર બહુ ઓછું કહે છે — તેનું મૂલ્ય સરખામણીમાં છે: પેઢીના પોતાના ભૂતકાળના વલણ સામે, અંદાજપત્ર સામે, કે ઉદ્યોગના સાથીઓ સામે.',
+        '૨:૧ ચાલુ ગુણોત્તર કે ૧:૧ ઝડપી ગુણોત્તર જેવા “આદર્શ” આંકડા અંગૂઠાના નિયમો છે, કાયદા નહીં. ધોરણથી ઘણો ઊંચો ગુણોત્તર પણ એટલી જ ચેતવણી હોઈ શકે (નવરી રોકડ, ધીમે ફરતો માલ) જેટલો નીચો ગુણોત્તર. હંમેશાં અર્થઘટન કરો, કેવળ ગણતરી નહીં.',
+      ],
+      keyTerms: [
+        { term: 'પ્રવાહિતા ગુણોત્તરો', def: 'પેઢી તેના ટૂંકા ગાળાનાં દેવાં સમયસર ચૂકવી શકે છે કે કેમ તે માપે છે (ચાલુ ગુણોત્તર, ઝડપી/એસિડ-ટેસ્ટ ગુણોત્તર).' },
+        { term: 'શોધનક્ષમતા / ગિયરિંગ ગુણોત્તરો', def: 'ઉધાર ભંડોળ પરની નિર્ભરતા અને લાંબા ગાળાનું દેવું ચૂકવવાની ક્ષમતા માપે છે (દેવાં-માલિકી, વ્યાજ આવરણ, માલિકી ગુણોત્તર).' },
+        { term: 'નફાકારકતા ગુણોત્તરો', def: 'વેચાણ કે મૂડી સામેની કમાણી માપે છે (કાચો/ચોખ્ખો નફો ગુણોત્તર, ROCE, ROE).' },
+        { term: 'પ્રવૃત્તિ / ઉથલા ગુણોત્તરો', def: 'વેચાણ પેદા કરવા મિલકતો કેટલી સખત કામ કરે છે તે માપે છે (સ્ટૉક, મિલકત અને કાર્યશીલ મૂડી ઉથલા).' },
+        { term: 'રોકાયેલી મૂડી', def: 'ધંધામાંનું લાંબા ગાળાનું ભંડોળ = માલિકીનું ભંડોળ + લાંબા ગાળાનું દેવું (અથવા કુલ મિલકતો − ચાલુ દેવાં).' },
+      ],
+      formulas: [
+        { name: 'ચાલુ ગુણોત્તર', expr: 'Current Assets ÷ Current Liabilities', note: 'અંગૂઠાનો આદર્શ ૨ : ૧.' },
+        { name: 'ઝડપી (એસિડ-ટેસ્ટ) ગુણોત્તર', expr: '(Current Assets − Inventory) ÷ Current Liabilities', note: 'અંગૂઠાનો આદર્શ ૧ : ૧.' },
+        { name: 'દેવાં-માલિકી ગુણોત્તર', expr: 'Long-term Debt ÷ Shareholders’ Equity' },
+        { name: 'વ્યાજ આવરણ', expr: 'EBIT ÷ Interest expense', note: 'ઊંચું = દેવું ચૂકવવામાં વધુ સરળતા.' },
+        { name: 'કાચા નફાનો ગુણોત્તર', expr: '(Sales − COGS) ÷ Sales × 100' },
+        { name: 'ચોખ્ખા નફાનો ગુણોત્તર', expr: 'Net Profit (PAT) ÷ Sales × 100' },
+        { name: 'રોકાયેલી મૂડી પર વળતર (ROCE)', expr: 'EBIT ÷ Capital Employed × 100' },
+        { name: 'માલિકી ભંડોળ પર વળતર (ROE)', expr: 'Net Profit ÷ Shareholders’ Equity × 100' },
+        { name: 'સ્ટૉક ઉથલા', expr: 'COGS ÷ Average Inventory (વખત)' },
+      ],
+      procedure: {
+        heading: 'ગુણોત્તરનો દાખલો કેવી રીતે ઉકેલવો',
+        steps: [
+          { title: 'આંકડા પસંદ કરો', detail: 'ગુણોત્તરને જરૂરી ચોક્કસ વસ્તુઓ નફા-નુકસાન ખાતા અને સરવૈયામાંથી ઓળખો — “ચાલુ” અને “બિન-ચાલુ” વર્ગીકરણ બાબતે સાવધ રહો.' },
+          { title: 'પ્રમાણભૂત સૂત્ર વાપરો', detail: 'માન્ય સૂત્ર લાગુ કરો. જ્યાં સરેરાશ ઉપલબ્ધ હોય (દા.ત. સરેરાશ સ્ટૉક, સરેરાશ દેવાદાર) ત્યાં બંધ આંકડાને બદલે સરેરાશ વાપરો.' },
+          { title: 'યોગ્ય સ્વરૂપમાં દર્શાવો', detail: 'પ્રવાહિતા/શોધનક્ષમતા ગુણોત્તરો “x : 1” તરીકે, નફાકારકતા % તરીકે, ઉથલા “વખત” તરીકે (અને જ્યાં પૂછ્યું હોય ત્યાં દિવસોમાં = 365 ÷ ઉથલા).' },
+          { title: 'અર્થઘટન કરો', detail: 'આદર્શ, ગયા વર્ષ અને ઉદ્યોગ સામે સરખાવો. આંકડો પેઢી માટે શું દર્શાવે છે તે જણાવો — ગુણ ત્યાં જ છે.' },
+        ],
+      },
+      examTips: [
+        'સૂત્ર, મૂલ્ય મૂકવું અને એકમ સાથેનો જવાબ બતાવો — અંકગણિતમાં ભૂલ થાય તોપણ પરીક્ષક રીત માટે ગુણ આપે છે.',
+        '“ટિપ્પણી કરો” પૂછે ત્યારે હંમેશાં તુલના કરો: આદર્શ ધોરણ, વલણ અને સાથીની સરખામણી.',
+        'છેદ ધ્યાનમાં રાખો: ROCE રોકાયેલી મૂડી વાપરે, ROE કેવળ માલિકી ભંડોળ — બંને ભેળવવાં એ સૌથી સામાન્ય ભૂલ છે.',
+      ],
+      pitfalls: [
+        '“આદર્શ” ગુણોત્તરને લક્ષ્ય ગણવું — ઘણો ઊંચો ચાલુ ગુણોત્તર નવરા સાધનો સૂચવી શકે.',
+        '“ઝડપી મિલકતો”માં અગાઉથી ચૂકવેલ ખર્ચ સામેલ કરવો — તે સ્ટૉક સાથે બાકાત રખાય છે.',
+        'જુદી હિસાબી નીતિ વાપરતી પેઢીઓના ગુણોત્તર સમાયોજન વિના સરખાવવા.',
+      ],
+      applications: [
+        'બેંકો અને ધિરાણકર્તાઓ લોન મંજૂર કરતા પહેલાં પ્રવાહિતા અને ગિયરિંગ ગુણોત્તરથી અરજી ચકાસે છે.',
+        'રોકાણકારો અને વિશ્લેષકો શૅર પસંદ કરવા કંપનીઓ વચ્ચે નફાકારકતા અને વળતર ગુણોત્તરો સરખાવે છે.',
+        'સંચાલન આંતરિક નિયંત્રણ અને લક્ષ્યો/ધોરણો નક્કી કરવા ઉથલા અને કાર્યક્ષમતા ગુણોત્તરો વાપરે છે.',
+        'ધિરાણ-રેટિંગ સંસ્થાઓ અને પુરવઠાકારો શરતો આપતા પહેલાં પેઢીની શોધનક્ષમતા ચકાસે છે.',
+      ],
+      advantages: [
+        'વિશાળ નાણાકીય પત્રકોને થોડા નિર્ણય-તૈયાર સૂચકાંકોમાં સંકોચે છે.',
+        'અર્થપૂર્ણ સરખામણી શક્ય બનાવે છે — વર્ષો વચ્ચે (વલણ), અંદાજપત્ર સામે, અને પેઢીઓ/ઉદ્યોગો વચ્ચે.',
+        'પ્રવાહિતા, શોધનક્ષમતા, નફાકારકતા અને કાર્યક્ષમતામાંની તાકાત-નબળાઈ ઓળખે છે.',
+        'માલિકો, ધિરાણકર્તાઓ, રોકાણકારો, કર્મચારીઓ અને નિયમનકારો — વ્યાપક પ્રેક્ષકો માટે ઉપયોગી.',
+      ],
+      limitations: [
+        'પાછળનાં નાણાકીય પત્રકો જેટલા જ વિશ્વસનીય — ખોટો શણગાર કે જુદી નીતિ સરખામણી બગાડે.',
+        'ભાવ-સ્તર (ફુગાવો) ફેરફાર અને ગુણાત્મક પરિબળો (સંચાલન ગુણવત્તા, બ્રાન્ડ) અવગણે છે.',
+        'એકલો ગુણોત્તર ગેરમાર્ગે દોરી શકે; ગુણોત્તરો કારણ નહીં, લક્ષણ દર્શાવે છે.',
+        'ઐતિહાસિક માહિતી — ભૂતકાળ તરફ જુએ છે અને ભવિષ્ય ભાખે એ જરૂરી નથી.',
+      ],
+      workedExample: {
+        title: 'મુખ્ય પ્રવાહિતા અને નફાકારકતા ગુણોત્તર ગણવા',
+        problem:
+          'એક વેપારી દર્શાવે છે: વેચાણ ₹10,00,000; વેચાયેલા માલની પડતર ₹6,00,000; ચાલુ મિલકતો ₹4,00,000 (જેમાં સ્ટૉક ₹1,50,000); ચાલુ દેવાં ₹2,00,000. ચાલુ ગુણોત્તર, ઝડપી ગુણોત્તર અને કાચા નફાનો ગુણોત્તર શોધો.',
+        steps: [
+          { label: 'ચાલુ ગુણોત્તર = ચાલુ મિલકતો ÷ ચાલુ દેવાં', formula: '₹4,00,000 ÷ ₹2,00,000', result: '2 : 1' },
+          { label: 'ઝડપી ગુણોત્તર = (ચાલુ મિલકતો − સ્ટૉક) ÷ ચાલુ દેવાં', formula: '(₹4,00,000 − ₹1,50,000) ÷ ₹2,00,000', result: '1.25 : 1' },
+          { label: 'કાચો નફો = વેચાણ − વેચાયેલા માલની પડતર', formula: '₹10,00,000 − ₹6,00,000', result: '₹4,00,000' },
+          { label: 'કાચા નફાનો ગુણોત્તર = કાચો નફો ÷ વેચાણ × 100', formula: '₹4,00,000 ÷ ₹10,00,000 × 100', result: '40%' },
+        ],
+        answer:
+          'ચાલુ ગુણોત્તર 2 : 1 (પાઠ્યપુસ્તકના ધોરણને પૂરું કરે), ઝડપી ગુણોત્તર 1.25 : 1 (પેઢી સ્ટૉક વેચ્યા વિના પણ ચાલુ દેવાં આવરી શકે), અને તંદુરસ્ત 40% કાચો નફો.',
+      },
+      practice: [
+        {
+          q: 'પેઢીનો ચાલુ ગુણોત્તર 3 : 1 છે પણ ઝડપી ગુણોત્તર 0.8 : 1 છે. આ તફાવત શું સૂચવે છે?',
+          answer:
+            'ચાલુ મિલકતોનો મોટો ભાગ સ્ટૉક છે, જે ઓછો પ્રવાહી છે. મજબૂત ચાલુ ગુણોત્તર છતાં તાત્કાલિક પ્રવાહિતા નબળી છે — પેઢી ટૂંકાં દેવાં ચૂકવવા સ્ટૉક વેચવા પર આધાર રાખે છે.',
+        },
+        {
+          q: 'લાંબા ગાળાની શોધનક્ષમતા કયો ગુણોત્તર શ્રેષ્ઠ માપે છે?',
+          options: ['ચાલુ ગુણોત્તર', 'દેવાં-માલિકી ગુણોત્તર', 'સ્ટૉક ઉથલા', 'કાચા નફાનો ગુણોત્તર'],
+          answer: 'દેવાં-માલિકી ગુણોત્તર — તે ઉધાર ભંડોળને માલિકના ભંડોળ સાથે સરખાવે છે, જે લાંબા ગાળાનું નાણાકીય જોખમ દર્શાવે છે.',
+        },
+        {
+          q: 'ઘણો ઊંચો ચાલુ ગુણોત્તર ખરેખર ચેતવણીનું ચિહ્ન કેમ હોઈ શકે?',
+          answer:
+            'તે નવરી રોકડ, વધારે પડતો કે ધીમે ફરતો સ્ટૉક, કે નબળું કાર્યશીલ-મૂડી સંચાલન સૂચવી શકે — જરૂરી નથી કે નાણાકીય તાકાત.',
+        },
+      ],
+    },
   },
   {
     id: 'fund-flow',
@@ -280,6 +424,22 @@ export const resourceTopics: ResourceTopic[] = [
         answer:
           'It is added back to net profit. Depreciation is a non-fund (non-cash) charge that reduced profit but did not reduce working capital.',
       },
+    ],
+    applications: [
+      'Management uses it to see how long-term funds were raised and where they were applied during the year.',
+      'Lenders check whether a term loan was actually used for the capital purpose it was sanctioned for.',
+      'Helps plan the financing of expansion, dividends and repayments by revealing working-capital movements.',
+      'Used to appraise the soundness of a firm’s financing policy — long-term funds for long-term uses.',
+    ],
+    advantages: [
+      'Explains the change in working capital that the balance sheet alone does not reveal.',
+      'Shows whether long-term funds financed long-term assets (sound) or merely working capital and dividends (unsound).',
+      'Aids credit analysis and the managerial planning of funds.',
+    ],
+    limitations: [
+      'Based on working capital, not cash — it can hide a cash crunch within a healthy working-capital position.',
+      'Historical; it is prepared after the year-end from two balance sheets.',
+      'Not a substitute for the income statement or the cash flow statement, and it ignores non-fund transactions.',
     ],
     calc: 'fund-flow',
   },
@@ -368,6 +528,21 @@ export const resourceTopics: ResourceTopic[] = [
           'It is a non-cash expense that was deducted in computing profit; adding it back removes its effect to arrive at the cash actually generated.',
       },
     ],
+    applications: [
+      'A mandatory statement for listed and larger companies under AS 3 / Ind AS 7 — used by every external reader.',
+      'Lenders and investors judge whether operations generate enough cash to service debt and pay dividends.',
+      'Management uses it for short-term cash planning and to assess earnings quality (cash vs accrual profit).',
+    ],
+    advantages: [
+      'Shows the true cash position and liquidity, which an accrual profit figure can mask.',
+      'Classifies cash movements into operating, investing and financing — making it clear how cash was generated and used.',
+      'Helps assess the firm’s ability to meet obligations, pay dividends and fund growth from internal cash.',
+    ],
+    limitations: [
+      'Ignores significant non-cash transactions (e.g. shares issued to buy an asset).',
+      'Historical; it does not by itself forecast future cash — a cash budget does that.',
+      'Can be affected by the timing of receipts and payments around the year-end, so it is open to manipulation.',
+    ],
     calc: 'cash-flow',
   },
 
@@ -449,6 +624,21 @@ export const resourceTopics: ResourceTopic[] = [
         q: 'Credit sales are collected 50% in the next month and 50% the month after. When is January’s credit sale realised?',
         answer: 'Half in February and half in March.',
       },
+    ],
+    applications: [
+      'Treasury teams use it to arrange overdrafts or short-term loans before a shortfall actually hits.',
+      'Helps decide when surplus cash can be invested or used for capital purchases.',
+      'Forms the basis for negotiating credit limits with banks by showing the projected peak borrowing.',
+    ],
+    advantages: [
+      'Reveals the timing and size of cash surpluses and shortfalls well in advance.',
+      'Enables planned financing — borrow before a shortfall, invest idle cash productively.',
+      'Acts as a control tool — actual cash flows are compared against the budget.',
+    ],
+    limitations: [
+      'Only as good as the sales forecast and collection assumptions behind it.',
+      'Excludes non-cash items, so it is not a measure of profit.',
+      'Needs frequent revision as conditions change; a static cash budget quickly goes stale.',
     ],
     calc: 'cash-budget',
   },
@@ -532,6 +722,21 @@ export const resourceTopics: ResourceTopic[] = [
         q: 'Maintenance cost is ₹5,000 at 600 units and ₹5,600 at 1,000 units. Find the variable cost per unit (high-low).',
         answer: '(5,600 − 5,000) ÷ (1,000 − 600) = ₹1.50 per unit.',
       },
+    ],
+    applications: [
+      'Firms with fluctuating output or seasonality use it to set realistic cost targets at the actual activity level.',
+      'Forms the basis for performance evaluation — actual cost is compared with the budget restated to actual output.',
+      'Supports pricing and tender decisions at different levels of capacity utilisation.',
+    ],
+    advantages: [
+      'Provides a meaningful yardstick — costs are compared at the same activity level, which a fixed budget cannot do.',
+      'Recognises cost behaviour (fixed, variable, semi-variable), so variances are not distorted by volume.',
+      'Useful for “what-if” planning across a range of activity levels.',
+    ],
+    limitations: [
+      'Relies on an accurate split of costs into fixed and variable — wrong classification distorts the whole budget.',
+      'Assumes costs behave linearly within the relevant range; step costs and economies of scale break this.',
+      'Needs more data and effort to prepare than a simple fixed budget.',
     ],
     calc: 'flexible-budget',
   },
@@ -629,6 +834,21 @@ export const resourceTopics: ResourceTopic[] = [
           'At cost of production per unit — because that is the cost at which goods are completed and transferred to the finished-goods store.',
       },
     ],
+    applications: [
+      'Manufacturers use it to fix selling prices and to quote tenders and estimates on a cost-plus basis.',
+      'Provides the basis for valuing closing stocks of raw material, WIP and finished goods consistently.',
+      'Helps locate where cost is rising (material, labour or overhead) for period-to-period cost control.',
+    ],
+    advantages: [
+      'Builds cost in logical stages (prime → works → production → sales), exposing each element for control.',
+      'Provides the cost per unit needed for pricing, comparison and decision-making.',
+      'Enables inter-period and inter-firm cost comparison.',
+    ],
+    limitations: [
+      'A historical cost sheet shows what cost was, not what it should be — standard costing fills that gap.',
+      'Apportionment of overheads involves estimates and judgement, which reduces accuracy.',
+      'Excludes financial items, so it is not a substitute for the profit & loss account.',
+    ],
     calc: 'cost-sheet',
   },
   {
@@ -653,6 +873,7 @@ export const resourceTopics: ResourceTopic[] = [
       { term: 'Lead time', def: 'The time between raising an order and receiving the material.' },
       { term: 'Re-order level', def: 'The stock level at which a fresh purchase requisition is raised.' },
       { term: 'Danger level', def: 'A level below the minimum at which normal issues stop and material is issued only for urgent jobs.' },
+      { term: 'Inventory (stock) turnover ratio', def: 'How many times the average stock is consumed (or sold) in a period = cost of materials consumed ÷ average stock. A low ratio flags slow-moving, dormant or obsolete stock — a key technique for reviewing material movement.' },
     ],
     formulas: [
       { name: 'Economic Order Quantity', expr: 'EOQ = √(2 × A × O ÷ Cₕ)', note: 'A = annual consumption, O = ordering cost per order, Cₕ = carrying cost per unit per annum.' },
@@ -662,6 +883,9 @@ export const resourceTopics: ResourceTopic[] = [
       { name: 'Maximum level', expr: 'Re-order level + Re-order quantity − (Minimum usage × Minimum lead time)' },
       { name: 'Average stock level', expr: '½ (Minimum level + Maximum level)  —  or  Minimum level + ½ Re-order quantity' },
       { name: 'Danger level', expr: 'Normal usage × Emergency lead time' },
+      { name: 'Inventory (Stock) Turnover Ratio', expr: 'Cost of materials consumed ÷ Average stock  (times)', note: 'Use a COST flow, never sales. For finished goods: Cost of goods sold ÷ Average inventory.' },
+      { name: 'Average stock', expr: '(Opening stock + Closing stock) ÷ 2' },
+      { name: 'Inventory holding period', expr: '365 ÷ Inventory turnover ratio  (days)', note: 'Use 12 for months or 52 for weeks instead of 365.' },
     ],
     procedure: {
       heading: 'Setting EOQ and stock levels',
@@ -687,6 +911,7 @@ export const resourceTopics: ResourceTopic[] = [
       { label: 'M.N. Arora, Cost Accounting — Unit 3 (Material Cost Control)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
       { label: 'Economic order quantity (EOQ) — formula & meaning', url: 'https://corporatefinanceinstitute.com/resources/accounting/economic-order-quantity-eoq/', kind: 'article', source: 'CFI' },
       { label: 'Stock levels — re-order, minimum, maximum, danger', url: 'https://www.accountingnotes.net/cost-accounting/material-control/levels-of-stock/16125', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Inventory turnover ratio (material costing) — slow/dormant/obsolete stock', url: 'https://www.financestrategists.com/accounting/cost-accounting/material-costing/inventory-turnover-ratio/', kind: 'article', source: 'Finance Strategists' },
     ],
     workedExample: {
       title: 'EOQ and stock levels (Arora, Illustrations 3.1 & 3.2)',
@@ -718,6 +943,26 @@ export const resourceTopics: ResourceTopic[] = [
         answer:
           'Because the highest stock occurs in the best case — slowest consumption during the shortest delay — when fresh supply arrives with the most old stock still on hand.',
       },
+      {
+        q: 'Opening stock ₹40,000, closing stock ₹60,000, materials consumed ₹5,00,000. Find the inventory turnover ratio and the holding period.',
+        answer:
+          'Average stock = (40,000 + 60,000) ÷ 2 = ₹50,000; turnover = 5,00,000 ÷ 50,000 = 10 times; holding period = 365 ÷ 10 ≈ 36.5 days.',
+      },
+    ],
+    applications: [
+      'Stores and purchase departments use EOQ and stock levels to avoid both stock-outs and locked-up capital.',
+      'The inventory turnover ratio flags slow-moving, dormant and obsolete items for disposal (ABC and JIT systems).',
+      'Re-order and danger levels automate the timing of purchase requisitions in ERP/inventory systems.',
+    ],
+    advantages: [
+      'Minimises the total inventory cost (ordering + carrying) at the economic order quantity.',
+      'Scientific stock levels prevent production stoppage and over-investment in stock at the same time.',
+      'Turnover analysis releases working capital tied up in slow-moving stock.',
+    ],
+    limitations: [
+      'EOQ assumes constant demand, price and lead time — unrealistic where these fluctuate or quantity discounts apply.',
+      'Requires reliable data (usage, lead time, costs); poor data produces poor levels.',
+      'Does not by itself handle perishability, bulk discounts or supply disruptions.',
     ],
     calc: 'eoq-stock-levels',
   },
@@ -812,6 +1057,21 @@ export const resourceTopics: ResourceTopic[] = [
           'They do not replace anyone who left — they are additions to the workforce, not a change in its composition due to separation. They appear only in the accession figures.',
       },
     ],
+    applications: [
+      'Firms choose time, piece or incentive systems to balance worker security, output and quality.',
+      'Halsey and Rowan plans are used where output is measurable and management wants to share efficiency gains.',
+      'Labour-turnover analysis drives HR policy (retention, training) by quantifying the cost of leavers.',
+    ],
+    advantages: [
+      'Premium-bonus plans reward efficiency while guaranteeing a minimum wage — security and incentive together.',
+      'Turnover measurement quantifies a hidden cost and prompts retention action.',
+      'Helps control labour cost per unit and improve productivity.',
+    ],
+    limitations: [
+      'Piece and incentive systems can encourage speed at the expense of quality and safety.',
+      'Setting standard times is subjective; loose standards inflate bonuses, tight ones demotivate.',
+      'Turnover ratios show the rate of change, not the underlying causes, which need separate investigation.',
+    ],
     calc: 'wage-systems',
   },
   {
@@ -900,6 +1160,21 @@ export const resourceTopics: ResourceTopic[] = [
         answer: 'Over-absorbed by ₹4,000 (absorbed exceeds actual) — the excess is credited back / adjusted.',
       },
     ],
+    applications: [
+      'Manufacturers absorb factory overheads into product cost via machine-hour or labour-hour rates for pricing.',
+      'Service firms apportion shared costs (rent, administration) across departments for cost control.',
+      'Under/over-absorption analysis tells management whether the overhead recovery rates need revising.',
+    ],
+    advantages: [
+      'Spreads indirect cost fairly onto products, so total cost and price reflect resource use.',
+      'Predetermined rates allow prompt costing and quotations before the actual costs are known.',
+      'Highlights idle capacity and recovery problems through under/over-absorption.',
+    ],
+    limitations: [
+      'Absorption involves estimates and an arbitrary choice of base — different bases give different product costs.',
+      'Predetermined rates cause under- or over-absorption that must later be adjusted.',
+      'Treats fixed overhead as a product cost, which can mislead short-run decisions (marginal costing avoids this).',
+    ],
     calc: 'overhead-absorption',
   },
   {
@@ -980,6 +1255,21 @@ export const resourceTopics: ResourceTopic[] = [
         q: 'Why does cost per unit fall as batch size increases?',
         answer: 'Set-up cost is fixed per batch, so spreading it over more units lowers set-up cost per unit (until rising carrying cost offsets it — hence EBQ).',
       },
+    ],
+    applications: [
+      'Printing presses, repair shops, foundries and custom engineering firms cost each job on a job card.',
+      'Pharmaceutical and component makers use batch costing with the EBQ to size economical production runs.',
+      'Provides the basis for cost-plus quotations to customers on bespoke orders.',
+    ],
+    advantages: [
+      'Gives the exact cost and profit of each job or batch — strong cost control and accurate quoting.',
+      'Identifies profitable versus loss-making jobs to guide future pricing.',
+      'The EBQ minimises set-up plus carrying cost for repeated batches.',
+    ],
+    limitations: [
+      'Heavy clerical work — each job needs its own detailed record.',
+      'Costs are historical; judging efficiency needs a standard to compare against.',
+      'Overhead absorbed into each job still relies on estimated rates.',
     ],
     calc: 'job-batch-costing',
   },
@@ -1065,6 +1355,21 @@ export const resourceTopics: ResourceTopic[] = [
         answer: 'Transferred to the P&L account in full, regardless of the stage of completion.',
       },
     ],
+    applications: [
+      'Construction, civil-engineering and shipbuilding firms cost each site or contract separately.',
+      'Used to recognise prudent profit on long, multi-year contracts, year by year.',
+      'Forms the basis for billing (work certified) and for negotiating retention money with the contractee.',
+    ],
+    advantages: [
+      'Each contract is a self-contained cost unit, giving clear profitability per contract.',
+      'The prudence rules prevent overstating profit on incomplete work.',
+      'Cost-plus and escalation clauses can be monitored contract by contract.',
+    ],
+    limitations: [
+      'Estimating the degree of completion and the notional profit involves judgement.',
+      'Cost overruns on long contracts (inflation, delays) are hard to predict.',
+      'Profit recognised is only an estimate until the contract is complete.',
+    ],
     calc: 'contract-costing',
   },
   {
@@ -1149,6 +1454,21 @@ export const resourceTopics: ResourceTopic[] = [
         answer: 'Cost per unit = 9,500 ÷ (1,000 − 50) = 9,500 ÷ 950 = ₹10.',
       },
     ],
+    applications: [
+      'Continuous-process industries — chemicals, sugar, paper, paint, oil, cement, food — cost output process by process.',
+      'Used to value normal and abnormal loss and to set transfer prices between processes.',
+      'The equivalent-units method values partly-finished work-in-progress at the period-end.',
+    ],
+    advantages: [
+      'Simple averaging gives a cost per unit where output is uniform and continuous.',
+      'Normal-loss treatment automatically loads good output with the unavoidable loss.',
+      'Process-wise cost data aids control and inter-process comparison.',
+    ],
+    limitations: [
+      'Cost per unit is an average — it hides cost differences between individual units.',
+      'Valuing WIP through equivalent units relies on estimates of the degree of completion.',
+      'Apportioning joint- and by-product costs is somewhat arbitrary.',
+    ],
     calc: 'process-costing',
   },
   {
@@ -1230,6 +1550,21 @@ export const resourceTopics: ResourceTopic[] = [
         answer: 'A running (variable) charge — tyre wear depends on distance run.',
       },
     ],
+    applications: [
+      'Transport fleets, hospitals, hotels, canteens, power houses and cinemas cost their service per unit.',
+      'Composite units (tonne-km, passenger-km, bed-day) are used to set fares, freight and charges.',
+      'Helps compare the cost of running an own service against outsourcing or hiring.',
+    ],
+    advantages: [
+      'Provides a cost per unit of service for pricing fares, charges and hire rates.',
+      'Separates standing (fixed) and running (variable) charges for control and make-or-buy decisions.',
+      'Composite units make cost comparison fair where two factors (load × distance) drive the cost.',
+    ],
+    limitations: [
+      'Choosing the right cost unit (simple vs composite) needs judgement.',
+      'Many costs are fixed/period costs, so the cost per unit swings with the level of activity.',
+      'Apportioning shared service costs can be arbitrary.',
+    ],
     calc: 'operating-costing',
   },
   {
@@ -1239,13 +1574,14 @@ export const resourceTopics: ResourceTopic[] = [
     icon: SlidersHorizontal,
     level: 'B.Com · BBA · CA/CMA Inter',
     blurb:
-      'Set standard costs, then explain the gap to actuals — material and labour variances split into price/rate and usage/efficiency.',
+      'Set standard costs, then explain the gap to actuals — material, labour and overhead variances split into price/rate, usage/efficiency and the fixed-overhead volume/capacity/calendar analysis.',
     readingMinutes: 11,
     tags: ['standard costing', 'variance analysis', 'material variance', 'labour variance', 'price variance', 'efficiency variance', 'favourable adverse'],
     overview: [
       'Standard costing sets a predetermined cost for each unit — the standard cost — built from standard quantities and standard prices. Actual results are then compared with these standards, and the differences (variances) are analysed by cause. It is a tool of control: it pinpoints where, and by how much, performance departed from plan.',
       'A variance is favourable (F) when it saves cost — actual is less than standard — and adverse (A) when it costs more. The total cost variance for an element is split into a price/rate variance (the effect of paying a different price) and a usage/efficiency variance (the effect of using a different quantity or time). The two sub-variances always reconcile to the total.',
       'The same logic applies to material and labour. For material: price variance isolates the price paid, usage variance the quantity used. For labour: rate variance isolates the wage rate, efficiency variance the hours worked. Responsibility usually differs — purchasing owns price; production owns usage and efficiency.',
+      'Overheads are analysed in two streams. Variable overhead splits into an expenditure variance (spending more or less than standard for the hours worked) and an efficiency variance (taking more or fewer hours than allowed). Fixed overhead splits into an expenditure (budget) variance and a volume variance — the over- or under-absorption caused by producing above or below the budgeted output — and the volume variance itself sub-divides into capacity, efficiency and, where the number of working days differs, a calendar variance.',
     ],
     keyTerms: [
       { term: 'Standard cost', def: 'A predetermined cost = standard quantity × standard price (per unit of output).' },
@@ -1254,6 +1590,8 @@ export const resourceTopics: ResourceTopic[] = [
       { term: 'Material usage variance', def: '(SQ − AQ) × SP — the effect of using a different quantity.' },
       { term: 'Labour rate variance', def: '(SR − AR) × AH — the effect of a different wage rate.' },
       { term: 'Labour efficiency variance', def: '(SH − AH) × SR — the effect of taking different hours.' },
+      { term: 'Overhead cost variance', def: 'Absorbed (recovered) overhead − actual overhead. Split into variable OH (expenditure + efficiency) and fixed OH (expenditure + volume) variances.' },
+      { term: 'Fixed OH volume variance', def: 'Absorbed fixed OH − budgeted fixed OH — the over/under-absorption of fixed cost from producing above or below budget. It sub-divides into capacity, efficiency and (when working days differ) calendar variances.' },
     ],
     formulas: [
       { name: 'Material cost variance', expr: '(SQ × SP) − (AQ × AP)' },
@@ -1262,6 +1600,12 @@ export const resourceTopics: ResourceTopic[] = [
       { name: 'Labour cost variance', expr: '(SH × SR) − (AH × AR)' },
       { name: 'Labour rate variance', expr: '(SR − AR) × AH' },
       { name: 'Labour efficiency variance', expr: '(SH − AH) × SR', note: 'Rate + Efficiency = Cost variance.' },
+      { name: 'Total overhead cost variance', expr: 'Overhead absorbed − Actual overhead', note: 'Absorbed = standard hours for actual output × standard rate.' },
+      { name: 'Variable OH expenditure', expr: '(Std rate × Actual hours) − Actual variable OH' },
+      { name: 'Variable OH efficiency', expr: '(Std hours for actual output − Actual hours) × Std rate', note: 'Variable: expenditure + efficiency = variable OH cost variance.' },
+      { name: 'Fixed OH expenditure', expr: 'Budgeted fixed OH − Actual fixed OH' },
+      { name: 'Fixed OH volume', expr: 'Absorbed fixed OH − Budgeted fixed OH', note: 'Fixed: expenditure + volume = fixed OH cost variance.' },
+      { name: 'Fixed OH volume split', expr: 'Volume = Capacity + Efficiency  (+ Calendar when working days differ)', note: 'Capacity = (Actual − Budgeted hrs) × rate; Efficiency = (SHAO − Actual hrs) × rate; Calendar = (Actual − Budgeted days) × rate per day.' },
     ],
     procedure: {
       heading: 'Computing a variance',
@@ -1287,6 +1631,7 @@ export const resourceTopics: ResourceTopic[] = [
       { label: 'M.N. Arora, Cost Accounting — Unit 13 (Standard Costing)', url: 'https://www.alagappauniversity.ac.in/', kind: 'textbook', source: 'M.N. Arora' },
       { label: 'Variance analysis — material & labour', url: 'https://www.accaglobal.com/gb/en/student/exam-support-resources/fundamentals-exams-study-resources/f2/technical-articles/variance-analysis.html', kind: 'official', source: 'ACCA' },
       { label: 'Standard costing & variances', url: 'https://www.accountingnotes.net/cost-accounting/standard-costing/standard-costing/16480', kind: 'article', source: 'Accounting Notes' },
+      { label: 'Fixed overhead — total, expenditure, volume, capacity, efficiency', url: 'https://www.acowtancy.com/textbook/acca-pm/basic-variance-analysis/fixed-overhead-total-expenditure-volume-capacity-and-efficiency-variance/notes', kind: 'article', source: 'aCOWtancy (ACCA PM)' },
     ],
     workedExample: {
       title: 'Material & labour variances (Arora, Unit 13)',
@@ -1316,6 +1661,29 @@ export const resourceTopics: ResourceTopic[] = [
         q: 'Why must the price and usage variances add up to the cost variance?',
         answer: 'Because together they decompose the same total difference: one isolates the price effect, the other the quantity effect — their sum is the whole cost variance.',
       },
+      {
+        q: 'Why does variable overhead have no volume (capacity/calendar) variance, while fixed overhead does?',
+        answer: 'Variable overhead flexes directly with activity, so the amount absorbed always matches the hours worked — there is no over/under-absorption from volume, only expenditure and efficiency. Fixed overhead is a flat budgeted amount, so producing above or below the budgeted volume over- or under-absorbs it — that gap is the volume variance.',
+      },
+      {
+        q: 'Absorbed fixed overhead ₹9,500; budgeted fixed overhead ₹10,000; actual fixed overhead ₹10,500. Find the fixed-OH expenditure, volume and cost variances.',
+        answer: 'Expenditure = 10,000 − 10,500 = ₹500 (A); Volume = 9,500 − 10,000 = ₹500 (A); Cost = 9,500 − 10,500 = ₹1,000 (A). Check: expenditure + volume = cost ✓ (the M.N. Arora Illustration 13.3 figures).',
+      },
+    ],
+    applications: [
+      'Manufacturers set standard costs and analyse variances monthly for cost control and responsibility accounting.',
+      'Variances pinpoint where (price, usage, rate, efficiency, overhead) and who departed from the plan.',
+      'Standards feed budgets, pricing decisions and inventory valuation.',
+    ],
+    advantages: [
+      'Enables management by exception — attention goes only to the significant variances.',
+      'Fixes responsibility (purchasing owns price; production owns usage and efficiency).',
+      'Provides a yardstick for performance and a basis for budgets and pricing.',
+    ],
+    limitations: [
+      'Setting accurate standards is difficult and costly; outdated standards mislead.',
+      'Unsuitable where output is non-standard or conditions change rapidly.',
+      'Over-emphasis on cost variances can harm quality or staff morale.',
     ],
     calc: 'standard-costing-variances',
   },
