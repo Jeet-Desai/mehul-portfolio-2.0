@@ -8,7 +8,22 @@
      and this client surfaces that as a friendly "not switched on yet" state.
 ---------------------------------------------------------------------------- */
 
-export type TutorMessage = { role: 'user' | 'assistant'; content: string }
+/* OpenAI-compatible multimodal content parts. A user message is either a plain
+   string (text-only) or an array of parts (text + images) when files are attached. */
+export type TutorTextPart = { type: 'text'; text: string }
+export type TutorImagePart = { type: 'image_url'; image_url: { url: string } }
+export type TutorContentPart = TutorTextPart | TutorImagePart
+
+export type TutorMessage = { role: 'user' | 'assistant'; content: string | TutorContentPart[] }
+
+/** Flatten any message content to readable text (for previews, the mock, etc.). */
+export function contentToText(content: string | TutorContentPart[]): string {
+  if (typeof content === 'string') return content
+  return content
+    .filter((p): p is TutorTextPart => p.type === 'text')
+    .map((p) => p.text)
+    .join('\n')
+}
 
 export type TutorResult =
   | { ok: true; reply: string }
@@ -18,11 +33,20 @@ export type TutorResult =
 export const TUTOR_IS_MOCK = import.meta.env.DEV
 
 function mockReply(messages: TutorMessage[]): string {
-  const last = [...messages].reverse().find((m) => m.role === 'user')?.content?.trim() || 'your question'
+  const lastUser = [...messages].reverse().find((m) => m.role === 'user')
+  const last = (lastUser ? contentToText(lastUser.content).trim() : '') || 'your question'
+  const images = Array.isArray(lastUser?.content)
+    ? lastUser!.content.filter((p) => p.type === 'image_url').length
+    : 0
+  const attachLine =
+    images > 0
+      ? `I can see you attached ${images} image${images > 1 ? 's' : ''} — once deployed, I'll read ${images > 1 ? 'them' : 'it'} too.`
+      : 'Attach a photo of a sum, a PDF or notes and I’ll work through them once deployed.'
   return [
     '👋 This is a local preview of the AI doubt-tutor — no model is called on your machine.',
     '',
     `Once deployed with a free API key, I'll answer “${last}” step by step, in Dr. Desai's teaching style.`,
+    attachLine,
     '',
     'For now, try the calculators (they show full working) and the Formula Sheets for revision.',
   ].join('\n')

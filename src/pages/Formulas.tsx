@@ -65,7 +65,7 @@ export default function Formulas() {
       <PageHeader
         eyebrow="Formula Sheets"
         title="Every key formula, in one place"
-        subtitle="Searchable cheat-sheets across costing, financial management, accounting, taxation, investing and statistics — each linked to a calculator that shows the working."
+        subtitle="Searchable quick-reference sheets across costing, financial management, accounting, taxation, investing and statistics — each linked to a calculator that shows the working."
       />
 
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">

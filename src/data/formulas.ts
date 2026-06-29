@@ -1,10 +1,10 @@
 /* ----------------------------------------------------------------------------
-   Formula / cheat sheets — searchable, grouped by subject. Data-driven.
+   Formula / quick-reference sheets — searchable, grouped by subject. Data-driven.
 
    CORRECTNESS RULE (this ships under Dr. Desai's name):
    - These are the standard, evergreen formulas as taught in B.Com / CA-CS-CMA.
    - Keep TAXATION entries STRUCTURAL — no specific slab rates / thresholds that
-     change each Budget. Live rates belong in the calculators, not the cheat sheet.
+     change each Budget. Live rates belong in the calculators, not the quick-reference sheet.
    - Verify any new formula before adding it; this is a study reference.
 ---------------------------------------------------------------------------- */
 

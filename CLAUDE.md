@@ -42,7 +42,7 @@ low-friction. Favour making a missing pillar real over polishing an existing one
   GST · EMI · depreciation (SLM/WDV) · SIP · compound-vs-simple interest · TVM · HRA · WACC · CAGR/XIRR ·
   Capital Budgeting (NPV/IRR) · Capital Gains · Ratio Analysis · TDS (section-wise) · GST ITC set-off ·
   Bond pricing & YTM · Inventory (FIFO/LIFO/WAvg).
-- ✅ **Formula Sheets** (`/formulas`) — searchable cheat-sheets, ~48 formulas across 6 subjects (`src/data/formulas.ts`).
+- ✅ **Formula Sheets** (`/formulas`) — searchable quick-reference sheets, ~48 formulas across 6 subjects (`src/data/formulas.ts`).
 - ✅ **Notice Board** (`/notices`) — data-driven (`src/data/notices.ts`), filter chips, pinned-first.
 - ✅ **Practice & Quizzes** (`/practice`) — quiz player, 30 seeded MCQs (`src/data/quizzes.ts`), timer, review.
 - ✅ **Career Guide** (`/career`) — 7 paths (`src/data/careers.ts`), expandable roadmaps + official links.

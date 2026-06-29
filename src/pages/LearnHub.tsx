@@ -20,7 +20,7 @@ const entryPoints = [
     to: '/formulas',
     icon: FileText,
     title: 'Formula Sheets',
-    desc: 'Searchable cheat-sheets across every subject — revise before an exam.',
+    desc: 'Searchable quick-reference sheets across every subject — revise before an exam.',
   },
 ]
 

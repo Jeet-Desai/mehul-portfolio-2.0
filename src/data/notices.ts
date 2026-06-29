@@ -41,7 +41,7 @@ export const notices: Notice[] = [
     date: '2026-06-23',
     category: 'Site update',
     pinned: true,
-    body: 'A searchable set of formula / cheat sheets is now live — grouped by subject, so you can revise the key formulas for costing, financial management, accounting and taxation in one place before an exam.',
+    body: 'A searchable set of formula / quick-reference sheets is now live — grouped by subject, so you can revise the key formulas for costing, financial management, accounting and taxation in one place before an exam.',
     link: { label: 'Browse formula sheets', to: '/formulas' },
   },
   {

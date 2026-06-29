@@ -5,9 +5,16 @@
    Defaults to the Groq free tier (open models, no credit card). Switch provider
    purely with env vars — no code change:
 
-     LLM_API_KEY    (required to switch the tutor ON; if absent → 503 "not configured")
-     LLM_BASE_URL   default https://api.groq.com/openai/v1
-     LLM_MODEL      default llama-3.3-70b-versatile
+     LLM_API_KEY        (required to switch the tutor ON; if absent → 503 "not configured")
+     LLM_BASE_URL       default https://api.groq.com/openai/v1
+     LLM_MODEL          default llama-3.3-70b-versatile   (text-only questions)
+     LLM_VISION_MODEL   default meta-llama/llama-4-scout-17b-16e-instruct
+                        (used automatically when a message includes an image)
+
+   Students can attach images (sent to the vision model), and PDFs/.txt whose
+   text is extracted in the browser and arrives as plain text — see
+   src/lib/attachments.ts. Groq has no native document ingestion, so only images
+   travel as binary; everything else is already text by the time it reaches here.
 
    The API key lives ONLY in Vercel's env-var dashboard — never in the repo, never
    on a local disk. Locally the client uses a mock (see src/lib/tutor.ts), so this
@@ -46,7 +53,8 @@ export default async function handler(req: Request): Promise<Response> {
 
   const apiKey = process.env.LLM_API_KEY
   const baseUrl = (process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1').replace(/\/$/, '')
-  const model = process.env.LLM_MODEL || 'llama-3.3-70b-versatile'
+  const textModel = process.env.LLM_MODEL || 'llama-3.3-70b-versatile'
+  const visionModel = process.env.LLM_VISION_MODEL || 'meta-llama/llama-4-scout-17b-16e-instruct'
 
   // Dormant until a key is configured in the host's env. Degrades gracefully.
   if (!apiKey) {
@@ -75,16 +83,22 @@ export default async function handler(req: Request): Promise<Response> {
   const messages = Array.isArray(incoming)
     ? incoming
         .filter(
-          (m): m is { role: 'user' | 'assistant'; content: string } =>
+          (m): m is { role: 'user' | 'assistant'; content: unknown } =>
             !!m &&
-            typeof (m as { content?: unknown }).content === 'string' &&
             ((m as { role?: unknown }).role === 'user' || (m as { role?: unknown }).role === 'assistant'),
         )
         .slice(-12) // keep recent context only
-        .map((m) => ({ role: m.role, content: m.content.slice(0, 4000) }))
+        .map((m) => ({ role: m.role, content: sanitizeContent(m.content) }))
+        .filter((m) => m.content !== null)
     : []
 
   if (messages.length === 0) return json({ error: 'empty' }, 400)
+
+  // Any image present → use the vision-capable model; otherwise the text model.
+  const hasImage = messages.some(
+    (m) => Array.isArray(m.content) && m.content.some((p) => (p as { type?: string }).type === 'image_url'),
+  )
+  const model = hasImage ? visionModel : textModel
 
   try {
     const upstream = await fetch(`${baseUrl}/chat/completions`, {
@@ -119,6 +133,40 @@ export default async function handler(req: Request): Promise<Response> {
   } catch {
     return json({ error: 'network', message: 'Could not reach the tutor service. Please try again.' }, 502)
   }
+}
+
+type TextPart = { type: 'text'; text: string }
+type ImagePart = { type: 'image_url'; image_url: { url: string } }
+type Part = TextPart | ImagePart
+
+/**
+ * Normalise one message's content. Accepts a plain string or an array of
+ * OpenAI-style parts (text + image_url). Caps text length and image count,
+ * and only allows data:/http(s) image URLs. Returns null if nothing usable.
+ */
+function sanitizeContent(content: unknown): string | Part[] | null {
+  if (typeof content === 'string') {
+    const t = content.slice(0, 4000)
+    return t.trim() ? t : null
+  }
+  if (!Array.isArray(content)) return null
+
+  const parts: Part[] = []
+  let images = 0
+  for (const raw of content) {
+    const type = (raw as { type?: unknown })?.type
+    if (type === 'text' && typeof (raw as { text?: unknown }).text === 'string') {
+      const t = (raw as { text: string }).text.slice(0, 4000)
+      if (t.trim()) parts.push({ type: 'text', text: t })
+    } else if (type === 'image_url' && images < 5) {
+      const url = (raw as { image_url?: { url?: unknown } }).image_url?.url
+      if (typeof url === 'string' && (url.startsWith('data:image/') || /^https?:\/\//.test(url))) {
+        parts.push({ type: 'image_url', image_url: { url } })
+        images++
+      }
+    }
+  }
+  return parts.length ? parts : null
 }
 
 function isRateLimited(ip: string): boolean {

@@ -18,7 +18,7 @@ low-friction goal). Favour making every pillar real before deepening any one.
   TVM · HRA · WACC · CAGR/XIRR · Capital Budgeting · **Capital Gains** · Ratio Analysis · **TDS section-wise** ·
   **GST ITC set-off** · **Bond pricing & YTM** · **Inventory FIFO/LIFO/WAvg**. (TDS & GST ITC statutory — rates
   web-verified Jun 2026; see notes below.)
-- ✅ **Formula Sheets** (`/formulas`) — searchable cheat-sheets, ~48 formulas grouped by 6 subjects
+- ✅ **Formula Sheets** (`/formulas`) — searchable quick-reference sheets, ~48 formulas grouped by 6 subjects
   (`src/data/formulas.ts`), each linked to its calculator. Tax kept *structural* (no slab numbers — they change).
   Entry points: LearnHub CTA + footer.
 - ✅ **Resource Library** (`/resources`, `/resources/:id`) — data-driven study notes (`src/data/resources.ts`),

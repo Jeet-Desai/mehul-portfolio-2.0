@@ -30,7 +30,7 @@ Research      → publications, books, PhD scholars (v1 left this EMPTY)
 Learn Hub  ◀ the core
    ├─ Calculators & Solvers   (show the working, like a teacher)
    ├─ Practice & Quizzes
-   ├─ Formula / Cheat Sheets
+   ├─ Formula / Quick-Reference Sheets
    └─ Resource Library         (subject- & semester-wise)
 Ask CommerceLab → AI tutor + anonymous Doubt Box
 Career Guide   → after B.Com? CA / CS / CMA / MBA / ACCA / govt roadmaps
@@ -148,7 +148,7 @@ ActiveLearningLabs). Build order below = quick wins first → flagship simulator
 
 ### Learn Hub infra
 - [ ] Add **category filter chips** to `/learn` (currently search-only)
-- [ ] **Formula / cheat sheets** — searchable, per subject, data-driven (`src/data/`), PDF export
+- [ ] **Formula / quick-reference sheets** — searchable, per subject, data-driven (`src/data/`), PDF export
 - [ ] **Resource library** — notes/past papers organised by subject & semester (`src/data/`)
 
 *Deferred to a later flagship phase:* virtual NSE stock-trading simulator (needs a market-data
