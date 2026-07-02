@@ -39,16 +39,6 @@ export default function Footer() {
                 Notice Board
               </Link>
             </li>
-            <li>
-              <Link to="/revise" className="font-semibold text-slate-600 transition hover:text-brand-600">
-                Flashcards
-              </Link>
-            </li>
-            <li>
-              <Link to="/progress" className="font-semibold text-slate-600 transition hover:text-brand-600">
-                My Progress
-              </Link>
-            </li>
           </ul>
         </div>
 
