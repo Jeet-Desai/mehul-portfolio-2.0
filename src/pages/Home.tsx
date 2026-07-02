@@ -44,7 +44,7 @@ function MarqueeTrack() {
     <>
       {marqueeNames.map((name, i) => (
         <span key={i} className="whitespace-nowrap px-6 font-display text-[19px] text-slate-600">
-          {name} <span className="text-brand-600">·</span>
+          <span className="text-brand-600">·</span> {name}
         </span>
       ))}
     </>
