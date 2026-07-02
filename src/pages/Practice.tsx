@@ -41,6 +41,8 @@ export default function Practice() {
   const [idx, setIdx] = useState(0)
   const [picks, setPicks] = useState<(number | null)[]>([])
   const [timeLeft, setTimeLeft] = useState(0)
+  const [difficulty, setDifficulty] = useState<Difficulty | 'All'>('All')
+  const [count, setCount] = useState<number>(10) // 0 = All
 
   const start = (deckIn: Question[], title: string) => {
     const d = shuffle(deckIn)
@@ -52,8 +54,15 @@ export default function Practice() {
     setView('quiz')
   }
 
-  const startTopic = (topicId: string, title: string) => start(questionsForTopic(topicId), title)
-  const startMixed = () => start(shuffle(questions).slice(0, 10), 'Mixed quick quiz')
+  // Filter by the chosen difficulty, shuffle, then take the chosen count.
+  // Re-run on every start, so each attempt is a fresh random draw.
+  const buildPool = (base: Question[]) => {
+    const filtered = difficulty === 'All' ? base : base.filter((qq) => qq.difficulty === difficulty)
+    const sh = shuffle(filtered)
+    return count === 0 ? sh : sh.slice(0, count)
+  }
+  const startTopic = (topicId: string, title: string) => start(buildPool(questionsForTopic(topicId)), title)
+  const startMixed = () => start(buildPool(questions), 'Mixed quiz')
 
   // countdown for timed mode
   useEffect(() => {
@@ -109,21 +118,60 @@ export default function Practice() {
             </label>
           </div>
 
+          {/* difficulty + count config — applied to whichever quiz you start */}
+          <div className="mb-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">Difficulty</p>
+              <div className="flex flex-wrap gap-2">
+                {(['All', 'Easy', 'Medium', 'Hard'] as const).map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDifficulty(d)}
+                    className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
+                      difficulty === d ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">Number of questions</p>
+              <div className="flex flex-wrap gap-2">
+                {([5, 10, 15, 20, 0] as const).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setCount(n)}
+                    className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
+                      count === n ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {n === 0 ? 'All' : n}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {topics.map((t) => {
-              const count = questionsForTopic(t.id).length
+              const avail = (difficulty === 'All'
+                ? questionsForTopic(t.id)
+                : questionsForTopic(t.id).filter((qq) => qq.difficulty === difficulty)
+              ).length
               return (
                 <button
                   key={t.id}
                   onClick={() => startTopic(t.id, t.title)}
-                  disabled={count === 0}
+                  disabled={avail === 0}
                   className="cl-card flex h-full flex-col p-6 text-left disabled:opacity-50"
                 >
                   <div className="flex items-center justify-between">
                     <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
                       <t.icon className="h-6 w-6" />
                     </span>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">{count} Qs</span>
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">{avail} Qs</span>
                   </div>
                   <h3 className="mt-4 text-lg font-bold">{t.title}</h3>
                   <p className="mt-1.5 flex-1 text-sm text-slate-600">{t.blurb}</p>
@@ -143,7 +191,9 @@ export default function Practice() {
                   <Shuffle className="h-6 w-6" />
                 </span>
                 <h3 className="mt-4 text-lg font-bold">Mixed quick quiz</h3>
-                <p className="mt-1.5 text-sm text-white/80">10 random questions across every topic — a fast warm-up before exams.</p>
+                <p className="mt-1.5 text-sm text-white/80">
+                  {count === 0 ? 'All' : count} random {difficulty === 'All' ? '' : `${difficulty.toLowerCase()} `}questions across every topic — a fast warm-up before exams.
+                </p>
               </div>
               <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold">
                 Start now <ArrowRight className="h-4 w-4" />
@@ -152,7 +202,7 @@ export default function Practice() {
           </div>
 
           <p className="mt-8 text-center text-xs text-slate-400">
-            More questions and past-paper sets are on the way. Solutions are shown after you answer — try first, then check.
+            Questions are randomised on every attempt — set your difficulty and length above. Solutions appear after you answer, so try first, then check.
           </p>
         </div>
       </>
