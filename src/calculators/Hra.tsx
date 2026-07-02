@@ -1,17 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, round, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 type City = 'metro' | 'nonmetro'
 
 export default function Hra() {
-  const [basic, setBasic] = useState('40000')
-  const [hra, setHra] = useState('18000')
-  const [rent, setRent] = useState('20000')
-  const [city, setCity] = useState<City>('metro')
+  const [basic, setBasic] = useCalcState('basic', '40000')
+  const [hra, setHra] = useCalcState('hra', '18000')
+  const [rent, setRent] = useCalcState('rent', '20000')
+  const [city, setCity] = useCalcState('city', 'metro')
 
   const m = useMemo(() => {
     const B = toNum(basic) // Basic + DA (forming part of retirement benefits)

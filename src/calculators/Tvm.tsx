@@ -4,6 +4,7 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
 import { futureValue, presentValue, payment, solveRate, solveN } from '../lib/finance'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 type Solve = 'fv' | 'pv' | 'pmt' | 'rate' | 'n'
@@ -17,15 +18,19 @@ const SOLVE: { value: Solve; label: string }[] = [
 ]
 
 export default function Tvm() {
-  const [solve, setSolve] = useState<Solve>('fv')
+  const [solveStr, setSolveStr] = useCalcState('solve', 'fv')
+  const solve: Solve = SOLVE.some((s) => s.value === solveStr) ? (solveStr as Solve) : 'fv'
+  const setSolve = (v: Solve) => setSolveStr(v)
   // Defaults are mutually consistent: PV 10k + PMT 5k @ 8% for 10 periods → FV ≈ 94,022.
   // So switching "Solve for" returns the original value of whichever variable you pick.
-  const [pv, setPv] = useState('10000')
-  const [pmt, setPmt] = useState('5000')
-  const [fv, setFv] = useState('94022')
-  const [rate, setRate] = useState('8')
-  const [n, setN] = useState('10')
-  const [due, setDue] = useState(false)
+  const [pv, setPv] = useCalcState('pv', '10000')
+  const [pmt, setPmt] = useCalcState('pmt', '5000')
+  const [fv, setFv] = useCalcState('fv', '94022')
+  const [rate, setRate] = useCalcState('rate', '8')
+  const [n, setN] = useCalcState('n', '10')
+  const [dueStr, setDueStr] = useCalcState('due', '0')
+  const due = dueStr === '1'
+  const setDue = (v: boolean) => setDueStr(v ? '1' : '0')
 
   const m = useMemo(() => {
     const PV = toNum(pv)

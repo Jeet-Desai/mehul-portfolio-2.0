@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, Sparkles, Sun, Moon, LogIn, LogOut } from 'lucide-react'
+import { Menu, X, Sun, Moon, LogIn, LogOut } from 'lucide-react'
 import { navLinks } from '../data/site'
 import { useAuth } from '../lib/auth'
 import Logo from './Logo'
+import ExamChip from './ExamChip'
 
 function useDarkMode() {
   const [dark, setDark] = useState(
@@ -22,9 +23,9 @@ function useDarkMode() {
   return { dark, toggle }
 }
 
-/** Shared sizing so every top-bar control lines up at exactly h-10. */
+/** Square bordered control — the Ledger nav button (theme toggle, auth, menu). */
 const iconBtn =
-  'grid h-10 w-10 shrink-0 place-items-center rounded-xl text-slate-600 transition hover:bg-slate-100 hover:text-slate-900'
+  'grid h-10 w-10 shrink-0 cursor-pointer place-items-center rounded-[10px] border border-slate-200 bg-white text-slate-800 transition hover:border-brand-600 hover:text-brand-600'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -48,7 +49,7 @@ export default function Navbar() {
 
   const ThemeToggle = () => (
     <button onClick={toggle} aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'} className={iconBtn}>
-      {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
     </button>
   )
 
@@ -58,22 +59,22 @@ export default function Navbar() {
     if (user)
       return (
         <button onClick={() => signOut()} className={iconBtn} aria-label="Sign out" title={user.email ? `Sign out (${user.email})` : 'Sign out'}>
-          <LogOut className="h-5 w-5" />
+          <LogOut className="h-[18px] w-[18px]" />
         </button>
       )
     return (
       <Link to="/login" className={iconBtn} aria-label="Log in" title="Log in">
-        <LogIn className="h-5 w-5" />
+        <LogIn className="h-[18px] w-[18px]" />
       </Link>
     )
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-slate-50/85 backdrop-blur-md">
+      <nav className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
         <Logo />
 
-        {/* desktop links — only when there is room (xl+) */}
+        {/* desktop links — only when there is room (xl+). Active = accent + underline. */}
         <div className="hidden items-center gap-0.5 xl:flex">
           {navLinks.map((l) => (
             <NavLink
@@ -81,8 +82,10 @@ export default function Navbar() {
               to={l.to}
               end={l.to === '/'}
               className={({ isActive }) =>
-                `whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold transition ${
-                  isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                `whitespace-nowrap border-b-2 px-3 py-2 text-[13px] transition ${
+                  isActive
+                    ? 'border-brand-600 font-bold text-brand-600'
+                    : 'border-transparent font-semibold text-slate-600 hover:text-slate-900'
                 }`
               }
             >
@@ -92,19 +95,16 @@ export default function Navbar() {
         </div>
 
         {/* right controls — evenly aligned, consistent sizing, always visible */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          <ExamChip />
           <ThemeToggle />
           <AuthControl />
-          <Link
-            to="/learn"
-            className="ml-1 hidden h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-brand-600 px-4 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-700 sm:inline-flex"
-          >
-            <Sparkles className="h-4 w-4" />
+          <Link to="/learn" className="btn-accent hidden h-10 shrink-0 whitespace-nowrap px-4 text-[13px] sm:inline-flex">
             <span className="hidden md:inline">Start Learning</span>
             <span className="md:hidden">Learn</span>
           </Link>
           <button className={`${iconBtn} xl:hidden`} onClick={() => setOpen((v) => !v)} aria-label="Toggle menu" aria-expanded={open}>
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </nav>
@@ -112,7 +112,7 @@ export default function Navbar() {
       {/* slide-down vertical menu — shown below xl (where the links don't fit).
           Scrolls internally if taller than the viewport; background is scroll-locked. */}
       {open && (
-        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-slate-100 bg-white px-4 py-3 xl:hidden">
+        <div className="max-h-[calc(100dvh-4.25rem)] overflow-y-auto border-t border-slate-200 bg-slate-50 px-4 py-3 xl:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-1">
             {navLinks.map((l) => (
               <NavLink
@@ -121,7 +121,7 @@ export default function Navbar() {
                 end={l.to === '/'}
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
-                  `rounded-xl px-4 py-3 text-base font-semibold ${
+                  `rounded-[10px] px-4 py-3 text-base font-semibold ${
                     isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
                   }`
                 }
@@ -130,7 +130,7 @@ export default function Navbar() {
               </NavLink>
             ))}
 
-            <div className="mt-2 border-t border-slate-100 pt-2">
+            <div className="mt-2 border-t border-slate-200 pt-2">
               {enabled &&
                 (user ? (
                   <button
@@ -138,7 +138,7 @@ export default function Navbar() {
                       signOut()
                       setOpen(false)
                     }}
-                    className="flex w-full items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100"
+                    className="flex w-full items-center gap-2 rounded-[10px] px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100"
                   >
                     <LogOut className="h-5 w-5" /> Sign out
                   </button>
@@ -146,17 +146,12 @@ export default function Navbar() {
                   <Link
                     to="/login"
                     onClick={() => setOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100"
+                    className="flex w-full items-center gap-2 rounded-[10px] px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100"
                   >
                     <LogIn className="h-5 w-5" /> Log in
                   </Link>
                 ))}
-              <Link
-                to="/learn"
-                onClick={() => setOpen(false)}
-                className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white"
-              >
-                <Sparkles className="h-4 w-4" />
+              <Link to="/learn" onClick={() => setOpen(false)} className="btn-accent mt-1 flex px-5 py-3 text-[15px]">
                 Start Learning
               </Link>
             </div>

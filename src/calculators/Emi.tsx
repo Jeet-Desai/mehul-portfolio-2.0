@@ -1,16 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, round, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import { tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 export default function Emi() {
-  const [principal, setPrincipal] = useState('500000')
-  const [annualRate, setAnnualRate] = useState('9.5')
-  const [years, setYears] = useState('5')
+  const [principal, setPrincipal] = useCalcState('amt', '500000')
+  const [annualRate, setAnnualRate] = useCalcState('rate', '9.5')
+  const [years, setYears] = useCalcState('yrs', '5')
 
   const m = useMemo(() => {
     const P = toNum(principal)

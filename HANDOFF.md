@@ -1,7 +1,42 @@
-# Handoff — CommerceLab (next session)
+# Handoff — AccrualSense (next session)
 
 The product now spans **every pillar as a real, thin slice** (not just calculators). Read `ROADMAP.md`
-for the full vision. Current as of the "full vertical slice" session.
+for the full vision. Current as of the "Ledger redesign + student features" session (2 Jul 2026).
+
+## 🎨 LATEST SESSION (2 Jul 2026) — Ledger redesign + Tier 1/2 student features (UNCOMMITTED)
+Everything below is in the working tree, `pnpm build` green, browser-verified light/dark/mobile. **Not yet committed.**
+
+**Full "Ledger" visual redesign** from `D:\commercelab\clcode\design\design_handoff_accrualsense_ledger`
+(warm paper · Newsreader serif + Manrope · deep-teal accent). Implementation rides the existing token
+mechanism: in `src/index.css` the **slate ramp + white ARE the Ledger neutrals** and **brand-\* IS the teal
+accent** (`#0f766e` light → `#2dd4bf` dark; solid accent fills use ink text in dark for contrast — see
+`.btn-accent`). New component classes: `.cl-card`/`.cl-card-lift` (opt-in hover), `.ink-card`+`.ink-lines`
+(inverts to a light card in dark — intended), `.btn-accent`, `.btn-outline`, `.eyebrow`, `.h2-marker`,
+`.ledger-lines` (page background, mounted in `Layout`), `.margin-rule`, `text-line`. Shared pieces:
+`Reveal.tsx` (translate-only house rise), `CountUp.tsx`, `PageHeader` (`titleAccent` italic teal phrase),
+fonts loaded in `index.html`. Every page + all calc primitives restyled. **Never `dark:`-sweep; extend tokens.**
+
+**New student features (all client-side, localStorage `as:*` keys, pure libs in `src/lib/`):**
+- **Progress layer** `progress.ts` — streak/activity/quiz-stats/calc-usage/topic-reads; recording hooks live
+  in Practice, CalculatorPage, ResourceTopic; dashboard at **`/progress`** (heat strip, weakest topic, exam card).
+- **Question of the Day** `qotd.ts` + `components/QuestionOfTheDay.tsx` on Home (deterministic by local date; public habit hook).
+- **Flashcards + spaced repetition** `srs.ts` + **`/revise`** — Leitner boxes 1–5 → 1/2/5/10/21 days; ~207 cards
+  auto-derived from `formulas.ts` + resource `keyTerms` (incl. EN→ગુજરાતી drill decks). Content never stored, only schedule.
+- **Exam countdown** `exam.ts` + navbar `ExamChip` (presets are NAMES ONLY — never assert exam dates).
+- **Mock exam mode** in Practice — 20 Qs round-robin across topics, 25-min clock, no feedback until submit,
+  palette navigation, per-topic breakdown, printable result card; records `mode:'mock'`.
+- **Journal → Ledger → Trial Balance simulator** (🏆 flagship) — `lib/journal.ts` + `calculators/JournalLedger.tsx`
+  (slug `journal-ledger-trial-balance`, first in registry). Golden-rule reasoning per entry, textbook
+  T-accounts, balances-method TB; seed scenario hand-verified (tallies ₹1,48,000). Persists to `as:journal`.
+- **Shareable calculator links** — `lib/urlState.ts` `useCalcState` (drop-in URL-synced useState) wired into
+  all scalar-input calculators + `ShareButton` on every calc page. Complex row-array calculators skipped (listed in agent report).
+- **Per-page titles/meta** — `lib/usePageTitle.ts`, called on every page (was: one global title).
+- Routes added: `/progress`, `/revise` (both behind `RequireAuth`, consistent with the tools gate).
+  NavLinks + footer updated. **"No sign-up, no cost" copy removed from Home** (login IS required for tools).
+
+**Next up (user-approved backlog):** digitize Dr. Desai's question banks from `D:\commercelab\material`
+into practice sets (own focused session — correctness-critical); then PPF/EPF/NPS/FD-RD suite, PWA/offline,
+Gujarati beyond the Library. Consider updating `stats`/marquee if calculator count changes (now 32).
 
 ## What this is
 **CommerceLab — *by Dr. Mehulkumar Desai*** — a free learning hub for all Indian commerce students

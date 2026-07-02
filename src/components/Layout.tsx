@@ -4,9 +4,11 @@ import Footer from './Footer'
 
 export default function Layout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col">
+      {/* faint ledger rules behind the whole page — the Ledger house background */}
+      <div aria-hidden className="ledger-lines pointer-events-none fixed inset-0 z-0" />
       <Navbar />
-      <main className="flex-1">
+      <main className="relative z-10 flex-1">
         <Outlet />
       </main>
       <Footer />

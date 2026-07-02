@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import {
   AreaChart,
   Area,
@@ -15,6 +15,7 @@ import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResul
 import { formatINR, formatPct, round, toNum } from '../lib/format'
 import { chartGrid, chartAxis, axisTick, chartLabelFill, tooltipProps } from '../lib/chartTheme'
 import { simulateSip } from '../lib/finance'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 type Mode = 'sip' | 'lumpsum'
@@ -22,12 +23,12 @@ type Mode = 'sip' | 'lumpsum'
 const compact = (v: number) => `₹${Intl.NumberFormat('en-IN', { notation: 'compact' }).format(v)}`
 
 export default function Sip() {
-  const [mode, setMode] = useState<Mode>('sip')
-  const [monthly, setMonthly] = useState('10000')
-  const [stepUp, setStepUp] = useState('10')
-  const [lumpsum, setLumpsum] = useState('500000')
-  const [ret, setRet] = useState('12')
-  const [years, setYears] = useState('15')
+  const [mode, setMode] = useCalcState('mode', 'sip')
+  const [monthly, setMonthly] = useCalcState('amt', '10000')
+  const [stepUp, setStepUp] = useCalcState('step', '10')
+  const [lumpsum, setLumpsum] = useCalcState('lump', '500000')
+  const [ret, setRet] = useCalcState('ret', '12')
+  const [years, setYears] = useCalcState('yrs', '15')
 
   const m = useMemo(() => {
     const rate = toNum(ret)

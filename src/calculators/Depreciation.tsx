@@ -1,17 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel } from '../components/calc/CalcResult'
 import { formatINR, formatPct, round, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 type Method = 'slm' | 'wdv'
 
 export default function Depreciation() {
-  const [cost, setCost] = useState('100000')
-  const [salvage, setSalvage] = useState('10000')
-  const [life, setLife] = useState('5')
-  const [method, setMethod] = useState<Method>('slm')
+  const [cost, setCost] = useCalcState('cost', '100000')
+  const [salvage, setSalvage] = useCalcState('sv', '10000')
+  const [life, setLife] = useCalcState('life', '5')
+  const [method, setMethod] = useCalcState('m', 'slm')
 
   const m = useMemo(() => {
     const C = toNum(cost)

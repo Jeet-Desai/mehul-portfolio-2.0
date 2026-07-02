@@ -10,11 +10,12 @@ import {
   type WageInputs,
   type TurnoverInputs,
 } from '../lib/wages'
+import { useCalcState } from '../lib/urlState'
 
 type Tab = 'incentive' | 'turnover'
 
 export default function Wages() {
-  const [tab, setTab] = useState<Tab>('incentive')
+  const [tab, setTab] = useCalcState('tab', 'incentive')
 
   return (
     <div className="space-y-6">

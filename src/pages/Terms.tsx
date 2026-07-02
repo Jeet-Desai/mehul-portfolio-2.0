@@ -1,8 +1,10 @@
 import PageHeader from '../components/PageHeader'
 import { site, contact, professor } from '../data/site'
+import { usePageTitle } from '../lib/usePageTitle'
 
 /* Honest terms of service for a free educational tool. */
 export default function Terms() {
+  usePageTitle('Terms of Service')
   return (
     <>
       <PageHeader
@@ -10,7 +12,7 @@ export default function Terms() {
         title="Terms of Service"
         subtitle={`The terms for using ${site.brand}. Last updated June 2026.`}
       />
-      <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <article className="mx-auto max-w-[800px] px-4 py-10 sm:px-6">
         <Section title="1. Acceptance">
           <p>
             By using {site.brand} ({site.byline}), you agree to these terms. If you do not agree, please do not use the
@@ -79,9 +81,9 @@ export default function Terms() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mb-8">
-      <h2 className="mb-3 text-xl font-bold text-slate-900">{title}</h2>
-      <div className="space-y-3 text-slate-600 [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-slate-800 [&_ul]:space-y-2">
+    <section className="border-b border-slate-200 py-8 first:pt-0 last:border-b-0 last:pb-0">
+      <h2 className="h2-marker mb-3 text-[22px]">{title}</h2>
+      <div className="space-y-3 text-[15.5px] leading-[1.75] text-slate-600 [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-slate-800 [&_ul]:space-y-2">
         {children}
       </div>
     </section>

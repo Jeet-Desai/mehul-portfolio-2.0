@@ -1,20 +1,21 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatPct, round, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import { tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 export default function Wacc() {
-  const [equityVal, setEquityVal] = useState('600000')
-  const [equityCost, setEquityCost] = useState('14')
-  const [debtVal, setDebtVal] = useState('300000')
-  const [debtCost, setDebtCost] = useState('10')
-  const [prefVal, setPrefVal] = useState('100000')
-  const [prefCost, setPrefCost] = useState('12')
-  const [tax, setTax] = useState('30')
+  const [equityVal, setEquityVal] = useCalcState('ev', '600000')
+  const [equityCost, setEquityCost] = useCalcState('ke', '14')
+  const [debtVal, setDebtVal] = useCalcState('dv', '300000')
+  const [debtCost, setDebtCost] = useCalcState('kd', '10')
+  const [prefVal, setPrefVal] = useCalcState('pv', '100000')
+  const [prefCost, setPrefCost] = useCalcState('kp', '12')
+  const [tax, setTax] = useCalcState('tax', '30')
 
   const m = useMemo(() => {
     const E = toNum(equityVal)

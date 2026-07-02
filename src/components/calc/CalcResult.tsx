@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react'
 
+/* Ledger hero results — the primary result is an INK card (near-black in light,
+   inverts to a light card in dark: intended), the secondary is a solid accent
+   card. `sun` keeps a warm solid for warning-ish heroes. */
 const tones = {
-  brand: 'from-brand-500 to-brand-700',
-  mint: 'from-mint-500 to-mint-600',
-  sun: 'from-sun-500 to-sun-600',
+  brand: 'ink-card ink-lines',
+  mint: 'rounded-xl bg-brand-600 text-white',
+  sun: 'rounded-xl bg-sun-500 text-white',
 } as const
 
-/** A highlighted "hero" result (gradient). */
+/** A highlighted "hero" result. */
 export function HeroResult({
   label,
   value,
@@ -19,10 +22,10 @@ export function HeroResult({
   tone?: keyof typeof tones
 }) {
   return (
-    <div className={`rounded-2xl bg-gradient-to-br ${tones[tone]} p-5 text-white shadow-md`}>
-      <p className="text-sm font-medium text-white/80">{label}</p>
-      <p className="mt-1 font-display text-3xl font-extrabold">{value}</p>
-      {sub && <p className="mt-1 text-sm text-white/80">{sub}</p>}
+    <div className={`${tones[tone]} p-5 sm:p-6`}>
+      <p className="font-sans text-[11px] font-bold uppercase tracking-[0.1em] opacity-60">{label}</p>
+      <p className="mt-2 font-display text-4xl font-semibold leading-none">{value}</p>
+      {sub && <p className="mt-2 text-[13px] opacity-70">{sub}</p>}
     </div>
   )
 }
@@ -38,9 +41,9 @@ export function ResultRow({
   strong?: boolean
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 py-2">
+    <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-2.5 last:border-0">
       <span className="text-sm text-slate-600">{label}</span>
-      <span className={`text-sm ${strong ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}`}>
+      <span className={`text-sm ${strong ? 'font-display text-[15px] font-semibold text-brand-600' : 'font-semibold text-slate-800'}`}>
         {value}
       </span>
     </div>
@@ -49,8 +52,12 @@ export function ResultRow({
 
 export function ResultPanel({ title, children }: { title?: string; children: ReactNode }) {
   return (
-    <div className="cl-card p-6 hover:translate-y-0">
-      {title && <h3 className="mb-3 text-base font-bold">{title}</h3>}
+    <div className="cl-card p-5 sm:p-6">
+      {title && (
+        <h3 className="mb-3 font-sans text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+          {title}
+        </h3>
+      )}
       {children}
     </div>
   )

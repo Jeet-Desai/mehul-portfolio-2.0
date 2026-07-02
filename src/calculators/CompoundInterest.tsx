@@ -14,6 +14,7 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, round, toNum } from '../lib/format'
 import { chartGrid, chartAxis, axisTick, chartLabelFill, tooltipProps } from '../lib/chartTheme'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 type Freq = 1 | 2 | 4 | 12
@@ -28,10 +29,12 @@ const FREQS: { value: Freq; label: string }[] = [
 const compact = (v: number) => `₹${Intl.NumberFormat('en-IN', { notation: 'compact' }).format(v)}`
 
 export default function CompoundInterest() {
-  const [principal, setPrincipal] = useState('100000')
-  const [rate, setRate] = useState('10')
-  const [years, setYears] = useState('10')
-  const [freq, setFreq] = useState<Freq>(1)
+  const [principal, setPrincipal] = useCalcState('amt', '100000')
+  const [rate, setRate] = useCalcState('rate', '10')
+  const [years, setYears] = useCalcState('yrs', '10')
+  const [freqStr, setFreqStr] = useCalcState('freq', '1')
+  const freq = ([1, 2, 4, 12].includes(Number(freqStr)) ? Number(freqStr) : 1) as Freq
+  const setFreq = (f: Freq) => setFreqStr(String(f))
 
   const m = useMemo(() => {
     const P = toNum(principal)

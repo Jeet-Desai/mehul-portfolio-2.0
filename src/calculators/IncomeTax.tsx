@@ -4,6 +4,7 @@ import CalcField from '../components/calc/CalcField'
 import { ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, toNum } from '../lib/format'
 import { computeRegime, type RegimeResult } from '../lib/incomeTax'
+import { useCalcState } from '../lib/urlState'
 
 function RegimeCard({ r, best }: { r: RegimeResult; best: boolean }) {
   const title = r.regime === 'new' ? 'New regime' : 'Old regime'
@@ -56,9 +57,11 @@ function RegimeCard({ r, best }: { r: RegimeResult; best: boolean }) {
 }
 
 export default function IncomeTax() {
-  const [gross, setGross] = useState('1200000')
-  const [deductions, setDeductions] = useState('150000')
-  const [salaried, setSalaried] = useState(true)
+  const [gross, setGross] = useCalcState('inc', '1200000')
+  const [deductions, setDeductions] = useCalcState('ded', '150000')
+  const [salariedStr, setSalariedStr] = useCalcState('sal', '1')
+  const salaried = salariedStr === '1'
+  const setSalaried = (v: boolean) => setSalariedStr(v ? '1' : '0')
 
   const { newR, oldR, saving, winner } = useMemo(() => {
     const g = toNum(gross)

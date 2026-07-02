@@ -5,6 +5,7 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatPct, toNum } from '../lib/format'
 import { computeCapitalGains, type AssetType, type CGResult } from '../lib/capitalGains'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 /** Parse a 'YYYY-MM-DD' input value as a LOCAL date (noon, to dodge DST/UTC edges)
@@ -25,14 +26,18 @@ function holdingLabel(p: Date, s: Date): string {
 }
 
 export default function CapitalGains() {
-  const [assetType, setAssetType] = useState<AssetType>('equity')
-  const [purchase, setPurchase] = useState('200000')
-  const [sale, setSale] = useState('500000')
-  const [expenses, setExpenses] = useState('0')
-  const [purchaseDate, setPurchaseDate] = useState('2022-06-01')
-  const [saleDate, setSaleDate] = useState('2025-08-01')
-  const [landBuilding, setLandBuilding] = useState(false)
-  const [slabRate, setSlabRate] = useState('30')
+  const [assetTypeStr, setAssetTypeStr] = useCalcState('asset', 'equity')
+  const assetType: AssetType = assetTypeStr === 'other' ? 'other' : 'equity'
+  const setAssetType = (v: AssetType) => setAssetTypeStr(v)
+  const [purchase, setPurchase] = useCalcState('buy', '200000')
+  const [sale, setSale] = useCalcState('sell', '500000')
+  const [expenses, setExpenses] = useCalcState('exp', '0')
+  const [purchaseDate, setPurchaseDate] = useCalcState('bd', '2022-06-01')
+  const [saleDate, setSaleDate] = useCalcState('sd', '2025-08-01')
+  const [landBuildingStr, setLandBuildingStr] = useCalcState('lb', '0')
+  const landBuilding = landBuildingStr === '1'
+  const setLandBuilding = (v: boolean) => setLandBuildingStr(v ? '1' : '0')
+  const [slabRate, setSlabRate] = useCalcState('slab', '30')
 
   const m = useMemo(() => {
     const pDate = parseLocalDate(purchaseDate)

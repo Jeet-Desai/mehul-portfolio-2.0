@@ -3,11 +3,13 @@ import { useLocation, useNavigate, Navigate } from 'react-router-dom'
 import { LogIn, Mail, Lock, CheckCircle2, Info, Loader2 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import Logo from '../components/Logo'
+import { usePageTitle } from '../lib/usePageTitle'
 
 type LocState = { from?: string }
 type Mode = 'signin' | 'signup'
 
 export default function Login() {
+  usePageTitle('Sign in')
   const { enabled, user, signInWithGoogle, signInWithPassword, signUpWithPassword } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
@@ -55,20 +57,20 @@ export default function Login() {
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12">
-      <div className="cl-card p-8 hover:translate-y-0">
+      <div className="cl-card p-8">
         <div className="mb-6 flex flex-col items-center text-center">
           <Logo />
-          <h1 className="mt-5 font-display text-2xl font-extrabold">
+          <h1 className="mt-5 text-[26px]">
             {mode === 'signup' ? 'Create your account' : 'Sign in to AccrualSense'}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1.5 text-[13px] text-slate-600">
             Free for everyone. Log in to use the calculators, quizzes and AI tutor.
           </p>
         </div>
 
         {!enabled ? (
-          <div className="flex items-start gap-2 rounded-xl bg-sun-50 p-4 text-sm text-sun-700 dark:bg-sun-500/10 dark:text-sun-300">
-            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <div className="flex items-start gap-2.5 rounded-[10px] border border-slate-200 bg-slate-100 p-4 text-sm leading-relaxed text-slate-600">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
             <span>
               Login isn’t switched on yet. Once the site owner adds the Supabase keys, Google and email sign-in will work
               here. In the meantime, every page is open — head back to the{' '}
@@ -76,8 +78,8 @@ export default function Login() {
             </span>
           </div>
         ) : confirm ? (
-          <div className="flex items-start gap-2 rounded-xl bg-mint-50 p-4 text-sm text-mint-700 dark:bg-mint-500/10 dark:text-mint-300">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+          <div className="flex items-start gap-2.5 rounded-[10px] border border-brand-200 bg-brand-50 p-4 text-sm leading-relaxed text-slate-600">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
             <span>
               Almost there — we’ve emailed a confirmation link to <strong>{email}</strong>. Click it to verify your
               account, then come back and sign in.
@@ -87,9 +89,9 @@ export default function Login() {
           <div className="space-y-4">
             <form onSubmit={onSubmit} className="space-y-3">
               <label className="block">
-                <span className="text-sm font-semibold text-slate-700">Email address</span>
-                <div className="mt-1.5 flex items-stretch overflow-hidden rounded-xl border border-slate-200 bg-white focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100">
-                  <span className="grid place-items-center bg-slate-50 px-3 text-slate-400"><Mail className="h-4 w-4" /></span>
+                <span className="text-[12.5px] font-semibold text-slate-600">Email address</span>
+                <div className="mt-1.5 flex items-stretch overflow-hidden rounded-[9px] border border-slate-200 bg-slate-50 transition focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-100">
+                  <span className="grid place-items-center pl-3 text-slate-400"><Mail className="h-4 w-4" /></span>
                   <input
                     type="email"
                     required
@@ -103,9 +105,9 @@ export default function Login() {
               </label>
 
               <label className="block">
-                <span className="text-sm font-semibold text-slate-700">Password</span>
-                <div className="mt-1.5 flex items-stretch overflow-hidden rounded-xl border border-slate-200 bg-white focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100">
-                  <span className="grid place-items-center bg-slate-50 px-3 text-slate-400"><Lock className="h-4 w-4" /></span>
+                <span className="text-[12.5px] font-semibold text-slate-600">Password</span>
+                <div className="mt-1.5 flex items-stretch overflow-hidden rounded-[9px] border border-slate-200 bg-slate-50 transition focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-100">
+                  <span className="grid place-items-center pl-3 text-slate-400"><Lock className="h-4 w-4" /></span>
                   <input
                     type="password"
                     required
@@ -122,7 +124,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={busy}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-700 disabled:opacity-60"
+                className="btn-accent w-full px-4 py-3 text-sm disabled:opacity-60"
               >
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
                 {mode === 'signup' ? 'Create account' : 'Sign in'}
@@ -131,7 +133,7 @@ export default function Login() {
 
             {error && <p className="text-sm text-rose-500">{error}</p>}
 
-            <p className="text-center text-xs text-slate-500">
+            <p className="text-center text-[12px] text-slate-400">
               {mode === 'signup' ? 'Already have an account?' : 'New here?'}{' '}
               <button
                 onClick={() => {
@@ -151,7 +153,7 @@ export default function Login() {
             <button
               onClick={onGoogle}
               disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
+              className="btn-outline w-full px-4 py-3 text-sm disabled:opacity-60"
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleMark />}
               Continue with Google

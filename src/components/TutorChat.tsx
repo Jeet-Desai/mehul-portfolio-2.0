@@ -155,41 +155,43 @@ export default function TutorChat() {
   const canSend = !loading && !reading && (input.trim().length > 0 || ready.length > 0)
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-sm">
-      {/* header */}
-      <div className="flex items-center gap-3 bg-gradient-to-br from-brand-500 to-brand-700 px-5 py-4 text-white">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/20">
+    <div className="overflow-hidden rounded-[14px] border border-slate-200 bg-white">
+      {/* header — ink bar with accent icon tile (inverts to light in dark mode) */}
+      <div className="flex items-center gap-4 bg-slate-900 px-6 py-5 text-slate-50">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-600 text-white">
           <Sparkles className="h-5 w-5" />
         </span>
         <div className="min-w-0">
-          <h2 className="text-base font-bold leading-tight">AI doubt-tutor</h2>
-          <p className="text-xs text-white/85">
+          <h2 className="font-display text-[20px] font-semibold leading-tight text-slate-50">
+            AI doubt-tutor
+          </h2>
+          <p className="mt-0.5 text-[13px] opacity-70">
             Step-by-step answers in Dr. Desai's style — in English, हिंदी or ગુજરાતી.
           </p>
         </div>
         {TUTOR_IS_MOCK && (
-          <span className="ml-auto shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold">
+          <span className="ml-auto shrink-0 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold">
             Local preview
           </span>
         )}
       </div>
 
       {/* messages */}
-      <div ref={listRef} className="max-h-[26rem] min-h-[12rem] space-y-4 overflow-y-auto px-4 py-5 sm:px-5">
+      <div ref={listRef} className="max-h-[26rem] min-h-[12rem] space-y-4 overflow-y-auto px-4 py-6 sm:px-6">
         {empty && (
-          <div className="py-4 text-center">
-            <p className="text-sm text-slate-500">
+          <div className="py-2 text-center">
+            <p className="text-[16px] font-semibold text-slate-900">
               Ask anything in commerce — accounting, costing, finance, tax, economics.
             </p>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-[13px] text-slate-400">
               Stuck on a sum? Attach a photo, a PDF or your notes and ask.
             </p>
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <div className="mt-5 flex flex-wrap justify-center gap-2.5">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
                   onClick={() => void send(s)}
-                  className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+                  className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-[13px] font-medium text-slate-900 transition hover:border-brand-600 hover:text-brand-600"
                 >
                   {s}
                 </button>
@@ -210,14 +212,14 @@ export default function TutorChat() {
                           key={i}
                           src={a.thumb}
                           alt={a.name}
-                          className="h-16 w-16 rounded-lg border border-brand-200 object-cover"
+                          className="h-16 w-16 rounded-[10px] border border-slate-200 object-cover"
                         />
                       ) : (
                         <span
                           key={i}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-2.5 py-1.5 text-xs font-medium text-brand-700"
+                          className="inline-flex items-center gap-1.5 rounded-[10px] border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-600"
                         >
-                          <FileText className="h-3.5 w-3.5" />
+                          <FileText className="h-3.5 w-3.5 text-brand-600" />
                           <span className="max-w-[10rem] truncate">{a.name}</span>
                         </span>
                       ),
@@ -225,7 +227,7 @@ export default function TutorChat() {
                   </div>
                 )}
                 {(m.display || contentToText(m.content)) && (
-                  <div className="rounded-2xl rounded-br-md bg-brand-600 px-4 py-2.5 text-sm text-white">
+                  <div className="ink-card px-4 py-2.5 text-sm">
                     {m.display || contentToText(m.content)}
                   </div>
                 )}
@@ -236,10 +238,10 @@ export default function TutorChat() {
             </div>
           ) : (
             <div key={m.id} className="flex gap-2.5">
-              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-100 text-brand-600">
+              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
                 <Sparkles className="h-4 w-4" />
               </span>
-              <div className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-slate-100 px-4 py-2.5 text-sm leading-relaxed text-slate-700">
+              <div className="max-w-[85%] whitespace-pre-wrap rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm leading-relaxed text-slate-700">
                 {contentToText(m.content)}
               </div>
             </div>
@@ -248,17 +250,17 @@ export default function TutorChat() {
 
         {loading && (
           <div className="flex gap-2.5">
-            <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-100 text-brand-600">
+            <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
               <Sparkles className="h-4 w-4" />
             </span>
-            <div className="inline-flex items-center gap-2 rounded-2xl rounded-bl-md bg-slate-100 px-4 py-2.5 text-sm text-slate-500">
+            <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-400">
               <Loader2 className="h-4 w-4 animate-spin" /> Thinking…
             </div>
           </div>
         )}
 
         {notice && (
-          <div className="flex items-start gap-2 rounded-xl bg-sun-50 p-3 text-xs text-sun-600">
+          <div className="flex items-start gap-2 rounded-[10px] bg-sun-50 p-3 text-xs text-sun-600">
             <Info className="mt-0.5 h-4 w-4 shrink-0" />
             <span>{notice}</span>
           </div>
@@ -267,7 +269,7 @@ export default function TutorChat() {
 
       {/* attachment tray */}
       {(attachments.length > 0 || fileError) && (
-        <div className="border-t border-slate-100 px-3 pt-3 sm:px-4">
+        <div className="border-t border-slate-200 bg-slate-50 px-4 pt-3 sm:px-5">
           {fileError && (
             <p className="mb-2 flex items-center gap-1.5 text-xs text-rose-500">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" /> {fileError}
@@ -281,8 +283,13 @@ export default function TutorChat() {
         </div>
       )}
 
-      {/* input */}
-      <form onSubmit={onSubmit} className="flex items-center gap-2 border-t border-slate-100 p-3 sm:p-4">
+      {/* input — footer row on paper */}
+      <form
+        onSubmit={onSubmit}
+        className={`flex items-center gap-3 bg-slate-50 p-4 sm:px-5 ${
+          attachments.length > 0 || fileError ? '' : 'border-t border-slate-200'
+        }`}
+      >
         <input
           ref={fileRef}
           type="file"
@@ -299,7 +306,7 @@ export default function TutorChat() {
           onClick={() => fileRef.current?.click()}
           aria-label="Attach an image, PDF or notes"
           title="Attach an image, PDF or notes"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-brand-600"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-[10px] text-slate-400 transition hover:bg-slate-100 hover:text-brand-600"
         >
           <Paperclip className="h-5 w-5" />
         </button>
@@ -307,13 +314,13 @@ export default function TutorChat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your commerce doubt…"
-          className="w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          className="w-full rounded-[10px] border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-600"
         />
         <button
           type="submit"
           disabled={!canSend}
           aria-label="Send"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-600 text-white transition hover:bg-brand-700 disabled:opacity-40"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-600 text-white transition hover:bg-brand-700 disabled:opacity-40"
         >
           {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
         </button>
@@ -326,10 +333,10 @@ function AttachmentChip({ att, onRemove }: { att: Attachment; onRemove: () => vo
   const error = att.status === 'error'
   return (
     <span
-      className={`group relative inline-flex max-w-[14rem] items-center gap-2 rounded-xl border px-2.5 py-1.5 text-xs ${
+      className={`group relative inline-flex max-w-[14rem] items-center gap-2 rounded-[10px] border px-2.5 py-1.5 text-xs ${
         error
           ? 'border-rose-200 bg-rose-50 text-rose-600'
-          : 'border-slate-200 bg-slate-50 text-slate-600'
+          : 'border-slate-200 bg-white text-slate-600'
       }`}
     >
       {att.status === 'reading' ? (
@@ -361,7 +368,7 @@ function AttachmentChip({ att, onRemove }: { att: Attachment; onRemove: () => vo
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${att.name}`}
-        className="ml-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full text-slate-400 transition hover:bg-slate-200 hover:text-slate-700"
+        className="ml-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-900"
       >
         <X className="h-3.5 w-3.5" />
       </button>

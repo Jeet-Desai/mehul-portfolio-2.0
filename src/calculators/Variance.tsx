@@ -14,11 +14,12 @@ import {
   type LabourInputs,
   type OverheadInputs,
 } from '../lib/variance'
+import { useCalcState } from '../lib/urlState'
 
 type Tab = 'material' | 'labour' | 'overhead'
 
 export default function Variance() {
-  const [tabv, setTab] = useState<Tab>('material')
+  const [tabv, setTab] = useCalcState('tab', 'material')
   return (
     <div className="space-y-6">
       <div className="inline-flex flex-wrap rounded-xl border border-slate-200 bg-slate-50 p-1 dark:bg-white">
@@ -170,7 +171,9 @@ const OH_SEED = {
 
 function Overhead() {
   const [f, setF] = useState(OH_SEED)
-  const [calendar, setCalendar] = useState(false)
+  const [calendarStr, setCalendarStr] = useCalcState('cal', '0')
+  const calendar = calendarStr === '1'
+  const setCalendar = (v: boolean) => setCalendarStr(v ? '1' : '0')
   const set = (k: keyof typeof OH_SEED, v: string) => setF((s) => ({ ...s, [k]: v }))
 
   const res = useMemo(() => {

@@ -16,6 +16,7 @@ import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResul
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
 import { chartGrid, chartAxis, axisTick, chartLabelFill, chartRef, tooltipProps } from '../lib/chartTheme'
 import { npv, irr, paybackPeriod } from '../lib/finance'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 const compact = (v: number) => `₹${Intl.NumberFormat('en-IN', { notation: 'compact' }).format(v)}`
@@ -24,8 +25,8 @@ const fmtYears = (p: number | null) =>
   p === null ? 'Never recovered' : `${formatNum(p, 2)} years`
 
 export default function CapitalBudgeting() {
-  const [initial, setInitial] = useState('1000000')
-  const [rate, setRate] = useState('10')
+  const [initial, setInitial] = useCalcState('io', '1000000')
+  const [rate, setRate] = useCalcState('rate', '10')
   const [inflows, setInflows] = useState<string[]>(['300000', '300000', '350000', '350000', '300000'])
 
   const setInflow = (i: number, v: string) =>

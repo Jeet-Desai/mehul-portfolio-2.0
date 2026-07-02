@@ -5,17 +5,24 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatPct, toNum } from '../lib/format'
 import { TDS_SECTIONS, computeTds, noPanRateFor, type TdsSection } from '../lib/tds'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 const fmtPctRate = (r: number) => formatPct(r, r % 1 === 0 ? 0 : 1)
 
 export default function Tds() {
-  const [code, setCode] = useState(TDS_SECTIONS.find((s) => s.code === '194J')!.code)
-  const [amount, setAmount] = useState('80000')
-  const [rateIdx, setRateIdx] = useState(0)
-  const [hasPan, setHasPan] = useState(true)
-  const [senior, setSenior] = useState(false)
-  const [aggregate, setAggregate] = useState('')
+  const [code, setCode] = useCalcState('sec', TDS_SECTIONS.find((s) => s.code === '194J')!.code)
+  const [amount, setAmount] = useCalcState('amt', '80000')
+  const [rateIdxStr, setRateIdxStr] = useCalcState('pt', '0')
+  const rateIdx = Math.max(0, Math.floor(Number(rateIdxStr)) || 0)
+  const setRateIdx = (i: number) => setRateIdxStr(String(i))
+  const [hasPanStr, setHasPanStr] = useCalcState('pan', '1')
+  const hasPan = hasPanStr === '1'
+  const setHasPan = (v: boolean) => setHasPanStr(v ? '1' : '0')
+  const [seniorStr, setSeniorStr] = useCalcState('sr', '0')
+  const senior = seniorStr === '1'
+  const setSenior = (v: boolean) => setSeniorStr(v ? '1' : '0')
+  const [aggregate, setAggregate] = useCalcState('agg', '')
 
   const section = useMemo<TdsSection>(
     () => TDS_SECTIONS.find((s) => s.code === code) ?? TDS_SECTIONS[0],

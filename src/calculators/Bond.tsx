@@ -15,19 +15,22 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
 import { bondPrice, bondYTM } from '../lib/finance'
+import { useCalcState } from '../lib/urlState'
 import { chartGrid, chartAxis, axisTick, chartLabelFill, chartRef, chartDotStroke, tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 type Mode = 'price' | 'yield'
 
 export default function Bond() {
-  const [mode, setMode] = useState<Mode>('price')
-  const [face, setFace] = useState('1000')
-  const [coupon, setCoupon] = useState('8')
-  const [years, setYears] = useState('5')
-  const [freq, setFreq] = useState(2) // coupons per year
-  const [yld, setYld] = useState('9') // market yield (price mode)
-  const [price, setPrice] = useState('960') // market price (yield mode)
+  const [mode, setMode] = useCalcState('mode', 'price')
+  const [face, setFace] = useCalcState('fv', '1000')
+  const [coupon, setCoupon] = useCalcState('cpn', '8')
+  const [years, setYears] = useCalcState('yrs', '5')
+  const [freqStr, setFreqStr] = useCalcState('freq', '2') // coupons per year
+  const freq = Number(freqStr) === 1 ? 1 : 2
+  const setFreq = (v: number) => setFreqStr(String(v))
+  const [yld, setYld] = useCalcState('yld', '9') // market yield (price mode)
+  const [price, setPrice] = useCalcState('px', '960') // market price (yield mode)
 
   const m = useMemo(() => {
     const F = toNum(face)

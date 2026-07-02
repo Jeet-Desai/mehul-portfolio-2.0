@@ -5,11 +5,12 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, toNum } from '../lib/format'
 import { computeJob, computeEbq, type JobInputs, type EbqInputs } from '../lib/jobBatch'
+import { useCalcState } from '../lib/urlState'
 
 type Tab = 'job' | 'ebq'
 
 export default function JobBatch() {
-  const [tab, setTab] = useState<Tab>('job')
+  const [tab, setTab] = useCalcState('tab', 'job')
   return (
     <div className="space-y-6">
       <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 dark:bg-white">

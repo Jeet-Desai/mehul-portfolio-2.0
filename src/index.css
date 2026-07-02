@@ -4,34 +4,54 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ----------------------------------------------------------------------------
-   CommerceLab design system — "Modern EdTech"
-   vibrant · rounded · card-based. Tokens below generate Tailwind utilities
-   (e.g. bg-brand-500, text-mint-600, font-display).
+   AccrualSense design system — "Ledger"
+   editorial · warm paper · ledger rules · Newsreader + Manrope · deep-teal accent.
+
+   The palette rides the existing neutral-ramp mechanism: utilities resolve via
+   var(--color-*), so the slate ramp + white ARE the Ledger neutrals (paper /
+   surface / muted / ink), and redefining them under `.dark` flips the whole UI.
+   brand-* is the teal accent ramp (brightens under `.dark`, like the handoff).
 ---------------------------------------------------------------------------- */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Newsreader", ui-serif, Georgia, serif;
 
-  /* brand — indigo/violet */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* neutrals — Ledger light: paper, inset, surface, hairlines, dim/muted/ink */
+  --color-white: #fffdf8; /* surface (cards, panels, nav) */
+  --color-slate-50: #f6f2e9; /* bg — warm paper */
+  --color-slate-100: rgb(31 26 18 / 0.08); /* bg2-ish inset fills + soft hairlines */
+  --color-slate-200: rgb(31 26 18 / 0.12); /* hairline borders (design --border) */
+  --color-slate-300: rgb(31 26 18 / 0.2); /* stronger borders */
+  --color-slate-400: #9a9182; /* dim — captions, placeholders */
+  --color-slate-500: #857b68;
+  --color-slate-600: #6d6555; /* muted — body copy */
+  --color-slate-700: #554e3d;
+  --color-slate-800: #38342a; /* strong body */
+  --color-slate-900: #1c1a13; /* text / ink (also the ink-card surface) */
 
-  /* mint — growth / money / "correct" */
+  /* brand — deep teal accent (Ledger) */
+  --color-brand-50: #e7f0ee; /* accent-soft */
+  --color-brand-100: #d7e8e4;
+  --color-brand-200: #b6d6d0;
+  --color-brand-300: #8abfb6;
+  --color-brand-400: #4da096;
+  --color-brand-500: #1b877e;
+  --color-brand-600: #0f766e; /* accent */
+  --color-brand-700: #0b5f58;
+  --color-brand-800: #094d48;
+  --color-brand-900: #073e3a;
+
+  /* ledger rule / big index numerals — teal tint */
+  --color-line: rgb(15 118 110 / 0.16);
+
+  /* mint — growth / "correct" (kept; reads well with teal) */
   --color-mint-50: #ecfdf5;
   --color-mint-100: #d1fae5;
   --color-mint-400: #34d399;
   --color-mint-500: #10b981;
   --color-mint-600: #059669;
 
-  /* sun — highlights / streaks */
+  /* sun — highlights / streaks / warnings */
   --color-sun-50: #fffbeb;
   --color-sun-100: #fef3c7;
   --color-sun-400: #fbbf24;
@@ -40,64 +60,82 @@
 }
 
 /* ----------------------------------------------------------------------------
-   Dark theme — v4 utilities resolve colours via `var(--color-*)`, so redefining
-   the neutral ramp (slate + white) under `.dark` flips the whole UI coherently.
-   Vibrant accents (brand/mint/sun) are left intact — they read well on dark and
-   keep the "Modern EdTech" energy. No 35-file `dark:` sweep needed.
+   Dark theme — Ledger dark: near-black warm ink, parchment text, brighter teal.
+   Same inversion trick: redefine the neutral ramp + white under `.dark`.
+   Note the ink-card pattern (bg-slate-900 + text-slate-50) inverts to a light
+   card in dark mode automatically — that inversion is intended (see handoff).
 ---------------------------------------------------------------------------- */
 .dark {
-  --color-white: #151c2c; /* card / raised surface */
-  --color-slate-50: #0b1120; /* page background (below the cards) */
-  --color-slate-100: #1e293b; /* hairline borders, subtle fills */
-  --color-slate-200: #334155; /* stronger borders */
-  --color-slate-300: #475569;
-  --color-slate-400: #8b97a8; /* muted text */
-  --color-slate-500: #aab4c4;
-  --color-slate-600: #c5cedb; /* body text */
-  --color-slate-700: #dde3ed;
-  --color-slate-800: #e9eef5; /* strong body text */
-  --color-slate-900: #f5f8fc; /* headings */
+  --color-white: #1c1a14; /* surface */
+  --color-slate-50: #12110c; /* bg */
+  --color-slate-100: rgb(255 255 255 / 0.07);
+  --color-slate-200: rgb(255 255 255 / 0.1); /* hairlines (design --border) */
+  --color-slate-300: rgb(255 255 255 / 0.18);
+  --color-slate-400: #7d7566; /* dim */
+  --color-slate-500: #918a79;
+  --color-slate-600: #a49c8a; /* muted */
+  --color-slate-700: #beb6a2;
+  --color-slate-800: #d9d2c0;
+  --color-slate-900: #f2efe6; /* text */
+
+  /* accent brightens in dark (handoff) — soft fills go deep, text/borders go bright */
+  --color-brand-50: #14312d;
+  --color-brand-100: #17403a;
+  --color-brand-200: #1a4f48;
+  --color-brand-300: #156a61;
+  --color-brand-400: #0f8377;
+  --color-brand-500: #17a894;
+  --color-brand-600: #2dd4bf;
+  --color-brand-700: #56dfcd;
+  --color-brand-800: #8ae7da;
+  --color-brand-900: #b5f0e7;
+
+  --color-line: rgb(45 212 191 / 0.22);
+
   color-scheme: dark;
 
-  /* chart chrome — dark variants (see the light defaults in @layer base) */
-  --chart-grid: #28344a;
-  --chart-axis: #3b4a63;
-  --chart-axis-text: #8b97a8;
-  --chart-ref: #5b6b85;
-  --chart-dot-stroke: #151c2c; /* = card surface, so the dot halo matches the card */
-  --chart-tooltip-bg: #1e293b;
-  --chart-tooltip-border: #334155;
-  --chart-tooltip-text: #f5f8fc;
+  /* chart chrome — dark variants (light defaults in @layer base) */
+  --chart-grid: #2b2820;
+  --chart-axis: #3c382c;
+  --chart-axis-text: #918a79;
+  --chart-ref: #6d6555;
+  --chart-dot-stroke: #1c1a14; /* = card surface, so the dot halo matches the card */
+  --chart-tooltip-bg: #26231b;
+  --chart-tooltip-border: rgb(255 255 255 / 0.12);
+  --chart-tooltip-text: #f2efe6;
 }
 
 /* ----------------------------------------------------------------------------
-   White text sits on COLOURED / gradient surfaces (primary buttons, banners,
-   hero sections, chat bubbles), so it must stay white in dark mode. The neutral-
-   ramp inversion above redefines --color-white for card SURFACES, which would
-   otherwise also flip this text dark. These unlayered rules win over the
-   `text-white` utility without affecting `bg-white` surfaces.
+   White text sits on COLOURED surfaces (accent buttons, banners, chat bubbles),
+   so it must stay light in dark mode even though --color-white becomes the dark
+   card surface. On the bright dark-mode teal (brand-600 #2dd4bf), white fails
+   contrast — so text on accent fills flips to ink instead. Order matters: the
+   accent-fill rules are later + more specific, so they win inside accent fills.
 ---------------------------------------------------------------------------- */
 .dark .text-white { color: #fff; }
 .dark .text-white\/90 { color: rgb(255 255 255 / 0.9); }
 .dark .text-white\/85 { color: rgb(255 255 255 / 0.85); }
 .dark .text-white\/80 { color: rgb(255 255 255 / 0.8); }
+.dark .bg-brand-600.text-white,
+.dark .bg-brand-700.text-white,
+.dark .bg-brand-600 .text-white,
+.dark .bg-brand-700 .text-white { color: #0e1f1c; }
 
 @layer base {
   html {
     scroll-behavior: smooth;
 
     /* Chart chrome (gridlines / axes / tooltip / reference lines / dot halos).
-       Light defaults here; flipped under `.dark`. Element-selector specificity
-       (0,0,1) is below `.dark` (0,1,0), so the dark overrides always win.
-       Data-series colours stay brand/mint/sun — they are NOT tokenised here. */
-    --chart-grid: #eef2f7;
-    --chart-axis: #cbd5e1;
-    --chart-axis-text: #64748b;
-    --chart-ref: #94a3b8;
-    --chart-dot-stroke: #ffffff;
-    --chart-tooltip-bg: #ffffff;
-    --chart-tooltip-border: #e2e8f0;
-    --chart-tooltip-text: #0f172a;
+       Light defaults here; flipped under `.dark`. Data-series colours are NOT
+       tokenised — Revenue teal #0f766e · cost indigo #6366f1 · fixed sun #f59e0b. */
+    --chart-grid: #ece5d6;
+    --chart-axis: #d6cfbc;
+    --chart-axis-text: #857b68;
+    --chart-ref: #9a9182;
+    --chart-dot-stroke: #fffdf8;
+    --chart-tooltip-bg: #fffdf8;
+    --chart-tooltip-border: #e3dccb;
+    --chart-tooltip-text: #1c1a13;
   }
   body {
     @apply bg-slate-50 text-slate-800 font-sans antialiased;
@@ -107,22 +145,108 @@
   h2,
   h3,
   h4 {
-    @apply font-display tracking-tight text-slate-900;
+    @apply font-display text-slate-900;
+    letter-spacing: -0.02em;
+    font-weight: 500;
   }
   ::selection {
-    @apply bg-brand-200 text-brand-900;
+    @apply bg-brand-100 text-brand-900;
   }
 }
 
 @layer components {
-  /* shared building blocks for the EdTech card look */
+  /* Ledger card — hairline surface card. Interactive cards add .cl-card-lift
+     for the house hover (rise + soft shadow + accent border). */
   .cl-card {
-    @apply rounded-3xl border border-slate-100 bg-white shadow-sm transition
-           hover:-translate-y-1 hover:shadow-xl;
+    @apply rounded-xl border border-slate-200 bg-white;
+  }
+  .cl-card-lift {
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .cl-card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 34px -20px rgb(30 26 18 / 0.35);
+    border-color: var(--color-brand-600);
   }
   .cl-pill {
     @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold;
   }
+
+  /* Ink card — near-black in light, elegantly inverts to a light card in dark. */
+  .ink-card {
+    @apply rounded-xl bg-slate-900 text-slate-50;
+  }
+  /* faint internal ledger rules for ink surfaces (CTA band, hero results) */
+  .ink-lines {
+    background-image: repeating-linear-gradient(rgb(255 255 255 / 0.05) 0 1px, transparent 1px 34px);
+  }
+  .dark .ink-lines {
+    background-image: repeating-linear-gradient(rgb(0 0 0 / 0.05) 0 1px, transparent 1px 34px);
+  }
+
+  /* Solid accent button */
+  .btn-accent {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-[11px] bg-brand-600 font-sans text-sm font-bold text-white transition;
+    box-shadow: 0 14px 30px -14px rgb(15 118 110 / 0.8);
+  }
+  .btn-accent:hover { @apply bg-brand-700; }
+  /* dark: bright teal fill needs ink text (white fails contrast on #2dd4bf) */
+  .dark .btn-accent {
+    color: #0e1f1c;
+    box-shadow: 0 14px 30px -14px rgb(45 212 191 / 0.45);
+  }
+
+  /* Outline button — 1.5px ink border */
+  .btn-outline {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-[11px] border-[1.5px] border-slate-900 bg-transparent font-sans text-sm font-bold text-slate-900 transition;
+  }
+  .btn-outline:hover { @apply bg-slate-900 text-slate-50; }
+
+  /* Eyebrow — short accent bar + uppercase label */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-sans text-xs font-bold uppercase text-brand-600;
+    letter-spacing: 0.14em;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-[1.5px] w-[22px] bg-brand-600;
+  }
+
+  /* ▸ marker before content-page H2s (Library, Ask) */
+  .h2-marker::before {
+    content: "▸";
+    @apply mr-2.5 text-brand-600;
+  }
+
+  /* Ledger ruled background — place as an absolutely-positioned overlay div */
+  .ledger-lines {
+    background-image: repeating-linear-gradient(var(--color-line) 0 1px, transparent 1px 34px);
+    opacity: 0.45;
+  }
+  /* single red margin rule for the Library reading view */
+  .margin-rule {
+    background: rgb(180 60 60 / 0.18);
+  }
+  .dark .margin-rule {
+    background: rgb(220 100 100 / 0.22);
+  }
+}
+
+/* marquee (home band) — duplicated track scrolls half its width for a seamless loop */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 34s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+  html { scroll-behavior: auto; }
+  .cl-card-lift, .cl-card-lift:hover { transition: none; transform: none; }
 }
 
 /* ----------------------------------------------------------------------------
@@ -142,6 +266,10 @@
   }
   body {
     background: #fff !important;
+  }
+  .ledger-lines,
+  .margin-rule {
+    display: none !important;
   }
   .cl-card {
     box-shadow: none !important;

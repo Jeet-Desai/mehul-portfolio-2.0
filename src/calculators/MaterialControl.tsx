@@ -12,11 +12,12 @@ import {
   type StockInputs,
   type TurnoverInputs,
 } from '../lib/materialControl'
+import { useCalcState } from '../lib/urlState'
 
 type Tab = 'eoq' | 'levels' | 'turnover'
 
 export default function MaterialControl() {
-  const [tab, setTab] = useState<Tab>('eoq')
+  const [tab, setTab] = useCalcState('tab', 'eoq')
 
   return (
     <div className="space-y-6">

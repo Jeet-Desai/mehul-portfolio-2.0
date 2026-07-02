@@ -4,6 +4,7 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, toNum } from '../lib/format'
 import { valuate, valuateAll, type Method, type Txn } from '../lib/inventory'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 const METHODS: { v: Method; label: string; short: string }[] = [
@@ -27,7 +28,9 @@ const mkId = () => `r${nextId++}`
 
 export default function Inventory() {
   const [rows, setRows] = useState<Row[]>(seed)
-  const [method, setMethod] = useState<Method>('fifo')
+  const [methodStr, setMethodStr] = useCalcState('m', 'fifo')
+  const method: Method = METHODS.some((mm) => mm.v === methodStr) ? (methodStr as Method) : 'fifo'
+  const setMethod = (v: Method) => setMethodStr(v)
 
   const setRow = (id: string, patch: Partial<Row>) =>
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)))

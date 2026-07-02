@@ -29,6 +29,7 @@ import {
   Bus,
   SlidersHorizontal,
   CalendarRange,
+  BookOpenCheck,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -37,6 +38,15 @@ import type { Calculator } from './types'
    calculators. New cost/management calculators are slotted into the block as they
    are built. */
 export const calculators: Calculator[] = [
+  {
+    slug: 'journal-ledger-trial-balance',
+    title: 'Journal → Ledger → Trial Balance',
+    category: 'Accounting',
+    blurb: 'Type real transactions and watch them journalise with golden-rule reasoning, post into textbook T-accounts and roll into a tallied trial balance.',
+    icon: BookOpenCheck,
+    load: () => import('./JournalLedger'),
+    tags: ['journal', 'journal entries', 'ledger', 'posting', 't account', 'trial balance', 'double entry', 'golden rules', 'books of accounts', 'debit credit', 'simulator'],
+  },
   {
     slug: 'ratio-analysis',
     title: 'Ratio Analysis',

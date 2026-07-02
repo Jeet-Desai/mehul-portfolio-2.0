@@ -15,6 +15,7 @@ import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResul
 import { formatINR, formatPct, round, toNum } from '../lib/format'
 import { chartGrid, chartAxis, axisTick, chartLabelFill, tooltipProps } from '../lib/chartTheme'
 import { cagr, xirr, type DatedFlow } from '../lib/finance'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 type Mode = 'cagr' | 'xirr'
@@ -30,12 +31,12 @@ const DEFAULT_ROWS: Row[] = [
 ]
 
 export default function Cagr() {
-  const [mode, setMode] = useState<Mode>('cagr')
+  const [mode, setMode] = useCalcState('mode', 'cagr')
 
   // CAGR inputs
-  const [begin, setBegin] = useState('100000')
-  const [end, setEnd] = useState('260000')
-  const [years, setYears] = useState('5')
+  const [begin, setBegin] = useCalcState('bv', '100000')
+  const [end, setEnd] = useCalcState('ev', '260000')
+  const [years, setYears] = useCalcState('yrs', '5')
 
   // XIRR inputs
   const [rows, setRows] = useState<Row[]>(DEFAULT_ROWS)

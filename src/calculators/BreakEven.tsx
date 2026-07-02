@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import {
   LineChart,
   Line,
@@ -14,14 +14,15 @@ import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, formatNum, formatPct, round, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import { chartGrid, chartAxis, axisTick, chartLabelFill, chartDotStroke, tooltipProps } from '../lib/chartTheme'
 import type { Step } from './types'
 
 export default function BreakEven() {
-  const [fixed, setFixed] = useState('50000')
-  const [price, setPrice] = useState('100')
-  const [variable, setVariable] = useState('60')
-  const [units, setUnits] = useState('2000')
+  const [fixed, setFixed] = useCalcState('fc', '50000')
+  const [price, setPrice] = useCalcState('sp', '100')
+  const [variable, setVariable] = useCalcState('vc', '60')
+  const [units, setUnits] = useCalcState('units', '2000')
 
   const m = useMemo(() => {
     const FC = toNum(fixed)
@@ -125,11 +126,11 @@ export default function BreakEven() {
                     />
                     <Tooltip {...tooltipProps} formatter={(v) => formatINR(Number(v))} labelFormatter={(l) => `${formatNum(Number(l))} units`} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
-                    <Line type="monotone" dataKey="Revenue" stroke="#10b981" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="Revenue" stroke="#0f766e" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Total cost" stroke="#6366f1" strokeWidth={2} dot={false} />
                     <Line type="monotone" dataKey="Fixed cost" stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="5 4" dot={false} />
                     {Number.isFinite(m.bepUnits) && (
-                      <ReferenceDot x={round(m.bepUnits, 0)} y={round(m.bepSales, 0)} r={5} fill="#4f46e5" stroke={chartDotStroke} strokeWidth={2} />
+                      <ReferenceDot x={round(m.bepUnits, 0)} y={round(m.bepSales, 0)} r={5} fill="#0f766e" stroke={chartDotStroke} strokeWidth={2} />
                     )}
                   </LineChart>
                 </ResponsiveContainer>

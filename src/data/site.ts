@@ -65,6 +65,7 @@ export const navLinks: NavLink[] = [
   { to: '/learn', label: 'Learn Hub' },
   { to: '/resources', label: 'Library' },
   { to: '/practice', label: 'Practice' },
+  { to: '/revise', label: 'Revise' },
   { to: '/ask', label: 'Ask AI' },
   { to: '/career', label: 'Career' },
   { to: '/research', label: 'Research' },

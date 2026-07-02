@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { AlertTriangle, ArrowRight, Wallet } from 'lucide-react'
 import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import { computeItcSetOff, type Head } from '../lib/gstItc'
 import type { Step } from './types'
 
@@ -15,13 +16,13 @@ const HEADS: { key: Head; label: string }[] = [
 
 export default function GstItc() {
   // output tax liability
-  const [li, setLi] = useState('30000')
-  const [lc, setLc] = useState('20000')
-  const [ls, setLs] = useState('20000')
+  const [li, setLi] = useCalcState('li', '30000')
+  const [lc, setLc] = useCalcState('lc', '20000')
+  const [ls, setLs] = useCalcState('ls', '20000')
   // input tax credit available
-  const [ci, setCi] = useState('40000')
-  const [cc, setCc] = useState('8000')
-  const [cs, setCs] = useState('8000')
+  const [ci, setCi] = useCalcState('ci', '40000')
+  const [cc, setCc] = useCalcState('cc', '8000')
+  const [cs, setCs] = useCalcState('cs', '8000')
 
   const r = useMemo(
     () =>

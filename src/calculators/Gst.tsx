@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import CalcField from '../components/calc/CalcField'
 import CalcSteps from '../components/calc/CalcSteps'
 import { HeroResult, ResultPanel, ResultRow } from '../components/calc/CalcResult'
 import { formatINR, round, toNum } from '../lib/format'
+import { useCalcState } from '../lib/urlState'
 import type { Step } from './types'
 
 const RATES = ['5', '12', '18', '28']
@@ -34,10 +35,10 @@ function Segmented<T extends string>({
 }
 
 export default function Gst() {
-  const [amount, setAmount] = useState('10000')
-  const [rate, setRate] = useState('18')
-  const [mode, setMode] = useState<'add' | 'remove'>('add')
-  const [supply, setSupply] = useState<'intra' | 'inter'>('intra')
+  const [amount, setAmount] = useCalcState('amt', '10000')
+  const [rate, setRate] = useCalcState('rate', '18')
+  const [mode, setMode] = useCalcState('mode', 'add')
+  const [supply, setSupply] = useCalcState('sup', 'intra')
 
   const m = useMemo(() => {
     const amt = toNum(amount)
