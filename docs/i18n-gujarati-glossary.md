@@ -1,5 +1,10 @@
 # Gujarati Commerce Terminology — translation reference
 
+> **✅ Dr. Desai corrections (Jun 2026) — authoritative, supersede the tables below:**
+> - **variance = વિચલન** (vichalan), *not* વિચરણ. Applies to every variance term (ભાવ વિચલન, દર વિચલન, …).
+> - **order = વરદી** (varadī), *not* the loanword ઑર્ડર — in the material-control sense: **EOQ = આર્થિક વરદી જથ્થો**, **Re-order level = પુનઃ વરદી સપાટી**, **Ordering cost = વરદી ખર્ચ**.
+> - Still pending human cross-check: carrying cost, min/max/danger level; usage/efficiency/volume/capacity/calendar variance.
+
 Reference for the Resource Library Gujarati (ગુજરાતી) bilingual feature. ~70% of VNSGU
 commerce students study in the Gujarati medium, so the translation must read like a real
 Gujarati commerce textbook (B.S. Shah Prakashan register), **not** literal machine translation.
@@ -46,13 +51,13 @@ deliberately keep the English/transliteration — that is the authentic classroo
 | Raw material | કાચો માલ | 🟡 |
 | Stock / inventory | સ્ટૉક / માલસામગ્રીનો જથ્થો | ✅ |
 | Material control | માલસામગ્રી નિયંત્રણ | ⚠️ |
-| Economic Order Quantity | **keep "EOQ" / આર્થિક ઑર્ડર જથ્થો** | ⚠️ keep transliterated |
-| Re-order level | પુનઃ હુકમ સપાટી / ફરી માલ મંગાવવાની સપાટી | ⚠️ |
+| Economic Order Quantity | **keep "EOQ" / આર્થિક વરદી જથ્થો** | ⚠️ keep transliterated |
+| Re-order level | પુનઃ વરદી સપાટી | ⚠️ |
 | Minimum level | લઘુતમ સપાટી | ⚠️ |
 | Maximum level | મહત્તમ સપાટી | ⚠️ |
 | Danger level | ભયસપાટી / જોખમ સપાટી | ⚠️ |
 | Carrying / holding cost | વહન ખર્ચ / સંગ્રહ ખર્ચ | ⚠️ |
-| Ordering cost | હુકમ ખર્ચ / ઑર્ડર ખર્ચ | ⚠️ |
+| Ordering cost | વરદી ખર્ચ | ⚠️ |
 | Inventory / stock turnover ratio | સ્ટૉક ગુણોત્તર (sṭŏk guṇottar) | ✅ |
 
 ## 3. Labour cost
@@ -72,17 +77,17 @@ deliberately keep the English/transliteration — that is the authentic classroo
 | Standard cost | પ્રમાણ-પડતર (pramāṇ-paḍtar) | ✅ |
 | Standard costing | પ્રમાણ-પડતર પદ્ધતિ | ✅ |
 | Actual cost | વાસ્તવિક પડતર | ✅ |
-| Variance | વિચરણ (vicharaṇ) — *not* વિચલન (=deviation) | ✅ |
-| Variance analysis | વિચરણ-વિશ્લેષણ | ✅ |
-| Favourable variance | અનુકૂળ વિચરણ | 🟡 |
-| Adverse variance | પ્રતિકૂળ વિચરણ | 🟡 |
-| Material variance | માલસામગ્રી વિચરણ | ⚠️ |
-| Labour variance | મજૂરી વિચરણ | ⚠️ |
-| Overhead variance | પરોક્ષ ખર્ચ વિચરણ | ⚠️ |
-| Price variance | ભાવ વિચરણ | ⚠️ |
-| Usage / quantity variance | વપરાશ વિચરણ / જથ્થા વિચરણ | ⚠️ |
-| Rate variance | દર વિચરણ | ⚠️ |
-| Efficiency variance | કાર્યક્ષમતા વિચરણ | ⚠️ |
+| Variance | વિચલન (vichalan) — confirmed by Dr. Desai Jun 2026 (supersedes earlier વિચલન) | ✅ |
+| Variance analysis | વિચલન-વિશ્લેષણ | ✅ |
+| Favourable variance | અનુકૂળ વિચલન | 🟡 |
+| Adverse variance | પ્રતિકૂળ વિચલન | 🟡 |
+| Material variance | માલસામગ્રી વિચલન | ⚠️ |
+| Labour variance | મજૂરી વિચલન | ⚠️ |
+| Overhead variance | પરોક્ષ ખર્ચ વિચલન | ⚠️ |
+| Price variance | ભાવ વિચલન | ✅ Dr. Desai |
+| Usage / quantity variance | વપરાશ વિચલન / જથ્થા વિચલન | ⚠️ |
+| Rate variance | દર વિચલન | ✅ Dr. Desai |
+| Efficiency variance | કાર્યક્ષમતા વિચલન | ⚠️ |
 
 ## 5. Budgeting
 | English | Gujarati | Conf. |
@@ -137,10 +142,10 @@ deliberately keep the English/transliteration — that is the authentic classroo
 
 ## Register rules (this is what makes it read naturally)
 1. **Lead with the Gujarati coinage** for established Sanskritic terms (Sections 1, 4, 6):
-   પડતર, ગુણોત્તર, વિચરણ, પાકું સરવૈયું, કાર્યશીલ મૂડી, ભંડોળ પ્રવાહ, પ્રમાણ-પડતર. Transliterating these
+   પડતર, ગુણોત્તર, વિચલન, પાકું સરવૈયું, કાર્યશીલ મૂડી, ભંડોળ પ્રવાહ, પ્રમાણ-પડતર. Transliterating these
    would look childish to a commerce reader.
 2. **Keep as transliteration** (forcing pure Gujarati looks wrong): budget→બજેટ, stock→સ્ટૉક,
-   overhead→ઓવરહેડ, order→ઑર્ડર, overtime→ઓવરટાઇમ, cash→કૅશ, and all formula/acronym labels
+   overhead→ઓવરહેડ, order→વરદી, overtime→ઓવરટાઇમ, cash→કૅશ, and all formula/acronym labels
    (**EOQ, FIFO, LIFO, GST, ROI, IRR, NPV** — Latin script or transliterated, never coined).
 3. **Bilingual display format:** the safe pattern is **"ગુજરાતી (English)"** for coined terms and
    **"English (ગુજરાતી gloss)"** for the inventory-control mechanics and formula labels.
@@ -148,7 +153,7 @@ deliberately keep the English/transliteration — that is the authentic classroo
    Numbers, ₹ figures and formulas are language-neutral — never "translate" digits.
 
 ## Sources
-- Gujarati Vishwakosh — gujarativishwakosh.org (canonical; articles on પડતર, વિચરણ-વિશ્લેષણ, અંદાજપત્ર, નાણાકીય ગુણોત્તરો, નાણાકીય પત્રકો)
+- Gujarati Vishwakosh — gujarativishwakosh.org (canonical; articles on પડતર, વિચલન-વિશ્લેષણ, અંદાજપત્ર, નાણાકીય ગુણોત્તરો, નાણાકીય પત્રકો)
 - B.S. Shah Prakashan — bsshaheducation.in ("ઉચ્ચતર નામાપદ્ધતિ-3 (Cost A/c)", SY B.Com Sem-4, Gujarati)
 - Khatabook Gujarati blog — khatabook.com/blog/gu (direct/indirect/prime cost)
 - Gujarati Lexicon, Rekhta Gujarati dictionary (single-word confirmation)
