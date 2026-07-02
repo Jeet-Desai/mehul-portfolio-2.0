@@ -68,14 +68,11 @@ export default function Home() {
       {/* ---------- Hero — 2-col, offset-frame photo ---------- */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-14 pt-14 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pt-16">
         <div>
-          <motion.div {...heroRise(0, reduce)}>
-            <span className="eyebrow">A free learning hub · est. by a professor</span>
-          </motion.div>
           <motion.h1
             {...heroRise(0.09, reduce)}
-            className="mt-5 text-5xl leading-[1.0] sm:text-6xl lg:text-7xl"
+            className="text-5xl leading-[1.0] sm:text-6xl lg:text-7xl"
           >
-            Master commerce, <span className="italic text-brand-600">for free.</span>
+            Master Commerce and Accounting, <span className="italic text-brand-600">for free.</span>
           </motion.h1>
           <motion.p {...heroRise(0.17, reduce)} className="mt-6 max-w-md text-lg leading-relaxed text-slate-600">
             Calculators that show their working, practice quizzes, formula sheets and a 24/7 AI
@@ -120,6 +117,9 @@ export default function Home() {
         >
           <div aria-hidden className="absolute -bottom-3.5 -right-3.5 left-[18px] top-[18px] rounded-md border-[1.5px] border-brand-600 opacity-50" />
           <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white shadow-[0_24px_50px_-24px_rgb(30_26_18/0.35)]">
+            <p className="border-b border-slate-200 px-5 py-2.5 text-center font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-brand-600">
+              An initiative by
+            </p>
             <img
               src={professor.photo}
               alt={professor.name}

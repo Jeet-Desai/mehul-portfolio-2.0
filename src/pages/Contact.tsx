@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Mail, MapPin, Clock, Languages, Send } from 'lucide-react'
-import { Facebook, Instagram } from '../components/BrandIcons'
 import PageHeader from '../components/PageHeader'
 import Reveal from '../components/Reveal'
 import { contact, professor } from '../data/site'
@@ -54,26 +53,6 @@ export default function Contact() {
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="mt-5 flex gap-3">
-              <a
-                href={contact.socials.facebook}
-                target="_blank"
-                rel="noreferrer"
-                className="grid h-11 w-11 place-items-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-brand-50 hover:text-brand-600"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href={contact.socials.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="grid h-11 w-11 place-items-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-brand-50 hover:text-brand-600"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
             </div>
           </div>
 

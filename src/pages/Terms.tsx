@@ -33,7 +33,7 @@ export default function Terms() {
             The calculators and content are for learning and self-study. While prepared carefully and grounded in
             standard texts, they may contain errors and statutory rates change over time. <strong>Do not rely on the
             outputs for filing taxes, making investment decisions, or any real financial or legal action.</strong> Always
-            verify against official sources and consult a qualified professional. {site.brand} and {professor.name}
+            verify against official sources and consult a qualified professional. {site.brand} and {professor.name}{' '}
             accept no liability for decisions taken based on the site.
           </p>
         </Section>

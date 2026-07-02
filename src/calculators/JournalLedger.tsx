@@ -66,7 +66,8 @@ export default function JournalLedger() {
   const tpl = getTemplate(templateId)!
   const needsParty = tpl.needs.includes('party')
   const needsLabel = tpl.needs.includes('label')
-  const amt = Number(amount)
+  // tolerate grouped input like "20,000" / "1,00,000" (matches the placeholder)
+  const amt = Number(amount.replace(/[,\s]/g, ''))
   const canAdd = amt > 0 && (!needsParty || party.trim()) && (!needsLabel || label.trim())
 
   const add = () => {

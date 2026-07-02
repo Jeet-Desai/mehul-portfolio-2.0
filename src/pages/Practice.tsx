@@ -13,11 +13,142 @@ import {
   FileText,
   Printer,
 } from 'lucide-react'
+import { Eye, Layers, BookOpen } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import Reveal from '../components/Reveal'
 import { topics, questions, questionsForTopic, type Question, type Difficulty } from '../data/quizzes'
+import {
+  practiceSets,
+  questionsForSet,
+  PRACTICE_SOURCE,
+  type PracticeQuestion as LongQuestion,
+  type QTable,
+} from '../data/practiceQuestions'
+import { getCalculator } from '../calculators/registry'
 import { recordAnswer, recordQuizFinish } from '../lib/progress'
 import { usePageTitle } from '../lib/usePageTitle'
+
+const longDiffTone: Record<'Easy' | 'Medium' | 'Hard', string> = {
+  Easy: 'bg-mint-50 text-mint-600',
+  Medium: 'bg-sun-50 text-sun-600',
+  Hard: 'bg-rose-50 text-rose-600',
+}
+
+/** Renders a worked-solution / given-data table. Scrolls horizontally on small screens. */
+function WorkTable({ t }: { t: QTable }) {
+  return (
+    <div className="mt-3">
+      {t.caption && <p className="mb-1.5 text-[13px] font-semibold text-slate-800">{t.caption}</p>}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[420px] border-collapse text-[13px]">
+          {t.head && (
+            <thead>
+              <tr className="border-b border-slate-200">
+                {t.head.map((h, i) => (
+                  <th
+                    key={i}
+                    className={`py-1.5 pr-3 font-sans text-[11px] font-bold uppercase tracking-[0.04em] text-slate-400 ${
+                      i === 0 ? 'text-left' : 'text-right'
+                    }`}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {t.rows.map((r, ri) => {
+              const isTotal = r[0] === '' || /total|balance c\/d|^\(|funds from operations/i.test(r[0])
+              return (
+                <tr key={ri} className="border-b border-slate-100 last:border-0">
+                  {r.map((c, ci) => (
+                    <td
+                      key={ci}
+                      className={`py-1.5 pr-3 align-top ${ci === 0 ? 'text-left text-slate-700' : 'text-right tabular-nums text-slate-800'} ${
+                        isTotal ? 'font-semibold text-slate-900' : ''
+                      }`}
+                    >
+                      {c}
+                    </td>
+                  ))}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+/** A long-form practice question with given data + reveal-on-click worked solution. */
+function LongFormQuestion({ item, index }: { item: LongQuestion; index: number }) {
+  const [show, setShow] = useState(false)
+  return (
+    <div className="cl-card p-5 sm:p-6">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className="font-display text-[15px] text-brand-600">Q{index + 1}.</span>
+        {item.exam && (
+          <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-500">
+            {item.exam}
+          </span>
+        )}
+        <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${longDiffTone[item.difficulty]}`}>
+          {item.difficulty}
+        </span>
+      </div>
+      <p className="text-sm font-semibold leading-relaxed text-slate-900">{item.prompt}</p>
+
+      {item.given?.map((t, i) => (
+        <WorkTable key={i} t={t} />
+      ))}
+
+      {item.info && item.info.length > 0 && (
+        <div className="mt-3">
+          <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-slate-400">Additional information</p>
+          <ol className="mt-1 list-decimal space-y-1 pl-5 text-[13px] leading-relaxed text-slate-600">
+            {item.info.map((x, i) => (
+              <li key={i}>{x}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+      {item.requirement && <p className="mt-3 text-[13px] font-semibold text-slate-700">{item.requirement}</p>}
+
+      <button
+        onClick={() => setShow((s) => !s)}
+        className="btn-outline mt-4 px-3.5 py-1.5 text-[13px]"
+      >
+        <Eye className="h-3.5 w-3.5" /> {show ? 'Hide worked solution' : 'Show worked solution'}
+      </button>
+      {!show && <p className="mt-2 text-xs text-slate-400">Try it yourself first, then check the professor's working.</p>}
+
+      {show && (
+        <div className="mt-4 rounded-[10px] border border-slate-200 bg-slate-50 p-4 sm:p-5">
+          {item.solution.map((t, i) => (
+            <WorkTable key={i} t={t} />
+          ))}
+          {item.notes && item.notes.length > 0 && (
+            <div className="mt-4">
+              <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-slate-400">Working notes</p>
+              <ul className="mt-1 list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-slate-600">
+                {item.notes.map((x, i) => (
+                  <li key={i}>{x}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="mt-4 rounded-[8px] bg-brand-50 px-3.5 py-2.5 text-[13px] leading-relaxed text-slate-700">
+            <span className="font-bold text-brand-700">Answer: </span>
+            {item.answer}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 const SECONDS_PER_Q = 30
 const MOCK_QUESTIONS = 20
@@ -59,7 +190,7 @@ function buildMockDeck(): Question[] {
   return shuffle(out)
 }
 
-type View = 'home' | 'quiz' | 'result' | 'exam' | 'exam-result'
+type View = 'home' | 'quiz' | 'result' | 'exam' | 'exam-result' | 'longform'
 
 export default function Practice() {
   usePageTitle(
@@ -80,6 +211,8 @@ export default function Practice() {
   // mock-exam extras
   const [confirmSubmit, setConfirmSubmit] = useState(false)
   const [examTimeUsed, setExamTimeUsed] = useState(0)
+  // long-form practice-question set currently open
+  const [longSetId, setLongSetId] = useState('')
 
   const start = (deckIn: Question[], title: string, id: string) => {
     const d = shuffle(deckIn)
@@ -341,11 +474,90 @@ export default function Practice() {
             </div>
           </Reveal>
 
+          {/* Long-form practice questions — real past-exam numericals with worked solutions */}
+          <Reveal className="mb-4 mt-12 flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-2xl">Practice questions</h2>
+            <p className="text-[12.5px] text-slate-500">Full past-exam numericals with step-by-step worked solutions</p>
+          </Reveal>
+          <div className="grid gap-3.5 sm:grid-cols-2">
+            {practiceSets.map((s) => {
+              const n = questionsForSet(s.id).length
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => {
+                    setLongSetId(s.id)
+                    setView('longform')
+                  }}
+                  className="cl-card cl-card-lift flex h-full flex-col rounded-[10px] p-[22px] text-left"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="grid h-10 w-10 place-items-center rounded-[10px] bg-brand-50 text-brand-600">
+                      <Layers className="h-5 w-5" />
+                    </span>
+                    <span className="rounded-full bg-slate-100 px-[9px] py-[3px] text-[11px] font-bold text-slate-400">
+                      {n} {n === 1 ? 'question' : 'questions'}
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-display text-[19px] font-semibold leading-snug">{s.title}</h3>
+                  <p className="mt-1.5 flex-1 text-[12.5px] leading-normal text-slate-600">{s.blurb}</p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-[13px] font-bold text-brand-600">
+                    Open questions <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+          <p className="mt-3 text-center text-xs text-slate-400">{PRACTICE_SOURCE}</p>
+
           <p className="mt-8 text-center text-xs text-slate-400">
             Questions are randomised on every attempt — set your difficulty and length above. Solutions appear after you answer, so try first, then check.
           </p>
         </div>
       </>
+    )
+  }
+
+  /* ----------------------------- LONG-FORM PRACTICE QUESTIONS ----------------------------- */
+  if (view === 'longform') {
+    const set = practiceSets.find((s) => s.id === longSetId)
+    const list = questionsForSet(longSetId)
+    const calc = set?.calculatorSlug ? getCalculator(set.calculatorSlug) : undefined
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+        <button
+          onClick={reset}
+          className="mb-5 inline-flex items-center gap-1 text-sm font-semibold text-slate-400 transition hover:text-slate-900"
+        >
+          <ChevronLeft className="h-4 w-4" /> All practice
+        </button>
+        <p className="font-sans text-[11px] font-bold uppercase tracking-[0.12em] text-brand-600">Practice questions</p>
+        <h1 className="mt-1 font-display text-[30px] font-semibold leading-tight">{set?.title}</h1>
+        <p className="mt-2 text-[13px] leading-relaxed text-slate-600">{set?.blurb}</p>
+
+        {calc && (
+          <Link
+            to={`/learn/c/${calc.slug}`}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-[13px] font-bold text-brand-700 transition hover:bg-brand-100"
+          >
+            <BookOpen className="h-4 w-4" /> Try the {calc.title} calculator <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        )}
+
+        <div className="mt-6 space-y-4">
+          {list.map((item, i) => (
+            <LongFormQuestion key={item.id} item={item} index={i} />
+          ))}
+        </div>
+
+        <div className="mt-6 rounded-[10px] border border-slate-200 bg-white p-4 text-xs leading-relaxed text-slate-500">
+          <p>{PRACTICE_SOURCE}.</p>
+          <p className="mt-1">
+            These are study aids — always cross-check against your current syllabus and examiner's format. Rupee
+            figures follow the original question papers.
+          </p>
+        </div>
+      </div>
     )
   }
 

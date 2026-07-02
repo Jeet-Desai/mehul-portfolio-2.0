@@ -1,5 +1,6 @@
-import { BookOpen, Calculator, Receipt, TrendingUp, LineChart } from 'lucide-react'
+import { BookOpen, Calculator, Receipt, TrendingUp, LineChart, ClipboardList, ArrowLeftRight } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { questionBank } from './questionBank'
 
 /* ----------------------------------------------------------------------------
    Practice & Quizzes — seed question bank.
@@ -19,6 +20,8 @@ export type Question = {
   /** index of the correct option */
   correct: number
   explanation: string
+  /** attribution — e.g. Dr. Desai's college question bank */
+  source?: string
 }
 
 export type Topic = {
@@ -34,6 +37,8 @@ export const topics: Topic[] = [
   { id: 'taxation', title: 'Taxation (GST & Income Tax)', blurb: 'GST structure, input tax credit, TDS and the basics of income tax.', icon: Receipt },
   { id: 'fm', title: 'Financial Management', blurb: 'NPV/IRR, ratio analysis, cost of capital and working capital.', icon: TrendingUp },
   { id: 'eco-stats', title: 'Economics & Statistics', blurb: 'Elasticity, demand, measures of central tendency and index numbers.', icon: LineChart },
+  { id: 'management-accounting', title: 'Management Accounting', blurb: "Budgetary control, responsibility accounting, standard costing and reporting — from Dr. Desai's BBA question bank.", icon: ClipboardList },
+  { id: 'cash-fund-flow', title: 'Cash Flow & Fund Flow', blurb: "AS 3 cash flow and fund flow concepts — from Dr. Desai's B.Com question bank.", icon: ArrowLeftRight },
 ]
 
 export const questions: Question[] = [
@@ -1873,6 +1878,8 @@ export const questions: Question[] = [
     correct: 1,
     explanation: 'Monopolistic competition has many firms selling differentiated (branded) products with free entry and exit, giving each firm limited price-setting power.',
   },
+  // MCQs digitized from Dr. Desai's own college question banks (see questionBank.ts)
+  ...questionBank,
 ]
 
 export const questionsForTopic = (topicId: string): Question[] =>
