@@ -21,7 +21,6 @@ import { topics, questions, questionsForTopic, type Question, type Difficulty } 
 import {
   practiceSets,
   questionsForSet,
-  PRACTICE_SOURCE,
   type PracticeQuestion as LongQuestion,
   type QTable,
 } from '../data/practiceQuestions'
@@ -213,6 +212,8 @@ export default function Practice() {
   const [examTimeUsed, setExamTimeUsed] = useState(0)
   // long-form practice-question set currently open
   const [longSetId, setLongSetId] = useState('')
+  // which half of the practice hub is showing: MCQ quizzes or long-form questions
+  const [mode, setMode] = useState<'quizzes' | 'practice'>('quizzes')
 
   const start = (deckIn: Question[], title: string, id: string) => {
     const d = shuffle(deckIn)
@@ -333,9 +334,29 @@ export default function Practice() {
           eyebrow="Practice & Quizzes"
           title="Test yourself,"
           titleAccent="topic by topic."
-          subtitle="Multiple-choice questions with the worked reasoning revealed after each answer. Pick a topic, or take a quick mixed quiz."
+          subtitle="Multiple-choice quizzes with worked reasoning, plus full past-exam practice questions with step-by-step solutions. Switch between the two below."
         />
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+          {/* mode toggle — jump straight to MCQ quizzes or long-form practice questions */}
+          <div className="mb-6 inline-flex rounded-xl border border-slate-200 bg-white p-1">
+            {([
+              { id: 'quizzes', label: 'Quizzes (MCQ)' },
+              { id: 'practice', label: 'Practice questions' },
+            ] as const).map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setMode(m.id)}
+                className={`rounded-[9px] px-4 py-2 text-[13px] font-bold transition ${
+                  mode === m.id ? 'bg-brand-600 text-white' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+
+          {mode === 'quizzes' && (
+          <>
           <Reveal className="mb-4 flex flex-wrap items-center justify-between gap-4">
             <h2 className="text-2xl">Choose a topic</h2>
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] font-semibold text-slate-600">
@@ -474,10 +495,17 @@ export default function Practice() {
             </div>
           </Reveal>
 
+          <p className="mt-8 text-center text-xs text-slate-400">
+            Questions are randomised on every attempt — set your difficulty and length above. Solutions appear after you answer, so try first, then check.
+          </p>
+          </>
+          )}
+
+          {mode === 'practice' && (
+          <>
           {/* Long-form practice questions — real past-exam numericals with worked solutions */}
-          <Reveal className="mb-4 mt-12 flex flex-wrap items-baseline justify-between gap-2">
+          <Reveal className="mb-4">
             <h2 className="text-2xl">Practice questions</h2>
-            <p className="text-[12.5px] text-slate-500">Full past-exam numericals with step-by-step worked solutions</p>
           </Reveal>
           <div className="grid gap-3.5 sm:grid-cols-2">
             {practiceSets.map((s) => {
@@ -508,11 +536,8 @@ export default function Practice() {
               )
             })}
           </div>
-          <p className="mt-3 text-center text-xs text-slate-400">{PRACTICE_SOURCE}</p>
-
-          <p className="mt-8 text-center text-xs text-slate-400">
-            Questions are randomised on every attempt — set your difficulty and length above. Solutions appear after you answer, so try first, then check.
-          </p>
+          </>
+          )}
         </div>
       </>
     )
@@ -551,8 +576,7 @@ export default function Practice() {
         </div>
 
         <div className="mt-6 rounded-[10px] border border-slate-200 bg-white p-4 text-xs leading-relaxed text-slate-500">
-          <p>{PRACTICE_SOURCE}.</p>
-          <p className="mt-1">
+          <p>
             These are study aids — always cross-check against your current syllabus and examiner's format. Rupee
             figures follow the original question papers.
           </p>
