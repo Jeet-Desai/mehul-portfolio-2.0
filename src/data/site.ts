@@ -3,7 +3,7 @@
 export const site = {
   brand: 'AccrualSense',
   byline: 'by Mehul Desai',
-  tagline: 'Built by a professor of 22 years — for every commerce student.',
+  tagline: 'Built by a professor of 24 years — for every commerce student.',
   description:
     'A free learning hub for every commerce student — calculators that show their working, practice quizzes, formula sheets and a 24/7 AI doubt-tutor.',
 }
@@ -19,23 +19,23 @@ export const professor = {
   researchArea: 'Accounting and Finance',
   subject: 'Cost and Management Accounting',
   languages: ['English', 'Hindi', 'Gujarati'],
-  bio: `With over 22 years of combined teaching and administrative experience, specializing in Cost and Management Accounting, I've nurtured a culture of learning and independent thought. My research in Accounting, Finance, and Management seeks innovative solutions to contemporary challenges. By emphasizing critical thinking and lifelong learning, I equip students with essential skills for success.`,
+  bio: `With over 24 years of combined teaching and administrative experience, specializing in Cost and Management Accounting, I've nurtured a culture of learning and independent thought. My research in Accounting, Finance, and Management seeks innovative solutions to contemporary challenges. By emphasizing critical thinking and lifelong learning, I equip students with essential skills for success.`,
 }
 
 export const stats = [
-  { value: 22, suffix: '+', label: 'Years teaching' },
+  { value: 24, suffix: '+', label: 'Years teaching' },
   { value: 36, label: 'Research papers' },
-  { value: 7, label: 'Ph.D. scholars guided' },
+  { value: 11, label: 'Ph.D. scholars guided' },
   { value: 3, label: 'Books authored' },
 ]
 
 export const fullStats = [
-  { value: '22', label: 'Years teaching experience' },
+  { value: '24', label: 'Years teaching experience' },
   { value: '36', label: 'Research papers published' },
   { value: '19', label: 'Papers presented' },
   { value: '3', label: 'Books authored' },
   { value: '4', label: 'Chapters in edited books' },
-  { value: '7', label: 'Candidates guided for Ph.D.' },
+  { value: '11', label: 'Candidates guided for Ph.D.' },
   { value: '8', label: 'Candidates working for Ph.D.' },
   { value: '2', label: 'Candidates guided for M.Phil.' },
 ]

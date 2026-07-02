@@ -22,7 +22,7 @@ function StatValue({ value }: { value: string }) {
 }
 
 export default function About() {
-  usePageTitle('About Dr. Mehulkumar Desai', 'Professor of commerce for 22 years — qualifications, teaching journey and the story behind this free learning hub.')
+  usePageTitle('About Dr. Mehulkumar Desai', 'Professor of commerce for 24 years — qualifications, teaching journey and the story behind this free learning hub.')
   return (
     <div className="mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 sm:pt-14">
       {/* ---------- header — name + CV left, offset-frame photo right ---------- */}

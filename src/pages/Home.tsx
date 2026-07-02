@@ -79,7 +79,7 @@ export default function Home() {
           </motion.h1>
           <motion.p {...heroRise(0.17, reduce)} className="mt-6 max-w-md text-lg leading-relaxed text-slate-600">
             Calculators that show their working, practice quizzes, formula sheets and a 24/7 AI
-            doubt-tutor — everything one professor of 22 years wishes every commerce student had.
+            doubt-tutor — everything one professor of 24 years wishes every commerce student had.
           </motion.p>
           <motion.div {...heroRise(0.25, reduce)} className="mt-8 flex flex-wrap gap-3.5">
             <Link to="/learn" className="btn-accent px-6 py-3.5 text-[15px]">
@@ -93,7 +93,7 @@ export default function Home() {
           <motion.div {...heroRise(0.33, reduce)} className="mt-10 flex gap-8 sm:gap-9">
             <div className="border-l-2 border-line pl-3.5">
               <p className="font-display text-3xl font-semibold text-slate-900">
-                <CountUp to={22} />
+                <CountUp to={24} />
                 <span className="text-brand-600">+</span>
               </p>
               <p className="mt-0.5 text-xs text-slate-400">Years teaching</p>

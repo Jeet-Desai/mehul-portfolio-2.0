@@ -10,7 +10,7 @@ export const researchStats = [
 ]
 
 export const scholars = [
-  { value: '7', label: 'Ph.D. scholars guided' },
+  { value: '11', label: 'Ph.D. scholars guided' },
   { value: '8', label: 'Ph.D. scholars in progress' },
   { value: '2', label: 'M.Phil. scholars guided' },
 ]

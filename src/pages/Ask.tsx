@@ -26,7 +26,7 @@ function loadDoubts(): Doubt[] {
 }
 
 export default function Ask() {
-  usePageTitle('Ask AI — Commerce Doubt Tutor', 'Ask commerce doubts and get guided answers — plus a searchable FAQ from 22 years of classroom questions.')
+  usePageTitle('Ask AI — Commerce Doubt Tutor', 'Ask commerce doubts and get guided answers — plus a searchable FAQ from 24 years of classroom questions.')
   const [q, setQ] = useState('')
   const [cat, setCat] = useState<string>('All')
   const [openId, setOpenId] = useState<string | null>(null)
