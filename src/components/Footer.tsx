@@ -39,6 +39,11 @@ export default function Footer() {
                 Notice Board
               </Link>
             </li>
+            <li>
+              <Link to="/research" className="font-semibold text-slate-600 transition hover:text-brand-600">
+                Research
+              </Link>
+            </li>
           </ul>
         </div>
 

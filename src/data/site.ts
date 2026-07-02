@@ -70,6 +70,5 @@ export const navLinks: NavLink[] = [
   { to: '/ask', label: 'Ask AI' },
   { to: '/career', label: 'Career' },
   { to: '/about', label: 'About' },
-  { to: '/research', label: 'Research' },
   { to: '/contact', label: 'Contact' },
 ]
