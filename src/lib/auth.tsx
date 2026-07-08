@@ -24,9 +24,15 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
-/** where to land after a successful sign-in */
+/** Where the OAuth / email round-trip returns to. We target the site ORIGIN
+    (not a sub-path): Supabase only honours a redirect that matches its Site URL
+    / allow-list, and a bare origin matches those entries even without a path
+    wildcard. If it doesn't match, Supabase silently falls back to the Site URL —
+    which is how a local build ends up on the production domain. The page the
+    user actually wanted is restored client-side afterwards via the `as:next`
+    hand-off (Login.tsx → Layout.tsx), so the landing path here doesn't matter. */
 const redirectTo = () =>
-  typeof window !== 'undefined' ? `${window.location.origin}/learn` : undefined
+  typeof window !== 'undefined' ? window.location.origin : undefined
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
@@ -36,23 +42,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!supabase) return
     let active = true
+
+    // Are we mid sign-in? (PKCE ?code, or a stray implicit #access_token/#error)
+    const loc = typeof window !== 'undefined' ? window.location : null
+    const returningFromOAuth =
+      !!loc && (/[?&]code=/.test(loc.search) || loc.hash.includes('access_token') || loc.hash.includes('error'))
+
+    // Belt-and-suspenders: strip any auth artefact left in the address bar once
+    // the session is established (the SDK normally does this; we guarantee it).
+    const stripAuthArtefacts = () => {
+      if (typeof window === 'undefined') return
+      const { pathname, hash, search } = window.location
+      if (hash.includes('access_token') || hash.includes('error') || /[?&]code=/.test(search)) {
+        window.history.replaceState({}, document.title, pathname)
+      }
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return
       setSession(data.session)
-      setLoading(false)
-      // Belt-and-suspenders: once the session is established, make sure no auth
-      // artefact (PKCE ?code, or a stray implicit #access_token) is left in the
-      // address bar. The SDK normally strips it; this guarantees a clean URL.
-      if (typeof window !== 'undefined') {
-        const { pathname, hash, search } = window.location
-        if (hash.includes('access_token') || hash.includes('error') || /[?&]code=/.test(search)) {
-          window.history.replaceState({}, document.title, pathname)
-        }
-      }
+      // Keep `loading` true through a PKCE exchange that hasn't finished yet —
+      // getSession() can resolve with a null session a beat before
+      // onAuthStateChange delivers the real one. Flipping to "not loading" here
+      // would let the app paint the landing page for a frame mid-login.
+      if (data.session || !returningFromOAuth) setLoading(false)
+      stripAuthArtefacts()
     })
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s))
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      if (!active) return
+      setSession(s)
+      // Session arrived (or the user signed out) → auth is settled.
+      if (s || event === 'SIGNED_OUT') setLoading(false)
+      if (s) stripAuthArtefacts()
+    })
+
+    // Safety net: never hang on the loader if the exchange never resolves.
+    const fallback = setTimeout(() => {
+      if (active) setLoading(false)
+    }, 8000)
+
     return () => {
       active = false
+      clearTimeout(fallback)
       sub.subscription.unsubscribe()
     }
   }, [])

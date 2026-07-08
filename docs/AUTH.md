@@ -28,7 +28,14 @@ index) stay public so Google can still index them.
      - Authorised redirect URI: `https://<your-project-ref>.supabase.co/auth/v1/callback`
 4. **Set the redirect URLs**: Supabase → *Authentication → URL Configuration*
    - *Site URL*: your deployed origin, e.g. `https://accrualsense.vercel.app`
-   - *Redirect URLs*: add the same origin (and `http://localhost:5173` for local dev).
+   - *Redirect URLs*: add **each origin you sign in from** — the deployed origin **and**
+     every local port you run (`http://localhost:5173` for `pnpm dev`, `http://localhost:4174`
+     for `pnpm preview`). Sign-in redirects to the bare **origin** (not a sub-path), so a plain
+     origin entry is enough — no `/**` wildcard needed. The app then restores the page you were
+     headed to client-side.
+   - ⚠️ **If a redirect URL is not on this list, Supabase silently falls back to the *Site URL*.**
+     That's why signing in on an un-listed local port bounces you to the production site — add the
+     port here to fix it.
 5. **Add the env vars** in Vercel → *Project → Settings → Environment Variables* (Production + Preview):
    ```
    VITE_SUPABASE_URL=https://<your-project-ref>.supabase.co

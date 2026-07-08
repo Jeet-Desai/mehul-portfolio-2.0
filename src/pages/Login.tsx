@@ -28,6 +28,16 @@ export default function Login() {
   const onGoogle = async () => {
     setBusy(true)
     setError(null)
+    // OAuth is a full-page round-trip through Google that lands back on the site
+    // ORIGIN, so the in-memory `from` (router state) is lost. Stash it so Layout
+    // can forward there once the session is live. (Only survives when the redirect
+    // stays on THIS origin — if Supabase falls back to the prod Site URL because a
+    // local port isn't allow-listed, it can't carry across origins.)
+    try {
+      localStorage.setItem('as:next', from)
+    } catch {
+      /* private mode — we'll just land on the site root */
+    }
     const { error } = await signInWithGoogle()
     if (error) {
       setError(error)
