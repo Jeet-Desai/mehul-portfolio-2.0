@@ -11,7 +11,6 @@ import {
   Clock,
   ShieldCheck,
   UserPlus,
-  Activity,
 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import Reveal from '../components/Reveal'
@@ -311,10 +310,9 @@ function UsersPanel() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <StatCard icon={UsersIcon} label="Total users" value={stats.total} />
         <StatCard icon={UserPlus} label="New this week" value={stats.newThisWeek} />
-        <StatCard icon={Activity} label="Active today" value={stats.activeToday} />
         <StatCard icon={ShieldCheck} label="Admins" value={stats.admins} />
       </div>
 
