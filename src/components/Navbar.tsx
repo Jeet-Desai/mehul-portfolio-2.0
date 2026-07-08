@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, Sun, Moon, LogIn, LogOut } from 'lucide-react'
+import { Menu, X, Sun, Moon, LogIn, LogOut, ShieldCheck } from 'lucide-react'
 import { navLinks } from '../data/site'
 import { useAuth } from '../lib/auth'
+import { useIsAdmin } from '../lib/admin'
 import Logo from './Logo'
 import ExamChip from './ExamChip'
 
@@ -31,6 +32,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { dark, toggle } = useDarkMode()
   const { enabled, user, signOut } = useAuth()
+  const isAdmin = useIsAdmin()
 
   // Lock background page scroll while the mobile menu is open. The scroll
   // container is the <html> element, so lock both it and <body> to be safe.
@@ -92,6 +94,20 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `inline-flex items-center gap-1 whitespace-nowrap border-b-2 px-3 py-2 text-[13px] transition ${
+                  isActive
+                    ? 'border-brand-600 font-bold text-brand-600'
+                    : 'border-transparent font-semibold text-slate-600 hover:text-slate-900'
+                }`
+              }
+            >
+              <ShieldCheck className="h-3.5 w-3.5" /> Admin
+            </NavLink>
+          )}
         </div>
 
         {/* right controls — evenly aligned, consistent sizing, always visible */}
@@ -129,6 +145,19 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-[10px] px-4 py-3 text-base font-semibold ${
+                    isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
+                  }`
+                }
+              >
+                <ShieldCheck className="h-5 w-5" /> Admin
+              </NavLink>
+            )}
 
             <div className="mt-2 border-t border-slate-200 pt-2">
               {enabled &&

@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import { useAuth } from '../lib/auth'
+import { touchLastSeen } from '../lib/profiles'
 
 /* After an OAuth sign-in the browser lands back on the site ORIGIN (see the
    redirect note in auth.tsx). Login stashed the page the user actually wanted in
@@ -36,6 +37,13 @@ export default function Layout() {
   useEffect(() => {
     if (next && !loading) clearNext()
   }, [next, loading])
+
+  // Record "last active" once per signed-in session load, so the admin dashboard
+  // can show who's recently online. No-op when auth is dormant. Keyed on user id
+  // so it fires on sign-in, not on every route change.
+  useEffect(() => {
+    if (user?.id) touchLastSeen(user.id)
+  }, [user?.id])
 
   if (next) {
     // still resolving the returning session → show a loader, not the home page
