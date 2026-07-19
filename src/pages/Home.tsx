@@ -24,16 +24,37 @@ const features = [
   },
   {
     n: '03',
+    title: 'Problem Lab',
+    desc: 'Unlimited exam-style numericals, graded figure by figure, with the full method revealed — plus a daily challenge for everyone.',
+    to: '/lab',
+  },
+  {
+    n: '04',
+    title: 'Virtual Classrooms',
+    desc: 'Join your teacher’s class with one link — announcements, doubts and your classmates, all in one place.',
+    to: '/classrooms',
+  },
+  {
+    n: '05',
     title: 'Ask AccrualSense',
     desc: 'A 24/7 AI doubt-tutor in Dr. Desai’s style, plus worked answers to the most common doubts.',
     to: '/ask',
   },
   {
-    n: '04',
+    n: '06',
     title: 'Career Guide',
     desc: 'CA, CS, CMA, MBA, ACCA & government tracks — eligibility, structure and prospects at a glance.',
     to: '/career',
   },
+]
+
+/* Supporting pillars — shown as a compact "and more" row under the grid. */
+const moreLinks = [
+  { title: 'Resource Library', to: '/resources' },
+  { title: 'Formula Sheets', to: '/formulas' },
+  { title: 'Flashcards', to: '/revise' },
+  { title: 'My Progress', to: '/progress' },
+  { title: 'Notice Board', to: '/notices' },
 ]
 
 /* marquee — calculator names scroll by; track duplicated for a seamless loop */
@@ -75,8 +96,9 @@ export default function Home() {
             Master Commerce and Accounting, <span className="italic text-brand-600">for free.</span>
           </motion.h1>
           <motion.p {...heroRise(0.17, reduce)} className="mt-6 max-w-md text-lg leading-relaxed text-slate-600">
-            Calculators that show their working, practice quizzes, formula sheets and a 24/7 AI
-            doubt-tutor — everything one professor of 24 years wishes every commerce student had.
+            Calculators that show their working, exam-style practice, flashcards, virtual classrooms
+            and a 24/7 AI doubt-tutor — everything one professor of 24 years wishes every commerce
+            student had.
           </motion.p>
           <motion.div {...heroRise(0.25, reduce)} className="mt-8 flex flex-wrap gap-3.5">
             <Link to="/learn" className="btn-accent px-6 py-3.5 text-[15px]">
@@ -154,11 +176,11 @@ export default function Home() {
           <p className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-brand-600">
             The syllabus, made simple
           </p>
-          <h2 className="mt-2.5 text-4xl sm:text-[42px] sm:leading-tight">Four tools, one free hub.</h2>
+          <h2 className="mt-2.5 text-4xl sm:text-[42px] sm:leading-tight">Everything for the syllabus, one free hub.</h2>
         </Reveal>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f, i) => (
-            <Reveal key={f.n} delay={i * 0.09}>
+            <Reveal key={f.n} delay={i * 0.07}>
               <Link to={f.to} className="cl-card cl-card-lift flex h-full gap-5 rounded-lg p-6 sm:p-7">
                 <span className="shrink-0 font-display text-4xl leading-none text-line">{f.n}</span>
                 <span className="block">
@@ -172,6 +194,22 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+
+        {/* supporting pillars — nothing hidden, but they don't compete with the six */}
+        <Reveal delay={0.1}>
+          <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-2.5 text-[13px] text-slate-500">
+            <span className="font-sans font-bold uppercase tracking-[0.12em] text-slate-400">And more</span>
+            {moreLinks.map((m) => (
+              <Link
+                key={m.to}
+                to={m.to}
+                className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 font-semibold text-slate-700 transition hover:border-brand-600 hover:text-brand-600"
+              >
+                {m.title}
+              </Link>
+            ))}
+          </div>
+        </Reveal>
       </section>
 
       {/* ---------- CTA — ink band with faint internal rules ---------- */}
