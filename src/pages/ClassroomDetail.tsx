@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   Loader2,
@@ -15,6 +16,8 @@ import {
   KeyRound,
   MessageCircle,
   ArrowLeft,
+  ImagePlus,
+  X,
 } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -32,12 +35,15 @@ import {
   removeMember,
   updateClassroom,
   deleteClassroom,
+  uploadDoubtImages,
+  signedImageUrls,
   joinLink,
   type Classroom,
   type ClassMember,
   type ClassPost,
   type ClassComment,
 } from '../lib/classrooms'
+import { prepareImages, type PreparedImage } from '../lib/image'
 import { displayName } from './Classrooms'
 
 type Tab = 'stream' | 'people' | 'settings'
@@ -227,27 +233,169 @@ function RoleBadge({ role }: { role: string }) {
   )
 }
 
+/* ------------------------------------------------------------ image attach -- */
+
+const MAX_IMAGES = 6
+
+/** Manages a batch of to-be-uploaded images (compressed on add). */
+function useImagePicker() {
+  const [images, setImages] = useState<PreparedImage[]>([])
+  const addFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return
+    const room = MAX_IMAGES - images.length
+    const prepared = await prepareImages(Array.from(files).slice(0, room))
+    setImages((prev) => [...prev, ...prepared])
+  }
+  const removeAt = (i: number) =>
+    setImages((prev) => {
+      URL.revokeObjectURL(prev[i].previewUrl)
+      return prev.filter((_, idx) => idx !== i)
+    })
+  const clear = () =>
+    setImages((prev) => {
+      prev.forEach((p) => URL.revokeObjectURL(p.previewUrl))
+      return []
+    })
+  return { images, addFiles, removeAt, clear }
+}
+
+/** The paperclip button + hidden file input (multiple images). */
+function AttachButton({ count, onFiles, small = false }: { count: number; onFiles: (f: FileList | null) => void; small?: boolean }) {
+  const full = count >= MAX_IMAGES
+  return (
+    <label
+      className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 font-semibold text-slate-600 transition hover:border-brand-600 hover:text-brand-600 ${
+        small ? 'px-2.5 py-2 text-xs' : 'px-3 py-2 text-[13px]'
+      } ${full ? 'pointer-events-none opacity-40' : ''}`}
+      title={full ? `Up to ${MAX_IMAGES} images` : 'Attach photos of your working'}
+    >
+      <ImagePlus className={small ? 'h-4 w-4' : 'h-4 w-4'} />
+      {!small && 'Add photo'}
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          onFiles(e.target.files)
+          e.target.value = '' // allow re-selecting the same file
+        }}
+      />
+    </label>
+  )
+}
+
+/** Thumbnails of the images queued for upload, each removable. */
+function Previews({ images, removeAt }: { images: PreparedImage[]; removeAt: (i: number) => void }) {
+  if (images.length === 0) return null
+  return (
+    <div className="mt-2.5 flex flex-wrap gap-2">
+      {images.map((img, i) => (
+        <div key={i} className="relative h-16 w-16 overflow-hidden rounded-lg border border-slate-200">
+          <img src={img.previewUrl} alt="" className="h-full w-full object-cover" />
+          <button
+            onClick={() => removeAt(i)}
+            className="absolute right-0.5 top-0.5 grid h-5 w-5 place-items-center rounded-full bg-slate-900/70 text-white"
+            aria-label="Remove image"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/** Renders already-uploaded images from their storage paths (signed URLs). */
+function ImageStrip({ paths }: { paths: string[] }) {
+  const [urls, setUrls] = useState<Record<string, string>>({})
+  const [zoom, setZoom] = useState<string | null>(null)
+
+  useEffect(() => {
+    let active = true
+    if (paths.length === 0) return
+    signedImageUrls(paths).then((m) => {
+      if (active) setUrls(m)
+    })
+    return () => {
+      active = false
+    }
+  }, [paths])
+
+  if (paths.length === 0) return null
+  return (
+    <>
+      <div className="mt-2.5 flex flex-wrap gap-2">
+        {paths.map((p) =>
+          urls[p] ? (
+            <button
+              key={p}
+              onClick={() => setZoom(urls[p])}
+              className="h-20 w-20 overflow-hidden rounded-lg border border-slate-200 transition hover:border-brand-600"
+              aria-label="View image full size"
+            >
+              <img src={urls[p]} alt="Attached working" className="h-full w-full object-cover" loading="lazy" />
+            </button>
+          ) : (
+            <div key={p} className="grid h-20 w-20 place-items-center rounded-lg border border-slate-200 bg-slate-50">
+              <Loader2 className="h-4 w-4 animate-spin text-slate-300" />
+            </div>
+          ),
+        )}
+      </div>
+      {zoom &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] grid place-items-center bg-slate-900/80 p-4"
+            onClick={() => setZoom(null)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <img src={zoom} alt="Attached working" className="max-h-[90vh] max-w-[92vw] rounded-lg object-contain" />
+            <button className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white" aria-label="Close">
+              <X className="h-5 w-5" />
+            </button>
+          </div>,
+          document.body,
+        )}
+    </>
+  )
+}
+
 function Composer({ classroom, amOwner, onPosted }: { classroom: Classroom; amOwner: boolean; onPosted: () => void }) {
   const { user } = useAuth()
   const [body, setBody] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const { images, addFiles, removeAt, clear } = useImagePicker()
 
   const submit = async () => {
-    if (!user || !body.trim()) return
+    if (!user || (!body.trim() && images.length === 0)) return
     setBusy(true)
     setErr(null)
+    let imagePaths: string[] = []
+    if (images.length > 0) {
+      const up = await uploadDoubtImages(classroom.id, images.map((i) => i.blob))
+      if (up.error && up.paths.length === 0) {
+        setBusy(false)
+        setErr(`Couldn’t upload images — ${up.error}`)
+        return
+      }
+      imagePaths = up.paths
+    }
     const { error } = await createPost({
       classroomId: classroom.id,
       authorId: user.id,
       authorName: displayName(user),
       authorRole: amOwner ? 'teacher' : 'student',
       body,
+      imagePaths,
     })
     setBusy(false)
     if (error) setErr(error)
     else {
       setBody('')
+      clear()
       onPosted()
     }
   }
@@ -261,9 +409,11 @@ function Composer({ classroom, amOwner, onPosted }: { classroom: Classroom; amOw
         placeholder={amOwner ? 'Share an announcement with the class…' : 'Post to the class — a doubt, a resource, anything useful…'}
         className="w-full rounded-[9px] border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm leading-relaxed outline-none transition focus:border-brand-600"
       />
+      <Previews images={images} removeAt={removeAt} />
       {err && <p className="mt-1.5 text-xs text-rose-500">{err}</p>}
-      <div className="mt-2 flex justify-end">
-        <button onClick={submit} disabled={busy || !body.trim()} className="btn-accent px-4 py-2 text-sm disabled:opacity-40">
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <AttachButton count={images.length} onFiles={addFiles} />
+        <button onClick={submit} disabled={busy || (!body.trim() && images.length === 0)} className="btn-accent px-4 py-2 text-sm disabled:opacity-40">
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Post
         </button>
       </div>
@@ -289,11 +439,17 @@ function PostCard({
   const { user } = useAuth()
   const [reply, setReply] = useState('')
   const [busy, setBusy] = useState(false)
+  const { images, addFiles, removeAt, clear } = useImagePicker()
   const canDeletePost = amOwner || post.author_id === myId
 
   const sendReply = async () => {
-    if (!user || !reply.trim()) return
+    if (!user || (!reply.trim() && images.length === 0)) return
     setBusy(true)
+    let imagePaths: string[] = []
+    if (images.length > 0) {
+      const up = await uploadDoubtImages(classroom.id, images.map((i) => i.blob))
+      imagePaths = up.paths
+    }
     const { error } = await createComment({
       postId: post.id,
       classroomId: classroom.id,
@@ -301,10 +457,12 @@ function PostCard({
       authorName: displayName(user),
       authorRole: amOwner ? 'teacher' : 'student',
       body: reply,
+      imagePaths,
     })
     setBusy(false)
     if (!error) {
       setReply('')
+      clear()
       onChanged()
     }
   }
@@ -318,7 +476,8 @@ function PostCard({
             <RoleBadge role={post.author_role} />
             <span className="text-[11px] text-slate-400">{fmtDateTime(post.created_at)}</span>
           </div>
-          <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{post.body}</p>
+          {post.body && <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{post.body}</p>}
+          <ImageStrip paths={post.image_paths ?? []} />
         </div>
         {canDeletePost && (
           <button
@@ -344,7 +503,8 @@ function PostCard({
                 <RoleBadge role={c.author_role} />
                 <span className="text-[10.5px] text-slate-400">{fmtDateTime(c.created_at)}</span>
               </div>
-              <p className="mt-0.5 whitespace-pre-wrap text-[13.5px] leading-relaxed text-slate-600">{c.body}</p>
+              {c.body && <p className="mt-0.5 whitespace-pre-wrap text-[13.5px] leading-relaxed text-slate-600">{c.body}</p>}
+              <ImageStrip paths={c.image_paths ?? []} />
             </div>
             {(amOwner || c.author_id === myId) && (
               <button
@@ -362,23 +522,27 @@ function PostCard({
         ))}
 
         {!classroom.archived && (
-          <div className="flex items-center gap-2">
-            <MessageCircle className="h-4 w-4 shrink-0 text-slate-300" />
-            <input
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  sendReply()
-                }
-              }}
-              placeholder="Reply or ask a doubt…"
-              className="w-full rounded-[9px] border border-slate-200 bg-slate-50 px-3.5 py-2 text-[13.5px] outline-none transition focus:border-brand-600"
-            />
-            <button onClick={sendReply} disabled={busy || !reply.trim()} className="btn-outline px-3 py-2 text-sm disabled:opacity-40" aria-label="Send reply">
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4 shrink-0 text-slate-300" />
+              <input
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    sendReply()
+                  }
+                }}
+                placeholder="Reply or ask a doubt…"
+                className="w-full rounded-[9px] border border-slate-200 bg-slate-50 px-3.5 py-2 text-[13.5px] outline-none transition focus:border-brand-600"
+              />
+              <AttachButton count={images.length} onFiles={addFiles} small />
+              <button onClick={sendReply} disabled={busy || (!reply.trim() && images.length === 0)} className="btn-outline px-3 py-2 text-sm disabled:opacity-40" aria-label="Send reply">
+                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </button>
+            </div>
+            <Previews images={images} removeAt={removeAt} />
           </div>
         )}
       </div>

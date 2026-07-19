@@ -38,6 +38,7 @@ export type ClassPost = {
   author_name: string | null
   author_role: AuthorRole
   body: string
+  image_paths: string[]
   created_at: string
 }
 
@@ -49,6 +50,7 @@ export type ClassComment = {
   author_name: string | null
   author_role: AuthorRole
   body: string
+  image_paths: string[]
   created_at: string
 }
 
@@ -230,6 +232,7 @@ export type NewPost = {
   authorName?: string | null
   authorRole: AuthorRole
   body: string
+  imagePaths?: string[]
 }
 
 export async function createPost(p: NewPost): Promise<Result<ClassPost | null>> {
@@ -242,6 +245,7 @@ export async function createPost(p: NewPost): Promise<Result<ClassPost | null>> 
       author_name: p.authorName?.trim() || null,
       author_role: p.authorRole,
       body: p.body.trim(),
+      image_paths: p.imagePaths ?? [],
     })
     .select()
     .single()
@@ -274,6 +278,7 @@ export type NewComment = {
   authorName?: string | null
   authorRole: AuthorRole
   body: string
+  imagePaths?: string[]
 }
 
 export async function createComment(c: NewComment): Promise<Result<ClassComment | null>> {
@@ -287,10 +292,43 @@ export async function createComment(c: NewComment): Promise<Result<ClassComment 
       author_name: c.authorName?.trim() || null,
       author_role: c.authorRole,
       body: c.body.trim(),
+      image_paths: c.imagePaths ?? [],
     })
     .select()
     .single()
   return { data: (data as ClassComment) ?? null, error: error?.message ?? null }
+}
+
+/* ------------------------------------------------------- doubt image files -- */
+
+/** Upload compressed images to doubt-images/<classroomId>/<uuid>.jpg.
+    Returns the storage paths to save on the post/comment. Best-effort per file:
+    a failed upload is skipped so a partial batch still posts. */
+export async function uploadDoubtImages(
+  classroomId: string,
+  blobs: Blob[],
+): Promise<{ paths: string[]; error: string | null }> {
+  if (!supabase) return { paths: [], error: OFF }
+  const paths: string[] = []
+  let firstError: string | null = null
+  for (const blob of blobs) {
+    const path = `${classroomId}/${crypto.randomUUID()}.jpg`
+    const { error } = await supabase.storage
+      .from('doubt-images')
+      .upload(path, blob, { contentType: 'image/jpeg', upsert: false })
+    if (error) firstError = firstError ?? error.message
+    else paths.push(path)
+  }
+  return { paths, error: paths.length === 0 ? firstError : null }
+}
+
+/** Batch short-lived signed URLs for display (private bucket). Maps path→url. */
+export async function signedImageUrls(paths: string[]): Promise<Record<string, string>> {
+  if (!supabase || paths.length === 0) return {}
+  const { data } = await supabase.storage.from('doubt-images').createSignedUrls(paths, 3600)
+  const map: Record<string, string> = {}
+  for (const row of data ?? []) if (row.path && row.signedUrl) map[row.path] = row.signedUrl
+  return map
 }
 
 export async function deleteComment(id: string): Promise<{ error: string | null }> {
