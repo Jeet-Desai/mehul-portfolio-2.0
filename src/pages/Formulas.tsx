@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, ArrowUpRight, Info } from 'lucide-react'
+import { Search, ArrowUpRight, Info, Printer } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import { formulas, formulaSubjects, type Formula, type FormulaSubject } from '../data/formulas'
 import { calculators } from '../calculators/registry'
@@ -10,6 +10,23 @@ import { usePageTitle } from '../lib/usePageTitle'
    with the related tool named on each card. */
 
 const calcTitleBySlug = new Map(calculators.map((c) => [c.slug, c.title]))
+
+/** Print the current (filtered) sheet as a clean PDF (browser "Save as PDF").
+    Force light mode for the printout so the PDF is readable on paper —
+    same mechanism as ResourceTopic's Download PDF. */
+function downloadAsPdf() {
+  const el = document.documentElement
+  const wasDark = el.classList.contains('dark')
+  if (wasDark) {
+    el.classList.remove('dark')
+    const restore = () => {
+      el.classList.add('dark')
+      window.removeEventListener('afterprint', restore)
+    }
+    window.addEventListener('afterprint', restore)
+  }
+  window.print()
+}
 
 function FormulaCard({ f }: { f: Formula }) {
   return (
@@ -21,7 +38,7 @@ function FormulaCard({ f }: { f: Formula }) {
         {f.calc && (
           <Link
             to={`/learn/c/${f.calc}`}
-            className="inline-flex shrink-0 items-center gap-0.5 text-[11.5px] font-semibold text-brand-600 hover:text-brand-700"
+            className="inline-flex shrink-0 items-center gap-0.5 text-[11.5px] font-semibold text-brand-600 hover:text-brand-700 print:hidden"
           >
             {calcTitleBySlug.get(f.calc) ?? 'Calculator'} <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
@@ -38,7 +55,9 @@ function FormulaCard({ f }: { f: Formula }) {
 
 export default function Formulas() {
   usePageTitle('Formula Sheets — Quick Reference', 'Searchable quick-reference formula sheets across accounting, costing, taxation, finance and statistics.')
-  const [q, setQ] = useState('')
+  // Seed the search from ?q= so external links can deep-link a filter
+  // (read once on mount; we never write back to the URL while typing).
+  const [q, setQ] = useState(() => new URLSearchParams(window.location.search).get('q') ?? '')
   const [subject, setSubject] = useState<FormulaSubject | 'All'>('All')
 
   const filtered = useMemo(() => {
@@ -72,19 +91,27 @@ export default function Formulas() {
       />
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        {/* search */}
-        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-[18px] py-3.5 focus-within:border-brand-600">
-          <Search className="h-4 w-4 shrink-0 text-slate-400" />
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search formulas — contribution, WACC, current ratio…"
-            className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-          />
+        {/* search + print */}
+        <div className="flex items-center gap-3 print:hidden">
+          <div className="flex flex-1 items-center gap-3 rounded-xl border border-slate-200 bg-white px-[18px] py-3.5 focus-within:border-brand-600">
+            <Search className="h-4 w-4 shrink-0 text-slate-400" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search formulas — contribution, WACC, current ratio…"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+            />
+          </div>
+          <button
+            onClick={downloadAsPdf}
+            className="inline-flex shrink-0 items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-4 py-2 text-[13px] font-bold text-slate-900 transition hover:border-brand-600"
+          >
+            <Printer className="h-4 w-4" /> <span className="hidden sm:inline">Print / save PDF</span>
+          </button>
         </div>
 
         {/* subject chips */}
-        <div className="mb-8 mt-3.5 flex flex-wrap gap-2">
+        <div className="mb-8 mt-3.5 flex flex-wrap gap-2 print:hidden">
           {(['All', ...formulaSubjects] as const).map((s) => (
             <button
               key={s}

@@ -23,6 +23,8 @@ import {
   type DoubtStatus,
 } from '../lib/doubts'
 import { listProfiles, computeStats, type Profile } from '../lib/profiles'
+import { setUserRole } from '../lib/classrooms'
+import { GraduationCap } from 'lucide-react'
 
 type Tab = 'doubts' | 'users'
 
@@ -279,16 +281,33 @@ function UsersPanel() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [q, setQ] = useState('')
+  const [roleBusy, setRoleBusy] = useState<string | null>(null)
+
+  const load = useCallback(async () => {
+    const { data, error } = await listProfiles()
+    setProfiles(data)
+    setError(error)
+    setLoading(false)
+  }, [])
 
   useEffect(() => {
-    ;(async () => {
-      setLoading(true)
-      const { data, error } = await listProfiles()
-      setProfiles(data)
-      setError(error)
-      setLoading(false)
-    })()
-  }, [])
+    load()
+  }, [load])
+
+  /** Promote a student to teacher (they can then create classrooms) or demote. */
+  const changeRole = async (p: Profile, newRole: 'student' | 'teacher') => {
+    const who = p.full_name || p.email || 'this user'
+    const prompt =
+      newRole === 'teacher'
+        ? `Make ${who} a teacher? They will be able to create and manage their own classrooms.`
+        : `Remove ${who}’s teacher role? Their existing classrooms stay, but they can’t create new ones.`
+    if (!window.confirm(prompt)) return
+    setRoleBusy(p.id)
+    const { error } = await setUserRole(p.id, newRole)
+    setRoleBusy(null)
+    if (error) setError(error)
+    else load()
+  }
 
   const stats = useMemo(() => computeStats(profiles, Date.now()), [profiles])
 
@@ -364,8 +383,30 @@ function UsersPanel() {
                         <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-600">
                           <ShieldCheck className="h-3 w-3" /> Admin
                         </span>
+                      ) : p.role === 'teacher' ? (
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-mint-100 px-2.5 py-1 text-[11px] font-bold text-mint-600">
+                            <GraduationCap className="h-3 w-3" /> Teacher
+                          </span>
+                          <button
+                            onClick={() => changeRole(p, 'student')}
+                            disabled={roleBusy === p.id}
+                            className="text-[11px] font-bold text-slate-400 hover:text-rose-500 disabled:opacity-40"
+                          >
+                            {roleBusy === p.id ? '…' : 'Demote'}
+                          </button>
+                        </div>
                       ) : (
-                        <span className="text-xs text-slate-400">Student</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-slate-400">Student</span>
+                          <button
+                            onClick={() => changeRole(p, 'teacher')}
+                            disabled={roleBusy === p.id}
+                            className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold text-brand-600 transition hover:bg-brand-50 disabled:opacity-40"
+                          >
+                            <GraduationCap className="h-3 w-3" /> {roleBusy === p.id ? '…' : 'Make teacher'}
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>

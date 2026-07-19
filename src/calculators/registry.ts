@@ -30,6 +30,8 @@ import {
   SlidersHorizontal,
   CalendarRange,
   BookOpenCheck,
+  Vault,
+  SplitSquareHorizontal,
 } from 'lucide-react'
 import type { Calculator } from './types'
 
@@ -177,6 +179,15 @@ export const calculators: Calculator[] = [
   },
 
   {
+    slug: 'marginal-vs-absorption',
+    title: 'Marginal vs Absorption Costing',
+    category: 'Costing',
+    blurb: 'Prepare the income statement under both methods side by side, and reconcile the profit difference to the fixed overhead carried in stock.',
+    icon: SplitSquareHorizontal,
+    load: () => import('./MarginalAbsorption'),
+    tags: ['marginal costing', 'absorption costing', 'variable costing', 'full costing', 'profit reconciliation', 'stock valuation', 'fixed overhead in stock', 'income statement', 'contribution', 'under absorption', 'over absorption'],
+  },
+  {
     slug: 'break-even',
     title: 'Break-even / CVP',
     category: 'Costing',
@@ -229,6 +240,15 @@ export const calculators: Calculator[] = [
     icon: PiggyBank,
     load: () => import('./Sip'),
     tags: ['mutual fund', 'step-up', 'lumpsum', 'investment', 'maturity', 'returns', 'compounding'],
+  },
+  {
+    slug: 'savings-schemes',
+    title: 'PPF / FD / RD / EPF Maturity',
+    category: 'Investing',
+    blurb: 'Project the maturity of the classic safe-savings quartet — PPF, bank fixed deposit, recurring deposit and EPF — each with the exact compounding method it really uses.',
+    icon: Vault,
+    load: () => import('./Savings'),
+    tags: ['ppf', 'public provident fund', 'fd', 'fixed deposit', 'rd', 'recurring deposit', 'epf', 'provident fund', 'maturity', 'small savings', '80c', 'post office', 'vpf', 'eps', 'safe investment'],
   },
   {
     slug: 'compound-interest',

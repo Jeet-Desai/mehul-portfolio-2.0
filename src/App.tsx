@@ -10,9 +10,13 @@ import ResourceLibrary from './pages/ResourceLibrary'
 import ResourceTopic from './pages/ResourceTopic'
 import CalculatorPage from './pages/CalculatorPage'
 import Practice from './pages/Practice'
+import ProblemLab from './pages/ProblemLab'
 import Progress from './pages/Progress'
 import Revise from './pages/Revise'
 import Ask from './pages/Ask'
+import Classrooms from './pages/Classrooms'
+import ClassroomDetail from './pages/ClassroomDetail'
+import JoinClassroom from './pages/JoinClassroom'
 import CareerGuide from './pages/CareerGuide'
 import NoticeBoard from './pages/NoticeBoard'
 import Contact from './pages/Contact'
@@ -40,9 +44,13 @@ export default function App() {
           {/* Interactive tools require login (when auth is enabled); browse pages stay public for SEO. */}
           <Route path="/learn/c/:slug" element={<RequireAuth><CalculatorPage /></RequireAuth>} />
           <Route path="/practice" element={<RequireAuth><Practice /></RequireAuth>} />
+          <Route path="/lab" element={<RequireAuth><ProblemLab /></RequireAuth>} />
           <Route path="/progress" element={<RequireAuth><Progress /></RequireAuth>} />
           <Route path="/revise" element={<RequireAuth><Revise /></RequireAuth>} />
           <Route path="/ask" element={<RequireAuth><Ask /></RequireAuth>} />
+          <Route path="/classrooms" element={<RequireAuth><Classrooms /></RequireAuth>} />
+          <Route path="/classrooms/join/:code" element={<RequireAuth><JoinClassroom /></RequireAuth>} />
+          <Route path="/classrooms/:id" element={<RequireAuth><ClassroomDetail /></RequireAuth>} />
           <Route path="/career" element={<CareerGuide />} />
           <Route path="/notices" element={<NoticeBoard />} />
           <Route path="/contact" element={<Contact />} />

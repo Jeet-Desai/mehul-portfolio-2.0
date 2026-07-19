@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, Sun, Moon, LogIn, LogOut, ShieldCheck } from 'lucide-react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Menu, X, Sun, Moon, LogIn, LogOut, ShieldCheck, Search } from 'lucide-react'
 import { navLinks } from '../data/site'
 import { useAuth } from '../lib/auth'
 import { useIsAdmin } from '../lib/admin'
 import Logo from './Logo'
 import ExamChip from './ExamChip'
+import CommandPalette from './CommandPalette'
 
 function useDarkMode() {
   const [dark, setDark] = useState(
@@ -30,9 +31,38 @@ const iconBtn =
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [paletteOpen, setPaletteOpen] = useState(false)
   const { dark, toggle } = useDarkMode()
   const { enabled, user, signOut } = useAuth()
   const isAdmin = useIsAdmin()
+  const navigate = useNavigate()
+
+  /** Sign out from Home, NOT from wherever we're standing. If we sign out while
+      on a protected page, RequireAuth bounces to /login remembering THAT page —
+      and the next account to log in (maybe a different person on a shared
+      device) gets returned to the previous account's page, e.g. a classroom
+      they aren't a member of. Navigate home first so no guard ever fires. */
+  const handleSignOut = () => {
+    try {
+      localStorage.removeItem('as:next') // stale OAuth hand-off must not leak to the next account
+    } catch {
+      /* private mode */
+    }
+    navigate('/')
+    signOut()
+  }
+
+  // Ctrl/⌘+K opens the command palette from anywhere on the site.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((v) => !v)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   // Lock background page scroll while the mobile menu is open. The scroll
   // container is the <html> element, so lock both it and <body> to be safe.
@@ -60,7 +90,7 @@ export default function Navbar() {
     if (!enabled) return null
     if (user)
       return (
-        <button onClick={() => signOut()} className={iconBtn} aria-label="Sign out" title={user.email ? `Sign out (${user.email})` : 'Sign out'}>
+        <button onClick={handleSignOut} className={iconBtn} aria-label="Sign out" title={user.email ? `Sign out (${user.email})` : 'Sign out'}>
           <LogOut className="h-[18px] w-[18px]" />
         </button>
       )
@@ -84,14 +114,14 @@ export default function Navbar() {
               to={l.to}
               end={l.to === '/'}
               className={({ isActive }) =>
-                `whitespace-nowrap border-b-2 px-3 py-2 text-[13px] transition ${
+                `whitespace-nowrap border-b-2 px-2.5 py-2 text-[13px] transition ${
                   isActive
                     ? 'border-brand-600 font-bold text-brand-600'
                     : 'border-transparent font-semibold text-slate-600 hover:text-slate-900'
                 }`
               }
             >
-              {l.label}
+              {l.short ?? l.label}
             </NavLink>
           ))}
           {isAdmin && (
@@ -113,9 +143,18 @@ export default function Navbar() {
         {/* right controls — evenly aligned, consistent sizing, always visible */}
         <div className="flex items-center gap-2">
           <ExamChip />
+          <button
+            onClick={() => setPaletteOpen(true)}
+            className={iconBtn}
+            aria-label="Search the site"
+            title="Search (Ctrl+K)"
+          >
+            <Search className="h-[18px] w-[18px]" />
+          </button>
           <ThemeToggle />
           <AuthControl />
-          <Link to="/learn" className="btn-accent hidden h-10 shrink-0 whitespace-nowrap px-4 text-[13px] sm:inline-flex">
+          {/* CTA only while the link row is collapsed — at xl+ the Learn link is right there */}
+          <Link to="/learn" className="btn-accent hidden h-10 shrink-0 whitespace-nowrap px-4 text-[13px] sm:inline-flex xl:hidden">
             <span className="hidden md:inline">Start Learning</span>
             <span className="md:hidden">Learn</span>
           </Link>
@@ -164,7 +203,7 @@ export default function Navbar() {
                 (user ? (
                   <button
                     onClick={() => {
-                      signOut()
+                      handleSignOut()
                       setOpen(false)
                     }}
                     className="flex w-full items-center gap-2 rounded-[10px] px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-100"
@@ -187,6 +226,8 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </header>
   )
 }

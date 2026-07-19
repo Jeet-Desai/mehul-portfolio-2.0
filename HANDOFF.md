@@ -3,6 +3,79 @@
 The product now spans **every pillar as a real, thin slice** (not just calculators). Read `ROADMAP.md`
 for the full vision. Current as of the "Ledger redesign + student features" session (2 Jul 2026).
 
+## 🏫 LATEST SESSION (19 Jul 2026) — **Virtual Classrooms** (UNCOMMITTED)
+Google-Classroom-style classes at **`/classrooms`** (navbar "Class"), Supabase-backed, **multi-teacher**:
+`profiles.role` now includes `'teacher'`; the admin promotes users from `/admin → Users → Make teacher`
+(`set_user_role` RPC — admin-gated, admin rows untouchable, `role` col is column-revoked so the RPC is the
+only path). Teachers create classes → share a 6-char code / `/classrooms/join/CODE` link (login round-trip
+preserves it) → students preview + join (ONLY via `join_classroom` RPC; no insert policy on members) →
+Stream (teacher announcements, optional student posts, threaded doubt-comments, role badges, author/teacher
+delete) · People (roster, teacher-only emails + invite card + WhatsApp share, remove/leave) · Settings
+(teacher-only: edit, student-post toggle, archive = read-only enforced by RLS, delete-cascades).
+- **Files:** `supabase/classrooms.sql` (ADDITIVE, idempotent — user has RUN it in prod; note `language sql`
+  fns are validated at CREATE so class-scoped helpers sit AFTER the tables), `src/lib/classrooms.ts`,
+  `src/lib/role.ts` (`useMyRole`/`useIsTeacher`, cached), pages `Classrooms` (hub; exports `displayName`),
+  `ClassroomDetail` (ink-card header — use `text-slate-50`/opacity, NOT `text-white`, it inverts in dark),
+  `JoinClassroom`; routes in App.tsx (RequireAuth), navLink short "Class" (navbar still fits @1280),
+  Admin Users tab promote/demote. Docs: `docs/CLASSROOMS.md`.
+- **Verified end-to-end with Playwright** (19 Jul): teacher create→post, student signup-via-join-link→join→
+  doubt-comment→post, roster, moderation delete, archive read-only, unarchive, dark mode. **Adversarial RLS
+  checks all blocked server-side** (create/rename class as student, self-promote via update AND RPC, direct
+  membership insert, delete teacher post, post-to-archived, outsider reads = 0 rows). `pnpm build` green.
+- Test data in prod Supabase (throwaway, deletable): `teacher.test@as.com` / `student.test@as.com` /
+  `outsider.test@as.com` (+ a "Div A" class); the user also made a real "TY-BBA" class as admin.
+- **Sign-out bug fixed (user-reported):** signing out while ON a protected page made RequireAuth stash that
+  page as `from`, so the NEXT account to log in got returned to the previous account's URL (student landed on
+  the admin's classroom → "not available"). `Navbar.handleSignOut` now navigates home BEFORE `signOut()` (so
+  no guard fires) and clears the stale `as:next` OAuth hand-off. Playwright-verified: sign-out → `/`,
+  next login → `/learn`.
+- **Phase 2 (user-endorsed):** assignments pointing at quizzes / seeded Problem-Lab sets + attempts table
+  (scores reach the teacher — first server-side progress), Supabase Realtime stream updates.
+
+## 🧪 SAME SESSION, PART 2 (8 Jul 2026) — **Problem Lab** (UNCOMMITTED)
+New pillar at **`/lab`** (RequireAuth): an **infinite exam-style numerical generator, graded figure by figure**.
+- `lib/problemLab.ts` — 7 seeded templates (break-even · EOQ · overhead absorption · labour turnover · WDV ·
+  FD maturity · marginal-vs-absorption). Each template REVERSE-ENGINEERS inputs from a clean answer (pick EOQ,
+  derive demand) so figures are exam-friendly, and computes the key with the SAME verified engines the
+  calculators use (`computeFd`, `computeMarginalAbsorption`) or hand-checked closed forms. mulberry32 PRNG;
+  a problem ≡ (templateId, seed).
+- **Daily Challenge** — seed hashed from the local date (like QotD): one identical sum nationwide per day.
+- **Challenge a friend** — the URL always carries `?t=…&s=…` (stamped on first render too), so any problem is a
+  WhatsApp link that reproduces the *exact same sum* (determinism browser-verified by reloading the URL).
+- Page `pages/ProblemLab.tsx`: topic chips + 🎲, given-data panel, per-answer grading with rounding tolerance
+  (`isCorrect`, tol = max(0.6, 0.5%)), reveal → `CalcSteps` working + auto "Practise this method" calculator CTA;
+  `touchStreak()` on check. Entry points: navLink `/lab` ("Problem Lab", desktop shows `short: 'Lab'`),
+  LearnHub 3-card entry row, footer/palette (both derive from navLinks).
+- **Navbar congestion fix** (pre-existing at xl, worsened by the new link): `NavLink.short` compact desktop
+  labels (Learn/Lab), link `px-2.5`, and the Start-Learning CTA now `xl:hidden` (redundant next to the full
+  link row). Nav content now exactly fits `max-w-6xl`; no horizontal page scroll at 1280+.
+- To add a new problem type: write one `tpl*` maker in `problemLab.ts` + register in `makers` + `labTemplates`.
+  KEEP the reverse-engineering discipline (clean answers first) and reuse calculator libs for the answer key.
+
+## ⚡ LATEST SESSION (8 Jul 2026) — Savings suite · Marginal-vs-Absorption · ⌘K palette (UNCOMMITTED)
+All in the working tree, `pnpm build` green, browser-verified light/dark (auth-free via temporarily-moved `.env`,
+since restored). **Not committed.** Calculator count is now **34** (Home stats derive from `calculators.length` — auto).
+- **PPF / FD / RD / EPF Maturity** (`savings-schemes`, Investing) — `lib/savings.ts` + `calculators/Savings.tsx`,
+  4 tabs (tab pattern), all inputs URL-shareable via `useCalcState`. Models use the REAL methods: PPF annual
+  compounding (₹1.5L×15y @7.1% → ₹40,68,209 = published figure), FD chosen-frequency compounding, RD India-Post
+  quarterly method (x = (1+r/4)^(1/3), verified equal to the canonical closed form), EPF monthly accrual credited
+  annually with the EPS 8.33%/₹15k-cap diversion. **Rates are INPUTS with a visible disclaimer** — defaults
+  web-verified Jul 2026 (PPF 7.1% Q2 FY27, EPF 8.25% FY26); never hard-code them as facts.
+- **Marginal vs Absorption Costing** (`marginal-vs-absorption`, Costing) — `lib/marginalAbsorption.ts` +
+  `calculators/MarginalAbsorption.tsx`. Side-by-side income statements, under/over-absorption via normal capacity,
+  reconciliation = (closing − opening units) × fixed-OH rate (identity holds exactly with the write-off treatment;
+  seed hand-verified ₹1,90,000 vs ₹2,30,000).
+- **⌘K command palette** — `components/CommandPalette.tsx` (site-wide ranked search over calculators, resource
+  topics, formula entries, nav pages; grouped, keyboard-driven), wired in `Navbar.tsx` (search icon + global
+  Ctrl/⌘+K, toggles). Formula results deep-link to `/formulas?q=…`.
+- **/learn upgrades** — category filter chips (registry order) + "Pick up where you left off" strip
+  (`getRecentCalcs()` — new `as:recent-calcs` recency list written by `recordCalcUse` in `lib/progress.ts`);
+  both hidden while searching/filtering. "Upcoming" cards refreshed (PWA · Gujarati-everywhere).
+- **/formulas** — "Print / save PDF" button (mirrors ResourceTopic's force-light `window.print()` mechanism,
+  existing print CSS sufficed) + search seeds from `?q=`. **7 new formula entries** (FD/RD maturity, effective
+  annual yield, structural EPF split; marginal-vs-absorption cost/profit-difference/fixed-OH-rate) — all
+  structural, no perishable rates.
+
 ## 🎨 LATEST SESSION (2 Jul 2026) — Ledger redesign + Tier 1/2 student features (UNCOMMITTED)
 Everything below is in the working tree, `pnpm build` green, browser-verified light/dark/mobile. **Not yet committed.**
 

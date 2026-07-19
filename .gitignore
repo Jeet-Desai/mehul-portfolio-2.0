@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # playwright (local browser-test output)
 .playwright-mcp/
+
+# scratch screenshots captured at repo root during dev/testing
+/*.png

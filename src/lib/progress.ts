@@ -19,6 +19,7 @@ const KEYS = {
   quizStats: 'as:quiz-stats',
   recent: 'as:recent-quizzes',
   calcs: 'as:calc-usage',
+  recentCalcs: 'as:recent-calcs',
   reads: 'as:topics-read',
 } as const
 
@@ -159,10 +160,18 @@ export function recordCalcUse(slug: string) {
   const c = read<Record<string, number>>(KEYS.calcs, {})
   c[slug] = (c[slug] ?? 0) + 1
   write(KEYS.calcs, c)
+  // most-recent-first, deduped — drives the "pick up where you left off" strip
+  const recent = readArr<string>(KEYS.recentCalcs).filter((s) => s !== slug)
+  recent.unshift(slug)
+  write(KEYS.recentCalcs, recent.slice(0, 8))
   touchStreak()
 }
 export function getCalcUsage(): Record<string, number> {
   return read<Record<string, number>>(KEYS.calcs, {})
+}
+/** Slugs of recently opened calculators, most recent first. */
+export function getRecentCalcs(): string[] {
+  return readArr<string>(KEYS.recentCalcs)
 }
 
 export function recordTopicRead(id: string) {

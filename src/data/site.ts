@@ -58,13 +58,17 @@ export const contact = {
   },
 }
 
-export type NavLink = { to: string; label: string }
+/** `short` (optional) is the compact label the desktop navbar uses — the full
+    label still shows in the mobile menu, footer and command palette. */
+export type NavLink = { to: string; label: string; short?: string }
 
 export const navLinks: NavLink[] = [
   { to: '/', label: 'Home' },
-  { to: '/learn', label: 'Learn Hub' },
+  { to: '/learn', label: 'Learn Hub', short: 'Learn' },
   { to: '/resources', label: 'Library' },
   { to: '/practice', label: 'Practice' },
+  { to: '/lab', label: 'Problem Lab', short: 'Lab' },
+  { to: '/classrooms', label: 'Classrooms', short: 'Class' },
   { to: '/revise', label: 'Revise' },
   { to: '/progress', label: 'Progress' },
   { to: '/ask', label: 'Ask AI' },
