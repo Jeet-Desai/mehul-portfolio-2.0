@@ -5,6 +5,7 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import { useAuth } from '../lib/auth'
 import { touchLastSeen } from '../lib/profiles'
+import { syncProgress, stopProgressSync } from '../lib/progressSync'
 
 /* After an OAuth sign-in the browser lands back on the site ORIGIN (see the
    redirect note in auth.tsx). Login stashed the page the user actually wanted in
@@ -43,6 +44,15 @@ export default function Layout() {
   // so it fires on sign-in, not on every route change.
   useEffect(() => {
     if (user?.id) touchLastSeen(user.id)
+  }, [user?.id])
+
+  // Cloud-sync learning progress on sign-in (pull → merge → push, then keep
+  // pushing local changes); detach on sign-out. No-op when auth is dormant.
+  useEffect(() => {
+    if (user?.id) {
+      syncProgress(user.id)
+      return () => stopProgressSync()
+    }
   }, [user?.id])
 
   if (next) {

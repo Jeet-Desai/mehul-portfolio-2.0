@@ -8,7 +8,7 @@ import CalcSteps from '../components/calc/CalcSteps'
 import { ResultPanel } from '../components/calc/CalcResult'
 import { generateProblem, dailyChallenge, labTemplates, isCorrect, type LabProblem } from '../lib/problemLab'
 import { getCalculator } from '../calculators/registry'
-import { touchStreak } from '../lib/progress'
+import { recordLabAttempt } from '../lib/progress'
 import { toNum, formatNum } from '../lib/format'
 import { shareCalculation } from '../lib/urlState'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -79,7 +79,10 @@ export default function ProblemLab() {
 
   const check = () => {
     setChecked(true)
-    touchStreak()
+    // grade now (results is derived, not yet committed) so we can record the attempt
+    const graded = problem.answers.map((a) => isCorrect(a, toNum(inputs[a.key] ?? '')))
+    const allCorrect = graded.length > 0 && graded.every(Boolean)
+    recordLabAttempt(sel.templateId, allCorrect)
   }
 
   const share = async () => {

@@ -21,10 +21,27 @@ const KEYS = {
   calcs: 'as:calc-usage',
   recentCalcs: 'as:recent-calcs',
   reads: 'as:topics-read',
+  labStats: 'as:lab-stats',
 } as const
+
+/* Change notification — the cloud-sync layer (progressSync.ts) registers one
+   listener and debounces a push whenever any aggregate changes. Kept as a
+   single callback (not an event bus) because there is exactly one consumer. */
+let changeListener: (() => void) | null = null
+export function setProgressListener(fn: (() => void) | null) {
+  changeListener = fn
+}
+function notifyChange() {
+  try {
+    changeListener?.()
+  } catch {
+    /* a broken listener must never break a local write */
+  }
+}
 
 export type Streak = { current: number; best: number; lastDay: string }
 export type TopicStat = { attempted: number; correct: number }
+export type LabStat = { attempted: number; solved: number }
 export type QuizRecord = {
   date: string // YYYY-MM-DD (local)
   topicId: string
@@ -109,11 +126,28 @@ export function touchStreak(): Streak {
   const cutoff = todayKey(new Date(Date.now() - 182 * 86_400_000))
   for (const k of Object.keys(act)) if (k < cutoff) delete act[k]
   write(KEYS.activity, act)
+  notifyChange()
   return next
 }
 
 export function getActivity(): Record<string, number> {
   return read<Record<string, number>>(KEYS.activity, {})
+}
+
+/** Activity summary for the current Mon–Sun week: active days + total actions. */
+export function weekSummary(now = new Date()): { activeDays: number; total: number } {
+  const act = getActivity()
+  // Monday as day 0
+  const dow = (now.getDay() + 6) % 7
+  let activeDays = 0
+  let total = 0
+  for (let i = 0; i <= dow; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
+    const n = act[todayKey(d)] ?? 0
+    if (n > 0) activeDays++
+    total += n
+  }
+  return { activeDays, total }
 }
 
 /* --------------------------------------------------------------- quiz stats */
@@ -144,14 +178,59 @@ export function getRecentQuizzes(): QuizRecord[] {
 
 /** Weakest topic with a meaningful sample (≥ 5 answers), lowest accuracy first. */
 export function weakestTopic(): { topicId: string; accuracy: number } | null {
+  return extremeTopic('weakest')
+}
+
+/** Strongest topic with a meaningful sample (≥ 5 answers), highest accuracy. */
+export function strongestTopic(): { topicId: string; accuracy: number } | null {
+  return extremeTopic('strongest')
+}
+
+function extremeTopic(which: 'weakest' | 'strongest'): { topicId: string; accuracy: number } | null {
   const stats = getQuizStats()
-  let worst: { topicId: string; accuracy: number } | null = null
+  let pick: { topicId: string; accuracy: number } | null = null
   for (const [topicId, s] of Object.entries(stats)) {
     if (s.attempted < 5) continue
     const accuracy = s.correct / s.attempted
-    if (!worst || accuracy < worst.accuracy) worst = { topicId, accuracy }
+    if (!pick || (which === 'weakest' ? accuracy < pick.accuracy : accuracy > pick.accuracy)) {
+      pick = { topicId, accuracy }
+    }
   }
-  return worst
+  return pick
+}
+
+/** Accuracy % of the last N finished quizzes, oldest→newest (drives the trend). */
+export function accuracyTrend(n = 8): number[] {
+  return getRecentQuizzes()
+    .slice(0, n)
+    .filter((r) => r.total > 0)
+    .map((r) => Math.round((r.score / r.total) * 100))
+    .reverse()
+}
+
+/* -------------------------------------------------------------- lab attempts */
+
+export function recordLabAttempt(templateId: string, allCorrect: boolean) {
+  const stats = read<Record<string, LabStat>>(KEYS.labStats, {})
+  const t = stats[templateId] ?? { attempted: 0, solved: 0 }
+  t.attempted += 1
+  if (allCorrect) t.solved += 1
+  stats[templateId] = t
+  write(KEYS.labStats, stats)
+  touchStreak()
+}
+export function getLabStats(): Record<string, LabStat> {
+  return read<Record<string, LabStat>>(KEYS.labStats, {})
+}
+/** Totals across all lab templates — for the Progress Lab card. */
+export function labTotals(): { attempted: number; solved: number } {
+  let attempted = 0
+  let solved = 0
+  for (const s of Object.values(getLabStats())) {
+    attempted += s.attempted
+    solved += s.solved
+  }
+  return { attempted, solved }
 }
 
 /* ------------------------------------------------------- calcs & topic reads */
@@ -182,4 +261,113 @@ export function recordTopicRead(id: string) {
 }
 export function getTopicsRead(): Record<string, string> {
   return read<Record<string, string>>(KEYS.reads, {})
+}
+
+/* -------------------------------------------------------- cloud-sync support
+
+   The sync layer (progressSync.ts) mirrors this whole snapshot to Supabase so a
+   student's progress survives a cache clear and follows them across devices.
+   The MERGE is field-wise max / latest-wins, which is important: it is
+   idempotent and monotonic, so re-merging the same cloud data (every login)
+   never double-counts. The trade-off is that true cross-device totals are
+   under-counted rather than inflated — the right call for durability. */
+
+export type ProgressSnapshot = {
+  streak?: Streak
+  activity?: Record<string, number>
+  quizStats?: Record<string, TopicStat>
+  recent?: QuizRecord[]
+  calcs?: Record<string, number>
+  recentCalcs?: string[]
+  reads?: Record<string, string>
+  labStats?: Record<string, LabStat>
+}
+
+export function exportProgress(): ProgressSnapshot {
+  return {
+    streak: read<Streak>(KEYS.streak, { current: 0, best: 0, lastDay: '' }),
+    activity: getActivity(),
+    quizStats: getQuizStats(),
+    recent: getRecentQuizzes(),
+    calcs: getCalcUsage(),
+    recentCalcs: getRecentCalcs(),
+    reads: getTopicsRead(),
+    labStats: getLabStats(),
+  }
+}
+
+const maxByKey = <T extends Record<string, number>>(a: T = {} as T, b: T = {} as T): T => {
+  const out: Record<string, number> = { ...a }
+  for (const [k, v] of Object.entries(b)) out[k] = Math.max(out[k] ?? 0, v)
+  return out as T
+}
+
+/** Per-key pick of the sub-record with the larger `attempted` (monotone). */
+function mergeAttempted<T extends { attempted: number }>(
+  a: Record<string, T> = {},
+  b: Record<string, T> = {},
+): Record<string, T> {
+  const out: Record<string, T> = { ...a }
+  for (const [k, v] of Object.entries(b)) {
+    const cur = out[k]
+    if (!cur || v.attempted > cur.attempted) out[k] = v
+  }
+  return out
+}
+
+/** Pure merge of two snapshots — commutative-ish, idempotent, never inflates. */
+export function mergeSnapshots(a: ProgressSnapshot, b: ProgressSnapshot): ProgressSnapshot {
+  const sa = a.streak ?? { current: 0, best: 0, lastDay: '' }
+  const sb = b.streak ?? { current: 0, best: 0, lastDay: '' }
+  // the streak with the more recent lastDay is authoritative for current/lastDay
+  const newer = sb.lastDay > sa.lastDay ? sb : sa
+  const streak: Streak = {
+    lastDay: newer.lastDay,
+    current: sa.lastDay === sb.lastDay ? Math.max(sa.current, sb.current) : newer.current,
+    best: Math.max(sa.best, sb.best),
+  }
+
+  // recent quizzes: union, dedupe by day+topic+score, newest first, cap 30
+  const seen = new Set<string>()
+  const recent = [...(a.recent ?? []), ...(b.recent ?? [])]
+    .sort((x, y) => (x.date < y.date ? 1 : -1))
+    .filter((r) => {
+      const k = `${r.date}|${r.topicId}|${r.score}|${r.total}|${r.mode ?? ''}`
+      if (seen.has(k)) return false
+      seen.add(k)
+      return true
+    })
+    .slice(0, 30)
+
+  // recent calcs: local order first, then cloud, deduped, cap 8
+  const recentCalcs = [...(a.recentCalcs ?? []), ...(b.recentCalcs ?? [])]
+    .filter((s, i, arr) => arr.indexOf(s) === i)
+    .slice(0, 8)
+
+  // topics read: latest date per topic
+  const reads: Record<string, string> = { ...(a.reads ?? {}) }
+  for (const [k, v] of Object.entries(b.reads ?? {})) if (!reads[k] || v > reads[k]) reads[k] = v
+
+  return {
+    streak,
+    activity: maxByKey(a.activity, b.activity),
+    quizStats: mergeAttempted(a.quizStats, b.quizStats),
+    recent,
+    calcs: maxByKey(a.calcs, b.calcs),
+    recentCalcs,
+    reads,
+    labStats: mergeAttempted(a.labStats, b.labStats),
+  }
+}
+
+/** Write a snapshot back into localStorage (used after a cloud pull-merge). */
+export function applySnapshot(s: ProgressSnapshot) {
+  if (s.streak) write(KEYS.streak, s.streak)
+  if (s.activity) write(KEYS.activity, s.activity)
+  if (s.quizStats) write(KEYS.quizStats, s.quizStats)
+  if (s.recent) write(KEYS.recent, s.recent)
+  if (s.calcs) write(KEYS.calcs, s.calcs)
+  if (s.recentCalcs) write(KEYS.recentCalcs, s.recentCalcs)
+  if (s.reads) write(KEYS.reads, s.reads)
+  if (s.labStats) write(KEYS.labStats, s.labStats)
 }
