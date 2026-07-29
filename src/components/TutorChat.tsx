@@ -26,6 +26,7 @@ import {
   type Attachment,
   type AttachmentKind,
 } from '../lib/attachments'
+import Markdown from './Markdown'
 
 const SUGGESTIONS = [
   'Explain break-even point with a simple example',
@@ -241,8 +242,8 @@ export default function TutorChat() {
               <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
                 <Sparkles className="h-4 w-4" />
               </span>
-              <div className="max-w-[85%] whitespace-pre-wrap rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm leading-relaxed text-slate-700">
-                {contentToText(m.content)}
+              <div className="max-w-[85%] rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-700">
+                <Markdown text={contentToText(m.content)} />
               </div>
             </div>
           ),
