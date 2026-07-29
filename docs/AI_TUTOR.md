@@ -21,8 +21,9 @@ once you add a key in Vercel and deploy. No code change is needed to turn it on.
    - `LLM_API_KEY` = your Groq key  *(required)*
    - `LLM_BASE_URL` = `https://api.groq.com/openai/v1`  *(optional — this is the default)*
    - `LLM_MODEL` = `llama-3.3-70b-versatile`  *(optional — text questions; this is the default)*
-   - `LLM_VISION_MODEL` = `meta-llama/llama-4-scout-17b-16e-instruct`  *(optional — used
-     automatically when a student attaches an image; this is the default)*
+   - `LLM_VISION_MODEL` = `qwen/qwen3.6-27b`  *(optional — used automatically when a student
+     attaches an image; this is the default. Must be a currently-served vision model —
+     check https://console.groq.com/docs/deprecations if image answers start failing.)*
 3. **Redeploy** (Deployments → Redeploy, or push a commit). The `/ask` chat is now live.
 
 The same free Groq key covers both models — no extra signup. The key lives only in Vercel.
@@ -49,6 +50,24 @@ chat bubble shows only their typed question + attachment chips, not the raw dump
 **Google Gemini** (also free tier, also OpenAI-compatible — no code change, just point
 `LLM_BASE_URL`/`LLM_MODEL`/`LLM_VISION_MODEL` at Gemini). Gemini ingests documents natively,
 so you could then drop the client-side pdf.js step.
+
+## Provider health check (catch model deprecations early)
+
+Groq periodically **deprecates and shuts down models** — that's exactly what broke image
+answers in Jun 2026 (the old vision default `meta-llama/llama-4-scout-17b-16e-instruct` was
+retired). Because `vite dev` mocks the tutor (zero egress), no local test ever calls the live
+provider, so a shutdown is otherwise only found when a student hits it.
+
+`api/tutor-health.ts` fires a tiny real request at **both** the text and vision models and
+reports which are alive. `vercel.json` runs it daily via **Vercel Cron** (`0 6 * * *`), so a
+dead model surfaces in the Vercel logs (grep `[tutor-health] DEGRADED`) — and, if you point an
+uptime monitor at the URL, it returns **503** when any model is down.
+
+- Set **`CRON_SECRET`** (Vercel → Settings → Environment Variables) to a long random string.
+  Vercel Cron sends it automatically as `Authorization: Bearer <value>`; requests without it
+  get `401`. Leave it unset only during first-time setup (then the endpoint is public).
+- Manual check: `curl -H "Authorization: Bearer $CRON_SECRET" https://<your-app>/api/tutor-health`
+  → `{"status":"ok",...}`, `{"status":"degraded",...}` (503), or `{"status":"dormant"}` (no key).
 
 ## Use a different free provider
 The proxy speaks the OpenAI format, so just change the env vars — no code change:

@@ -8,8 +8,14 @@
      LLM_API_KEY        (required to switch the tutor ON; if absent → 503 "not configured")
      LLM_BASE_URL       default https://api.groq.com/openai/v1
      LLM_MODEL          default llama-3.3-70b-versatile   (text-only questions)
-     LLM_VISION_MODEL   default meta-llama/llama-4-scout-17b-16e-instruct
+     LLM_VISION_MODEL   default qwen/qwen3.6-27b          (multimodal — Groq)
                         (used automatically when a message includes an image)
+
+   NOTE (Jun 2026): Groq deprecated meta-llama/llama-4-scout-17b-16e-instruct
+   (the old vision default), so image questions started returning upstream 502s.
+   Vision now defaults to qwen/qwen3.6-27b. If Groq deprecates a model again,
+   check https://console.groq.com/docs/deprecations and update the default here
+   (or set LLM_MODEL / LLM_VISION_MODEL in Vercel to a currently-served model).
 
    Students can attach images (sent to the vision model), and PDFs/.txt whose
    text is extracted in the browser and arrives as plain text — see
@@ -54,7 +60,7 @@ export default async function handler(req: Request): Promise<Response> {
   const apiKey = process.env.LLM_API_KEY
   const baseUrl = (process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1').replace(/\/$/, '')
   const textModel = process.env.LLM_MODEL || 'llama-3.3-70b-versatile'
-  const visionModel = process.env.LLM_VISION_MODEL || 'meta-llama/llama-4-scout-17b-16e-instruct'
+  const visionModel = process.env.LLM_VISION_MODEL || 'qwen/qwen3.6-27b'
 
   // Dormant until a key is configured in the host's env. Degrades gracefully.
   if (!apiKey) {
@@ -117,6 +123,9 @@ export default async function handler(req: Request): Promise<Response> {
 
     if (!upstream.ok) {
       const detail = (await upstream.text()).slice(0, 300)
+      // Surface upstream failures in Vercel logs — a model deprecation (e.g. a
+      // decommissioned vision model) shows up here as a 4xx/5xx from Groq.
+      console.error(`[tutor] upstream ${upstream.status} (model=${model}): ${detail}`)
       return json(
         { error: 'upstream', status: upstream.status, message: 'The tutor had trouble answering just now. Please try again.', detail },
         502,
