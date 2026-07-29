@@ -106,6 +106,20 @@ export default async function handler(req: Request): Promise<Response> {
   )
   const model = hasImage ? visionModel : textModel
 
+  // The Groq vision model (qwen/qwen3.6-27b) is a REASONING model: by default it
+  // emits its chain-of-thought in <think>…</think> before the answer. Ask Groq to
+  // hide it so students only see the final answer. Harmless on non-reasoning models,
+  // but we only send it for the vision model to avoid any provider-specific 400.
+  const payload: Record<string, unknown> = {
+    model,
+    messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+    temperature: 0.3,
+    // Reasoning models spend part of the budget on hidden thinking before the
+    // answer, so give the vision path more headroom to avoid a truncated reply.
+    max_tokens: hasImage ? 2200 : 900,
+  }
+  if (hasImage) payload.reasoning_format = 'hidden'
+
   try {
     const upstream = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
@@ -113,12 +127,7 @@ export default async function handler(req: Request): Promise<Response> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
-        temperature: 0.3,
-        max_tokens: 900,
-      }),
+      body: JSON.stringify(payload),
     })
 
     if (!upstream.ok) {
@@ -135,13 +144,29 @@ export default async function handler(req: Request): Promise<Response> {
     const data = (await upstream.json()) as {
       choices?: { message?: { content?: string } }[]
     }
-    const reply = data?.choices?.[0]?.message?.content?.trim() || ''
+    const reply = stripReasoning(data?.choices?.[0]?.message?.content || '')
     if (!reply) return json({ error: 'empty_reply', message: 'The tutor returned an empty answer. Please try rephrasing.' }, 502)
 
     return json({ reply })
   } catch {
     return json({ error: 'network', message: 'Could not reach the tutor service. Please try again.' }, 502)
   }
+}
+
+/**
+ * Strip a reasoning model's chain-of-thought from the reply. Belt-and-suspenders
+ * for `reasoning_format: 'hidden'`: if a provider ignores that flag (or a future
+ * model default changes), we still never show students the raw <think> block.
+ * Handles a full <think>…</think> pair, and a dangling </think> with no opener
+ * (reasoning that ran up to the answer). No-op on clean answers.
+ */
+function stripReasoning(text: string): string {
+  let out = text.replace(/<think>[\s\S]*?<\/think>/gi, '')
+  // Opener stripped/absent but a closer remains → drop everything up to it.
+  if (/<\/think>/i.test(out)) out = out.replace(/^[\s\S]*?<\/think>/i, '')
+  // Any stray unmatched opener → drop from it to the end (never leak partial CoT).
+  out = out.replace(/<think>[\s\S]*$/i, '')
+  return out.trim()
 }
 
 type TextPart = { type: 'text'; text: string }
