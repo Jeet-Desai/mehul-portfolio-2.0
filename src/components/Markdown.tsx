@@ -12,6 +12,7 @@
 ---------------------------------------------------------------------------- */
 
 import { type ReactNode } from 'react'
+import { delatex } from '../lib/delatex'
 
 /* ---------- inline: bold / italic / code / links ------------------------- */
 
@@ -84,7 +85,8 @@ function splitRow(line: string): string[] {
 }
 
 export default function Markdown({ text }: { text: string }) {
-  const lines = text.replace(/\r\n/g, '\n').split('\n')
+  // The model sometimes emits LaTeX maths despite the prompt; convert it to plain text first.
+  const lines = delatex(text).replace(/\r\n/g, '\n').split('\n')
   const blocks: ReactNode[] = []
   let i = 0
   let key = 0
@@ -109,7 +111,14 @@ export default function Markdown({ text }: { text: string }) {
       }
       i++ // skip closing fence
       blocks.push(
-        <pre key={key++} className="overflow-x-auto rounded-lg bg-slate-900 px-3.5 py-3 text-[13px] leading-relaxed text-slate-100">
+        <pre
+          key={key++}
+          className={
+            fence[1].trim() === 'formula'
+              ? 'overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-[13.5px] leading-relaxed text-slate-800'
+              : 'overflow-x-auto rounded-lg bg-slate-900 px-3.5 py-3 text-[13px] leading-relaxed text-slate-100'
+          }
+        >
           <code className="font-mono">{body.join('\n')}</code>
         </pre>,
       )
