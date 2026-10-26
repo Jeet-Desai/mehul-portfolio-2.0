@@ -27,10 +27,11 @@
 
 export const config = { runtime: 'edge' }
 
-// Smallest possible valid image: a 1x1 transparent PNG as a data URL. Enough to
-// exercise the vision model's image path without shipping real pixels.
+// A tiny valid 64x64 solid-colour PNG as a data URL. Enough to exercise the vision
+// model's image path. (Must be at least 32px per side — qwen3.8 rejects smaller
+// images with a 400, which made a 1x1 probe report a false 'degraded'.)
 const PIXEL_PNG =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAeUlEQVR4nO3PQQkAMAzAwMqpfz0TMxF7HINABFzm7H7dcEEDWtCAFjSgBQ1oQQNa0IAWNKAFDWhBA1rQgBY0oAUNaEEDWtCAFjSgBQ1oQQNa0IAWNKAFDWhBA1rQgBY0oAUNaEEDWtCAFjSgBQ1oQQNa0IAWNKAFj13zk8EPp8weQAAAAABJRU5ErkJggg=='
 
 type ProbeResult = { model: string; ok: boolean; status: number; detail?: string }
 
