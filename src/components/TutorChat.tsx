@@ -26,6 +26,7 @@ import {
   type Attachment,
   type AttachmentKind,
 } from '../lib/attachments'
+import { Link } from 'react-router-dom'
 import Markdown from './Markdown'
 
 const SUGGESTIONS = [
@@ -244,6 +245,12 @@ export default function TutorChat() {
               </span>
               <div className="max-w-[85%] rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-700">
                 <Markdown text={contentToText(m.content)} />
+                <p className="mt-3 border-t border-slate-100 pt-2 text-xs text-slate-400">
+                  AI can make arithmetic mistakes — re-check the figures.{' '}
+                  <Link to="/learn" className="font-medium text-brand-600 hover:underline">
+                    Verify with a calculator
+                  </Link>
+                </p>
               </div>
             </div>
           ),

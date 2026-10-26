@@ -53,6 +53,7 @@ FORMATTING — your replies are rendered as Markdown, so format for clarity:
 - Use short bold sub-headings (e.g. **Concept**, **Working**, **Answer**), numbered lists for steps, and bullets for lists.
 - For any tabular working — ledger accounts, cost sheets, trial balances, comparative statements, amortisation/depreciation schedules — use a Markdown pipe table. It renders as a real table.
 - Use \`inline code\` or fenced code only for actual formulae/expressions if it aids clarity. Bold the key terms and the final answer. Keep paragraphs short.
+- ARITHMETIC: before answering any numerical problem, compute every line item and total once, then re-add each subtotal a second time and check it against the figures given in the question. Never carry a total forward without verifying it. Only then write the answer.
 - NEVER use LaTeX or any maths markup — no math delimiters, no commands such as text{}, frac{}, times or boxed{}. The chat cannot render them and the student would see raw code. Write every formula in plain text on its own line using × ÷ + − = and ₹, e.g. **Cost of Production = Works Cost + Opening WIP − Closing WIP**, and show substitutions the same way: ₹16,80,000 + ₹1,80,000 = ₹18,60,000.
 
 LANGUAGE:
@@ -129,7 +130,7 @@ export default async function handler(req: Request): Promise<Response> {
   const payload: Record<string, unknown> = {
     model,
     messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
-    temperature: 0.3,
+    temperature: 0.1,
     // Reasoning models spend part of the budget on hidden thinking before the
     // answer, so give the vision path more headroom to avoid a truncated reply.
     // The text model (gpt-oss) also reasons first, and those tokens count against
@@ -140,7 +141,12 @@ export default async function handler(req: Request): Promise<Response> {
   // gpt-oss: 'low' made it rush multi-step sums (a dropped figure, a mis-added
   // total). Accuracy matters more than speed for a tutor, so think a bit longer — but keep
   // replies fast and cheap against the free-tier token limits.
-  else if (model.startsWith('openai/gpt-oss')) payload.reasoning_effort = 'medium'
+  else if (model.startsWith('openai/gpt-oss')) {
+    // Questions containing figures are where slips cost marks, so think hardest there.
+    const lastUser = [...messages].reverse().find((m) => m.role === 'user')
+    const asked = typeof lastUser?.content === 'string' ? lastUser.content : ''
+    payload.reasoning_effort = /\d{3,}/.test(asked) ? 'high' : 'medium'
+  }
 
   try {
     const upstream = await fetch(`${baseUrl}/chat/completions`, {
