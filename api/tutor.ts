@@ -135,7 +135,7 @@ export default async function handler(req: Request): Promise<Response> {
     // answer, so give the vision path more headroom to avoid a truncated reply.
     // The text model (gpt-oss) also reasons first, and those tokens count against
     // max_tokens — 900 could leave nothing for the answer itself.
-    max_tokens: 2200,
+    max_tokens: 4500,
   }
   if (hasImage) payload.reasoning_format = 'hidden'
   // gpt-oss: 'low' made it rush multi-step sums (a dropped figure, a mis-added
