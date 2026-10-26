@@ -134,12 +134,13 @@ export default async function handler(req: Request): Promise<Response> {
     // answer, so give the vision path more headroom to avoid a truncated reply.
     // The text model (gpt-oss) also reasons first, and those tokens count against
     // max_tokens — 900 could leave nothing for the answer itself.
-    max_tokens: hasImage ? 2200 : 1800,
+    max_tokens: 2200,
   }
   if (hasImage) payload.reasoning_format = 'hidden'
-  // gpt-oss: a short reasoning pass is plenty for a tutoring answer and keeps
+  // gpt-oss: 'low' made it rush multi-step sums (a dropped figure, a mis-added
+  // total). Accuracy matters more than speed for a tutor, so think a bit longer — but keep
   // replies fast and cheap against the free-tier token limits.
-  else if (model.startsWith('openai/gpt-oss')) payload.reasoning_effort = 'low'
+  else if (model.startsWith('openai/gpt-oss')) payload.reasoning_effort = 'medium'
 
   try {
     const upstream = await fetch(`${baseUrl}/chat/completions`, {

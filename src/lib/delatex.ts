@@ -45,6 +45,9 @@ export function cleanMath(src: string, multiline: boolean): string {
   // LaTeX writes thousands separators as 60{,}000 — flatten before any brace matching
   let s = src.replace(/\{,\}/g, ',')
 
+  // the model sometimes bolds inside maths; markdown bold can't render in code
+  s = s.replace(/\*\*/g, '')
+
   // alignment environments
   s = s.replace(/\\(?:begin|end)\s*\{[^}]*\}/g, '')
   s = s.replace(/\\\\/g, multiline ? '\n' : ' ')
