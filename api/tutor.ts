@@ -141,12 +141,7 @@ export default async function handler(req: Request): Promise<Response> {
   // gpt-oss: 'low' made it rush multi-step sums (a dropped figure, a mis-added
   // total). Accuracy matters more than speed for a tutor, so think a bit longer — but keep
   // replies fast and cheap against the free-tier token limits.
-  else if (model.startsWith('openai/gpt-oss')) {
-    // Questions containing figures are where slips cost marks, so think hardest there.
-    const lastUser = [...messages].reverse().find((m) => m.role === 'user')
-    const asked = typeof lastUser?.content === 'string' ? lastUser.content : ''
-    payload.reasoning_effort = /\d{3,}/.test(asked) ? 'high' : 'medium'
-  }
+  else if (model.startsWith('openai/gpt-oss')) payload.reasoning_effort = 'low'
 
   try {
     const upstream = await fetch(`${baseUrl}/chat/completions`, {
