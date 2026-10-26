@@ -138,9 +138,8 @@ export default async function handler(req: Request): Promise<Response> {
     max_tokens: 4500,
   }
   if (hasImage) payload.reasoning_format = 'hidden'
-  // gpt-oss: 'low' made it rush multi-step sums (a dropped figure, a mis-added
-  // total). Accuracy matters more than speed for a tutor, so think a bit longer — but keep
-  // replies fast and cheap against the free-tier token limits.
+  // gpt-oss: low effort keeps replies fast and cheap against the free-tier token limits.
+  // (Sums can still slip — the planned fix is calculator tool-calling, not more thinking.)
   else if (model.startsWith('openai/gpt-oss')) payload.reasoning_effort = 'low'
 
   try {
