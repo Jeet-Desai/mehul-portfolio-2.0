@@ -7,13 +7,14 @@
 
      LLM_API_KEY        (required to switch the tutor ON; if absent → 503 "not configured")
      LLM_BASE_URL       default https://api.groq.com/openai/v1
-     LLM_MODEL          default llama-3.3-70b-versatile   (text-only questions)
-     LLM_VISION_MODEL   default qwen/qwen3.6-27b          (multimodal — Groq)
+     LLM_MODEL          default openai/gpt-oss-120b       (text-only questions)
+     LLM_VISION_MODEL   default qwen/qwen3.8-27b          (multimodal — Groq)
                         (used automatically when a message includes an image)
 
-   NOTE (Jun 2026): Groq deprecated meta-llama/llama-4-scout-17b-16e-instruct
-   (the old vision default), so image questions started returning upstream 502s.
-   Vision now defaults to qwen/qwen3.6-27b. If Groq deprecates a model again,
+   NOTE (Oct 2026): Groq retired llama-3.3-70b-versatile (16 Aug) and
+   qwen/qwen3.6-27b (14 Sep), so every question returned an upstream error.
+   Defaults are now openai/gpt-oss-120b (text) and qwen/qwen3.8-27b (vision).
+   If Groq deprecates a model again,
    check https://console.groq.com/docs/deprecations and update the default here
    (or set LLM_MODEL / LLM_VISION_MODEL in Vercel to a currently-served model).
 
@@ -73,8 +74,8 @@ export default async function handler(req: Request): Promise<Response> {
 
   const apiKey = process.env.LLM_API_KEY
   const baseUrl = (process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1').replace(/\/$/, '')
-  const textModel = process.env.LLM_MODEL || 'llama-3.3-70b-versatile'
-  const visionModel = process.env.LLM_VISION_MODEL || 'qwen/qwen3.6-27b'
+  const textModel = process.env.LLM_MODEL || 'openai/gpt-oss-120b'
+  const visionModel = process.env.LLM_VISION_MODEL || 'qwen/qwen3.8-27b'
 
   // Dormant until a key is configured in the host's env. Degrades gracefully.
   if (!apiKey) {
@@ -120,7 +121,7 @@ export default async function handler(req: Request): Promise<Response> {
   )
   const model = hasImage ? visionModel : textModel
 
-  // The Groq vision model (qwen/qwen3.6-27b) is a REASONING model: by default it
+  // The Groq vision model (qwen/qwen3.8-27b) is a REASONING model: by default it
   // emits its chain-of-thought in <think>…</think> before the answer. Ask Groq to
   // hide it so students only see the final answer. Harmless on non-reasoning models,
   // but we only send it for the vision model to avoid any provider-specific 400.
@@ -130,9 +131,14 @@ export default async function handler(req: Request): Promise<Response> {
     temperature: 0.3,
     // Reasoning models spend part of the budget on hidden thinking before the
     // answer, so give the vision path more headroom to avoid a truncated reply.
-    max_tokens: hasImage ? 2200 : 900,
+    // The text model (gpt-oss) also reasons first, and those tokens count against
+    // max_tokens — 900 could leave nothing for the answer itself.
+    max_tokens: hasImage ? 2200 : 1800,
   }
   if (hasImage) payload.reasoning_format = 'hidden'
+  // gpt-oss: a short reasoning pass is plenty for a tutoring answer and keeps
+  // replies fast and cheap against the free-tier token limits.
+  else if (model.startsWith('openai/gpt-oss')) payload.reasoning_effort = 'low'
 
   try {
     const upstream = await fetch(`${baseUrl}/chat/completions`, {

@@ -45,8 +45,8 @@ export default async function handler(req: Request): Promise<Response> {
 
   const apiKey = process.env.LLM_API_KEY
   const baseUrl = (process.env.LLM_BASE_URL || 'https://api.groq.com/openai/v1').replace(/\/$/, '')
-  const textModel = process.env.LLM_MODEL || 'llama-3.3-70b-versatile'
-  const visionModel = process.env.LLM_VISION_MODEL || 'qwen/qwen3.6-27b'
+  const textModel = process.env.LLM_MODEL || 'openai/gpt-oss-120b'
+  const visionModel = process.env.LLM_VISION_MODEL || 'qwen/qwen3.8-27b'
 
   // Dormant until a key is configured — mirrors api/tutor.ts. Not a failure.
   if (!apiKey) return json({ status: 'dormant', message: 'No LLM_API_KEY set — tutor is off.' })

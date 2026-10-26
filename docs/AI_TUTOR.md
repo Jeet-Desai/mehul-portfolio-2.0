@@ -20,8 +20,8 @@ once you add a key in Vercel and deploy. No code change is needed to turn it on.
 2. **Add it to Vercel.** Project → **Settings → Environment Variables**, add:
    - `LLM_API_KEY` = your Groq key  *(required)*
    - `LLM_BASE_URL` = `https://api.groq.com/openai/v1`  *(optional — this is the default)*
-   - `LLM_MODEL` = `llama-3.3-70b-versatile`  *(optional — text questions; this is the default)*
-   - `LLM_VISION_MODEL` = `qwen/qwen3.6-27b`  *(optional — used automatically when a student
+   - `LLM_MODEL` = `openai/gpt-oss-120b`  *(optional — text questions; this is the default)*
+   - `LLM_VISION_MODEL` = `qwen/qwen3.8-27b`  *(optional — used automatically when a student
      attaches an image; this is the default. Must be a currently-served vision model —
      check https://console.groq.com/docs/deprecations if image answers start failing.)*
 3. **Redeploy** (Deployments → Redeploy, or push a commit). The `/ask` chat is now live.
